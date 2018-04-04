@@ -1,0 +1,7 @@
+# wp-bizpol-properties
+gulp/
+node_modules/
+composer.json
+compser.phar
+gulpfile.js
+package.json
