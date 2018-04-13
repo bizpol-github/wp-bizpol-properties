@@ -9,9 +9,10 @@ namespace Inc;
 final class Init{
     public static function get_services(){
         return [
-            Pages\Admin::class, 
-            Base\Enqueue::class, 
-            Base\Settings::class
+            Pages\Dashboard::class,
+            Base\Settings::class, 
+            Base\Enqueue::class,
+            Base\CustomPostTypeController::class
         ];
     }
     

@@ -1,4 +1,8 @@
+import 'code-prettify';
+
 window.addEventListener("load", function(){
+    PR.prettyPrint();
+
     var tabs = document.querySelectorAll('ul.nav-tabs > li');
     
     for (var i=0; i<tabs.length; i++){

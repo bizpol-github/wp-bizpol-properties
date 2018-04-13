@@ -16,7 +16,7 @@ class SettingsApi{
     public $fields = array();
     
     public function register(){
-        if(!empty($this->admin_pages)){
+        if(!empty($this->admin_pages) || !empty($this->admin_subpages)){
             add_action('admin_menu', array($this, 'addAdminMenu'));
         }
         
@@ -32,7 +32,7 @@ class SettingsApi{
     }
     
     public function withSubPage(string $title = null){
-        if (empty($this->admin_pages)){
+        if (!empty($this->admin_pages)){
             return $this;
         }
         

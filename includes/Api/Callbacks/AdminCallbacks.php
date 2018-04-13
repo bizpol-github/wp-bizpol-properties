@@ -12,34 +12,43 @@ class AdminCallbacks extends BaseController{
     public function adminDashboard(){
         return require_once("$this->plugin_path/templates/wp-bizpol-properties-admin.php");
     }
+
+    public function adminCptManager(){
+        return require_once("$this->plugin_path/templates/cpt.php");
+    }
     
     public function propertiesOptionGroup($input){
         return $input;
     }
     
     public function propertiesAdminSection(){
-        echo 'test';
+        echo 'Plugin Settings';
     }
     
     public function propertiesName(){
-        $value = esc_attr(get_option('PropertyName'));
+        $value = esc_attr(get_option('PropertyManager'));
         echo '<input type="text" class="regular-text" name="PropertyName" value="' .  $value . '" placeholder="">';
     }
     
-    public function propertiesAddress(){
-        $value = esc_attr(get_option('PropertyAddress'));
+    public function propertiesOwners(){
+        $value = esc_attr(get_option('PropertyOwners'));
         echo '<input type="text" class="regular-text" name="PropertyAddress" value="' .  $value . '" placeholder="Address">';
     }
 
-    public function propertiesLandRegister(){
-        $value = esc_attr(get_option('LandRegister'));
-        echo '<input type="text" class="regular-text" name="LandRegister" value="' .  $value . '" placeholder="Land Register">';
+    public function propertiesGallery()
+    {
+        echo "<h1>Gallery Manager</h1>";
     }
 
-    public function propertiesConstructionYear(){
-        $value = esc_attr(get_option('ConstructionYear'));
-        echo '<input type="text" class="regular-text" name="ConstructionYear" value="' .  $value . '" placeholder="Construction Year">';
-    }
+    // public function propertiesLandRegister(){
+    //     $value = esc_attr(get_option('LandRegister'));
+    //     echo '<input type="text" class="regular-text" name="LandRegister" value="' .  $value . '" placeholder="Land Register">';
+    // }
+
+    // public function propertiesConstructionYear(){
+    //     $value = esc_attr(get_option('ConstructionYear'));
+    //     echo '<input type="text" class="regular-text" name="ConstructionYear" value="' .  $value . '" placeholder="Construction Year">';
+    // }
     
 }
 
