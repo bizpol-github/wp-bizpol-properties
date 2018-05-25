@@ -15,7 +15,13 @@ class Enqueue extends BaseController{
     
     function enqueue(){
                 //enqueue all scripts
+                wp_enqueue_script('media_upload');
+                wp_enqueue_script('jquery-ui-dialog');
+                wp_enqueue_media();
                 wp_enqueue_style('main', $this->plugin_url . 'assets/style.min.css');
                 wp_enqueue_script('main', $this->plugin_url . 'assets/script.min.js');
-            }
+                wp_enqueue_script('add', $this->plugin_url . 'assets/bp-properties-add.min.js');
+                wp_enqueue_script('data-table', $this->plugin_url . 'src/js/bp-data-table.js');
+                wp_enqueue_script('dialog', $this->plugin_url . 'src/js/bp-dialog.js');
+    }
 }

@@ -12,7 +12,10 @@ final class Init{
             Pages\Dashboard::class,
             Base\Settings::class, 
             Base\Enqueue::class,
-            Base\CustomPostTypeController::class
+            Base\CustomPostTypeController::class,
+            Base\GalleryController::class,
+            Base\WidgetController::class,
+            Base\PropertiesController::class
         ];
     }
     

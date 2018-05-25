@@ -18,6 +18,14 @@ class Activate{
         if(!get_option('bizpol_properties_cpt')){
         	update_option('bizpol_properties_cpt', $default);
         }
+
+        if(!get_option('bizpol_gallery')){
+            update_option('bizpol_gallery', $default);
+        }
+
+        if(!get_option('bizpol_property')){
+            update_option('bizpol_property', $default);
+        }
     }
 }
 

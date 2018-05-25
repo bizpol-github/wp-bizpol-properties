@@ -19,14 +19,6 @@
 
 			<?php
 
-		   //      if(!get_option('bizpol_properties_cpt')){
-		   //      	$options = array();
-		   //      } else {
-					// $options = get_option('bizpol_properties_cpt');
-		   //      }
-
-				// $options = !get_option('bizpol_properties_cpt') ? array() : get_option('bizpol_properties_cpt');
-
 			$options = get_option('bizpol_properties_cpt') ?: array();
 
 				echo '<table class="cpt-table"><tr><th>ID</th><th>Singular Name</th><th>Plural Name</th><th class="text-center">Public</th><th class="text-center">Archive</th><th class="text-center">Actions</th></tr>';
@@ -69,14 +61,21 @@
         <div id="tab-3" class="tab-pane">
             <h3>Export Custom Post Types</h3>
 
+            <?php 
+            	foreach ($options as $option) {
+            ?>
+
+            <h3><?php echo $option['singular_name']; ?></h3>
+
             <pre class="prettyprint">
 // Register Custom Post Type
 function custom_post_type() {
 
 	$labels = array(
 		'name'                  => _x( 'Post Types', 'Post Type General Name', 'text_domain' ),
-		'singular_name'         => _x( 'Post Type', 'Post Type Singular Name', 'text_domain' ),
-		'menu_name'             => __( 'Post Types', 'text_domain' ),
+		'singular_name'         => _x( '<?php echo $option['singular_name']; ?>', 'Post Type Singular Name', 'text_domain' ),
+		'menu_name'             => __( '<?php echo $option['plural_name']; ?>', 'text_domain' ),
+		'plural_name'             => __( '<?php echo $option['plural_name']; ?>', 'text_domain' ),
 		'name_admin_bar'        => __( 'Post Type', 'text_domain' ),
 		'archives'              => __( 'Item Archives', 'text_domain' ),
 		'attributes'            => __( 'Item Attributes', 'text_domain' ),
@@ -109,23 +108,26 @@ function custom_post_type() {
 		'supports'              => false,
 		'taxonomies'            => array( 'category', 'post_tag' ),
 		'hierarchical'          => false,
-		'public'                => true,
+		'public'                => <?php echo isset($option['public']) ? "true" : "false"; ?>,
 		'show_ui'               => true,
 		'show_in_menu'          => true,
 		'menu_position'         => 5,
 		'show_in_admin_bar'     => true,
 		'show_in_nav_menus'     => true,
 		'can_export'            => true,
-		'has_archive'           => true,
+		'has_archive'           => <?php echo isset($option['has_achive']) ? "true" : "false"; ?>,
 		'exclude_from_search'   => false,
 		'publicly_queryable'    => true,
 		'capability_type'       => 'page',
 	);
-	register_post_type( 'post_type', $args );
+	register_post_type( '<?php echo $option['post_type']; ?>, $args );
 
 }
 add_action( 'init', 'custom_post_type', 0 );
 			</pre>
+			<?php 
+				} 
+			?>
         </div>
     </div>
 

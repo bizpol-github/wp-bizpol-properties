@@ -18,9 +18,10 @@ class BaseController{
         $this->plugin = plugin_basename(dirname(__FILE__, 3)) . '/wp-bizpol-properties.php';
 
         $this->managers = [
-        	'PropertyManager' => 'Activate Properties Manager',
         	'PropertyOwners' => 'Activate CPT Manager',
-            'PropertyGallery' => 'Activate Properties Gallery'
+            'PropertyGallery' => 'Activate Properties Gallery',
+            'CustomWidget' => 'Activate Custom Widget',
+            'Properties' => 'Activate Properties Manager'
         ];
     }
 }

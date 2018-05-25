@@ -16,6 +16,14 @@ class AdminCallbacks extends BaseController{
     public function adminCptManager(){
         return require_once("$this->plugin_path/templates/cpt.php");
     }
+
+    public function adminGallery(){
+        return require_once("$this->plugin_path/templates/bizpol-gallery.php");
+    }
+
+    public function adminProperties(){
+        return require_once("$this->plugin_path/templates/bizpol-properties.php");
+    }
     
     public function propertiesOptionGroup($input){
         return $input;
