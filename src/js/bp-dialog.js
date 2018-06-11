@@ -86,6 +86,30 @@ function bpDialog() {
         bpFormTitle.html(t);
         bpFormDesc.html(d);
     };
+    var setStatus = function (input) {
+        var min = input.attr('min');
+        var type = input.attr('type');
+        var status = input.next();
+        var text = input.val();
+
+        if (type === 'text') {
+            var patern = input.attr('patern');
+
+            if (patern === undefined) {
+                patern = '([A-Za-z0-9-])\\w{' + (min - 1) + ',}';
+            }
+
+            var regex = new RegExp(patern);
+
+            var test = regex.test(text);
+
+            if (test) {
+                status.removeClass('dashicons-no').addClass('dashicons-yes').css('color', 'green');
+            } else {
+                status.removeClass('dashicons-yes').addClass('dashicons-no').css('color', 'red');
+            }
+        }
+    };
     this.load = function () {
         if (this.initialized === false) {
             this.initialize();
@@ -93,9 +117,16 @@ function bpDialog() {
     };
     this.open = function () {
         this.newDialog.dialog('open');
+        this.inputKeyUp();
     };
     this.close = function () {
         this.newDialog.dialog('close');
+    };
+    this.inputKeyUp = function () {
+        $("#bpDialog").on('keyup paste select', 'input', function () {
+            setStatus($(this));
+        });
+
     };
     this.updateForm = function (id, disabled) {
         var header = $("#" + bpDataTableName + ' thead tr th');
@@ -104,7 +135,7 @@ function bpDialog() {
         var i = 0;
         var idx = 0;
         var val = '';
-        for (i = 0; i < header.length - 1; i++) {
+        for (i = 0; i < header.length - 1; i += 1) {
             idx = header[i].getAttribute('name');
             val = row[i].textContent;
             cols[idx] = val;
@@ -117,7 +148,25 @@ function bpDialog() {
                     content.value = value;
                     if (disabled === true) {
                         content.disabled = true;
+                    } else {
+                        setStatus($(this));
                     }
+                }
+            });
+        });
+        var selects = bpNewForm.find('select');
+        $.each(cols, function (key, value) {
+            $.each(selects, function (ignore, select) {
+                if (select.getAttribute('name') === key) {
+                    console.dir(select.children);
+                    $.each(select.children, function (ignore, option) {
+                        if (option.value === value) {
+                            option.selected = true;
+                        }
+                        if (disabled === true) {
+                            select.disabled = true;
+                        }
+                    });
                 }
             });
         });

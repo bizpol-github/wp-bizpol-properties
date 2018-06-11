@@ -18,8 +18,19 @@
 	background: #fff;
 	opacity: 0.95;
 	text-align: center;
+
+	& form{
+		margin: 0 15px;
+
+
+	}
 }
 
-#bpDialog form{
-	margin: 0 15px;
+.status{
+	color: green;
+    height: 20px;
+    width: 20px;
+    position: absolute;
+    top: 38%;
+    right: 20px;
 }

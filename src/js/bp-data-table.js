@@ -27,7 +27,7 @@ function bpDataTable() {
             $.post(
                 ajaxurl,
                 {
-                    action: 'bp_get_all_properties'
+                    action: 'bp_get_all_properties_rpc'
                 },
                 function (response) {
                     if (response.error === false) {

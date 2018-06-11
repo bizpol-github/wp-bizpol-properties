@@ -3,7 +3,7 @@
 	<?php settings_errors(); ?>
 
 	<ul class="nav-tabs">
-        <li class="active"><a href="#tab-1">Content</a></li>
+        <li class="active"><a href="#tab-1">Properties</a></li>
     </ul>
 
     <div class="tab-content">
@@ -53,7 +53,7 @@
 	      newCell.innerHTML = record.address;
 
 	      newCell = newRow.insertCell(4);
-	      newCell.innerHTML = record.construction_year;
+	      newCell.innerHTML = record.construction_year.substr(0,10);
 
 	      newCell = newRow.insertCell(5);
 	      newCell.innerHTML = record.land_register;

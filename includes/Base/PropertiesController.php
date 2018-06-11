@@ -37,7 +37,7 @@ class PropertiesController extends BaseController
 		$this->settings->addSubPages( $this->subpages )->register();
 
         add_action('wp_ajax_bp_dialog_rpc', array($this, 'bp_dialog_rpc'));
-        add_action('wp_ajax_bp_get_all_properties', array($this, 'bp_get_all_properties'));
+        add_action('wp_ajax_bp_get_all_properties_rpc', array($this, 'bp_get_all_properties_rpc'));
 	}
 
     public function bp_dialog_rpc(){
@@ -85,7 +85,7 @@ class PropertiesController extends BaseController
         wp_die();
     }
 
-    public function bp_get_all_properties(){
+    public function bp_get_all_properties_rpc(){
         global $wpdb;
 
         $properties = $wpdb->get_results("SELECT * FROM `wp_bp_properties`");
@@ -97,6 +97,7 @@ class PropertiesController extends BaseController
             $data['entries'][] = array(
                 'id' => $property->id,
                 'property_name' => $property->property_name,
+                'prefix' => $property->prefix,
                 'address' => $property->address,
                 'construction_year' => $property->construction_year,
                 'land_register' => $property->land_register
@@ -166,23 +167,9 @@ class PropertiesController extends BaseController
                 ]
             ],
             [
-                'id' => 'prefix',
-                'title' => '',
-                'callback' => [$this->properties_callbacks, 'textField'],
-                'page' => 'bizpol_property',
-                'section' => 'property_index',
-                'args' => [
-                    'option_name' => 'bizpol_property',
-                    'label_for' => 'prefix',
-                    'placeholder' => 'ex. ul',
-                    'min' => '2',
-                    'max' => '2'
-                ]
-            ],
-            [
                 'id' => 'address',
                 'title' => 'Address',
-                'callback' => [$this->properties_callbacks, 'textField'],
+                'callback' => [$this->properties_callbacks, 'textFieldAddress'],
                 'page' => 'bizpol_property',
                 'section' => 'property_index',
                 'args' => [
@@ -195,7 +182,7 @@ class PropertiesController extends BaseController
             [
                 'id' => 'construct_year',
                 'title' => 'Builded',
-                'callback' => [$this->properties_callbacks, 'textField'],
+                'callback' => [$this->properties_callbacks, 'dateField'],
                 'page' => 'bizpol_property',
                 'section' => 'property_index',
                 'args' => [
@@ -204,7 +191,8 @@ class PropertiesController extends BaseController
                     'placeholder' => 'Construction Year',
                     'min' => '10',
                     'max' => '10',
-                    'type' => 'date'
+                    'type' => 'date',
+                    'patern' => '[0-9]{2}[-][0-9]{2}[-][0-9]{4}$'
                 ]
             ],
             [
@@ -217,8 +205,7 @@ class PropertiesController extends BaseController
                     'option_name' => 'bizpol_property',
                     'label_for' => 'land_register',
                     'placeholder' => 'Land Register',
-                    'min' => '15',
-                    'max' => '15'
+                    'patern' => '^[A-Z]{2}\d{1}[A-Z]{1}[\/]\d{8}[\/]\d{1}$'
                 ]
             ]];
 
