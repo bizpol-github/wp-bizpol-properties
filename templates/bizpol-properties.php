@@ -1,6 +1,8 @@
 <div class="wrap">
 	<h1>Bizpol Properties - Add/Edit Property</h1>
-	<?php settings_errors(); ?>
+	<?php 
+		settings_errors();
+	?>
 
 	<ul class="nav-tabs">
         <li class="active"><a href="#tab-1">Properties</a></li>
@@ -10,6 +12,8 @@
     	<div id="tab-1" class="tab-pane active">
 
 <script>
+	var wp_adminId = '<?php echo wp_get_current_user()->id ?>';
+	var wp_adminFullName = '<?php echo wp_get_current_user()->display_name ?>';
 	var dialog = '';
 	var bpDialogName = 'bpDialog';
 	var bpDataTableName = 'propertiesTable';

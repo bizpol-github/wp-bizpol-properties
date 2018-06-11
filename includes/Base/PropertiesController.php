@@ -53,7 +53,8 @@ class PropertiesController extends BaseController
             'prefix' => sanitize_text_field($form['prefix']),
             'address' => sanitize_text_field($form['address']),
             'construction_year' => $form['construction_year'],
-            'land_register' => sanitize_text_field($form['land_register'])
+            'land_register' => sanitize_text_field($form['land_register']),
+            'user_id' => sanitize_text_field($form['user_id'])
         );
 
         if ($form['action'] == 'update') {
@@ -122,7 +123,15 @@ class PropertiesController extends BaseController
 				'capability' => 'manage_options', 
 				'menu_slug' => 'bizpol_property', 
 				'callback' => array( $this->callbacks, 'adminProperties' )
-			)
+			),
+            array(
+                'parent_slug' => 'bizpol_properties', 
+                'page_title' => 'Income/Expense', 
+                'menu_title' => 'Income/Expense', 
+                'capability' => 'manage_options', 
+                'menu_slug' => 'bizpol_incexp', 
+                'callback' => array( $this->callbacks, 'adminIncExp' )
+            )
 		);
 	}
 
@@ -131,6 +140,11 @@ class PropertiesController extends BaseController
             [
                 'option_group' => 'bp_property_settings',
                 'option_name' => 'bizpol_property',
+                'callback' => [$this->properties_callbacks, 'cptSanitize']
+            ],
+            [
+                'option_group' => 'bp_incexp_settings',
+                'option_name' => 'bizpol_incexp',
                 'callback' => [$this->properties_callbacks, 'cptSanitize']
             ]
         );
@@ -145,11 +159,18 @@ class PropertiesController extends BaseController
                 'title' => 'Add/Edit Property',
                 'callback' => [$this->properties_callbacks, 'propertiesSectionManager'],
                 'page' => 'bizpol_property'
+            ],
+            [   
+                'id' => 'incexp_index',
+                'title' => 'Income/Expense',
+                'callback' => [$this->properties_callbacks, 'propertiesSectionManager'],
+                'page' => 'bizpol_incexp'
             ]
         ]; 
         
         $this->settings->setSections($args);
     }
+
 
     public function setFields(){
             $args = [
@@ -206,10 +227,56 @@ class PropertiesController extends BaseController
                     'label_for' => 'land_register',
                     'placeholder' => 'Land Register',
                     'patern' => '^[A-Z]{2}\d{1}[A-Z]{1}[\/]\d{8}[\/]\d{1}$'
+                ],
+            ],
+            [
+                'id' => 'incexp_name',
+                'title' => 'Name',
+                'callback' => [$this->properties_callbacks, 'textField'],
+                'page' => 'bizpol_incexp',
+                'section' => 'incexp_index',
+                'args' => [
+                    'option_name' => 'bizpol_incexp',
+                    'label_for' => 'incexp_name',
+                    'placeholder' => 'Name',
+                    'min' => '3'
+                ]
+            ],
+            [
+                'id' => 'incexp_type',
+                'title' => 'Type',
+                'callback' => [$this->properties_callbacks, 'textField'],
+                'page' => 'bizpol_incexp',
+                'section' => 'incexp_index',
+                'args' => [
+                    'option_name' => 'bizpol_incexp',
+                    'label_for' => 'incexp_type',
+                    'placeholder' => 'Type',
+                    'min' => '2'
+                ]
+            ],
+            [
+                'id' => 'incexp_value',
+                'title' => 'Ammount',
+                'callback' => [$this->properties_callbacks, 'textField'],
+                'page' => 'bizpol_incexp',
+                'section' => 'incexp_index',
+                'args' => [
+                    'option_name' => 'bizpol_incexp',
+                    'label_for' => 'incexp_value',
+                    'placeholder' => 'Ammonut',
+                    'patern' => '[0-9]{0, 16}[,][0-9]{0, 4}$'
                 ]
             ]];
 
         $this->settings->setFields($args);
+    }
+
+    public function setIncExpFields(){
+            $args = [
+                ];
+
+        $this->settings->setIncExpFields($args);
     }
 
 }

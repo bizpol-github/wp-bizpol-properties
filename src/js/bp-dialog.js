@@ -1,4 +1,5 @@
-/*global bpDialog, bpDialogName, bpDataTable, bpDataTableName, bpFormTitle, bpFormDesc */
+/*global bpDialog, bpDialogName, bpDataTable, bpDataTableName, bpFormTitle,
+  bpFormDesc, wp_adminFullName, wp_adminId */
 /*global $, ajaxurl, alert */
 function bpDialog() {
     'use strict';
@@ -33,6 +34,7 @@ function bpDialog() {
     this.initialized = false;
     this.newDialog = '';
     this.initialize = function () {
+        var _this = this;
         this.newDialog = $('#' + bpDialogName).dialog({
             autoOpen: autoOpen,
             width: "50%",
@@ -47,24 +49,29 @@ function bpDialog() {
 
         $('#' + bpDialogName).on('submit', '#bp-dialog-form-copy', function (evnt) {
             evnt.preventDefault();
-            $.post(
-                ajaxurl,
-                {
-                    action: 'bp_dialog_rpc',
-                    type: 'post',
-                    data: serializeObject(bpNewForm, 'bp_dialog_rpc'),
-                    dataType: 'json',
-                    contentType: 'application/json'
-                },
-                function (response) {
-                    if (response.status === true) {
-                        bpDataTable.load();
-                        bpDialog.close();
-                        resetForm();
+            var status = _this.checkStatus();
+            if (status) {
+                $.post(
+                    ajaxurl,
+                    {
+                        action: 'bp_dialog_rpc',
+                        type: 'post',
+                        data: serializeObject(bpNewForm, 'bp_dialog_rpc'),
+                        dataType: 'json',
+                        contentType: 'application/json'
+                    },
+                    function (response) {
+                        if (response.status === true) {
+                            bpDataTable.load();
+                            bpDialog.close();
+                            resetForm();
+                        }
+                        console.log(response);
                     }
-                    console.log(response);
-                }
-            );
+                );
+            } else {
+                alert('error');
+            }
         });
         this.initialized = true;
     };
@@ -105,9 +112,18 @@ function bpDialog() {
 
             if (test) {
                 status.removeClass('dashicons-no').addClass('dashicons-yes').css('color', 'green');
+                status.attr('status', true);
             } else {
                 status.removeClass('dashicons-yes').addClass('dashicons-no').css('color', 'red');
+                status.attr('status', false);
             }
+        }
+    };
+    this.checkStatus = function () {
+        if (bpNewForm.find(".status[status='false']").length > 0) {
+            return false;
+        } else {
+            return true;
         }
     };
     this.load = function () {
@@ -173,7 +189,8 @@ function bpDialog() {
     };
     this.edit = function (id) {
         this.updateForm(id, false);
-        this.setTitle('Edit', 'Edit property #' + id);
+        this.setTitle('Edit', 'Edit property #' + id + ' by ' + wp_adminFullName);
+        bpFormDesc.after('<input type="hidden" name="user_id" value="' + wp_adminId + '"/>');
         bpFormDesc.after('<input type="hidden" name="id" value="' + id + '"/>');
         this.open();
     };

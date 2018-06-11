@@ -24,6 +24,10 @@ class AdminCallbacks extends BaseController{
     public function adminProperties(){
         return require_once("$this->plugin_path/templates/bizpol-properties.php");
     }
+
+    public function adminIncExp(){
+        return require_once("$this->plugin_path/templates/bizpol-incexp.php");
+    }
     
     public function propertiesOptionGroup($input){
         return $input;
@@ -46,6 +50,11 @@ class AdminCallbacks extends BaseController{
     public function propertiesGallery()
     {
         echo "<h1>Gallery Manager</h1>";
+    }
+
+    public function propertiesIncExp()
+    {
+        echo "<h1>Income/Expense Manager</h1>";
     }
 
     // public function propertiesLandRegister(){
