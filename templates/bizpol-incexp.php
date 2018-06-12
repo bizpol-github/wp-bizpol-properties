@@ -10,63 +10,60 @@
     	<div id="tab-1" class="tab-pane active">
 
 <script>
-	// var wp_adminId = '<?php echo wp_get_current_user()->id ?>';
-	// var wp_adminFullName = '<?php echo wp_get_current_user()->display_name ?>';
-	// var dialog = '';
-	// var bpDialogName = 'bpDialog';
-	// var bpDataTableName = 'propertiesTable';
-	// var bpDataTable = new bpDataTable();
-	// var bpDialog = new bpDialog();
+	var wp_adminId = '<?php echo wp_get_current_user()->id ?>';
+	var wp_adminFullName = '<?php echo wp_get_current_user()->display_name ?>';
+	var dialog = '';
+	var bpDialogName = 'bpDialog';
+	var bpDataTableName = 'incExpTable';
+	var bpDataTable = new bpDataTable();
+	var bpDialog = new bpDialog();
+	var bpRpcAction = 'bp_get_all_incexp_rpc';
+	var bpUpdateAction = 'bp_update_incexp_rpc';
+	var bpDialogActionTitle = 'event';
 
-	// $(document).ready(function ($) {
-	// 	//bpDialog.autoOpen(true);
-	// 	bpDialog.load();	
+	$(document).ready(function ($) {
+		//bpDialog.autoOpen(true);
+		bpDialog.load();	
 		
-	// });
+	});
 
-	// bpDataTable.load();
+	bpDataTable.load();
 
-	// function feedDataTable(data){
-	// 	var rowCounter = 0;
+	function feedDataTable(data){
+		var rowCounter = 0;
 
-	//     for ( var r in data.entries ) {
-	//       var record = data.entries[r];
+	    for ( var r in data.entries ) {
+	      var record = data.entries[r];
 
-	//       var newRow = $('#' + bpDataTableName)[0].tBodies[0].insertRow(rowCounter);
-	//       newRow.id = 'row' + parseInt(record.id);
+	      var newRow = $('#' + bpDataTableName)[0].tBodies[0].insertRow(rowCounter);
+	      newRow.id = 'row' + parseInt(record.id);
 
-	//       // $('#row' + parseInt(record[0])).mouseover( function() { rowOverEffect(this); }).mouseout( function() { rowOutEffect(this); }).click(function(event) {
-	//       //   if (event.target.type !== 'checkbox') {
-	//       //     $(':checkbox', this).trigger('click');
-	//       //   }
-	//       // }).css('cursor', 'pointer');
+	      // $('#row' + parseInt(record[0])).mouseover( function() { rowOverEffect(this); }).mouseout( function() { rowOutEffect(this); }).click(function(event) {
+	      //   if (event.target.type !== 'checkbox') {
+	      //     $(':checkbox', this).trigger('click');
+	      //   }
+	      // }).css('cursor', 'pointer');
 	      
 
-	//       var newCell = newRow.insertCell(0);
-	//       newCell.innerHTML = record.id;
+	      var newCell = newRow.insertCell(0);
+	      newCell.innerHTML = record.id;
 
-	//       newCell = newRow.insertCell(1);
-	//       newCell.innerHTML = record.property_name;
+	      newCell = newRow.insertCell(1);
+	      newCell.innerHTML = record.incexp_name;
 
-	//       newCell = newRow.insertCell(2);
-	//       newCell.innerHTML = record.prefix;
+	      newCell = newRow.insertCell(2);
+	      newCell.innerHTML = record.incexp_type;
 
-	//       newCell = newRow.insertCell(3);
-	//       newCell.innerHTML = record.address;
+	      newCell = newRow.insertCell(3);
+	      newCell.innerHTML = record.incexp_value;
 
-	//       newCell = newRow.insertCell(4);
-	//       newCell.innerHTML = record.construction_year.substr(0,10);
+	      newCell = newRow.insertCell(4);
+	      newCell.innerHTML = '<button name="edit" class="edit small" onclick="bpDialog.edit(' + record.id + ')">Edit</button><button name="delete" class="delete small" onclick="bpDialog.delete(' + record.id + ')">Delete</button>';
+	      newCell.align = 'center';
 
-	//       newCell = newRow.insertCell(5);
-	//       newCell.innerHTML = record.land_register;
-
-	//       newCell = newRow.insertCell(6);
-	//       newCell.innerHTML = '<button name="edit" class="edit small" onclick="bpDialog.edit(' + record.id + ')">Edit</button><button name="delete" class="delete small" onclick="bpDialog.delete(' + record.id + ')">Delete</button>';
-	//       newCell.align = 'center';
-
-	//       rowCounter++;
-	// 	}
-	// }
+	      rowCounter++;
+		}
+	}
 
 </script>
 
@@ -74,7 +71,7 @@
 
 
 					<?php
-					echo '<table id="incExpTable" class="incexp-table"><thead><tr><th name="id">ID</th><th name="property_name">Name</th><th name="prefix">Prefix</th><th name="address">Address</th><th class="text-center" name="construction_year">Builded</th><th class="text-center" name="land_register">Land Register</th><th class="text-center" name="actions">Actions</th></tr>';
+					echo '<table id="incExpTable" class="bp-data-table"><thead><tr><th name="id">ID</th><th name="incexp_name">Name</th><th name="incexp_type">Type</th><th name="incexp_value">Amount</th><th class="text-center" name="actions">Actions</th></tr>';
 					
 					echo '</thead><tbody></tbody></table>';
 				?>
@@ -90,7 +87,7 @@
 			</script>
 
 		</div>
-		<div id="bpDialog2">
+		<div id="bpDialog">
 				<form id="bp-dialog-form" method="post" action="" autocomplete="on">
 		        <?php
 		            settings_fields('bp_incexp_settings');

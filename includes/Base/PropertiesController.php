@@ -36,11 +36,13 @@ class PropertiesController extends BaseController
 
 		$this->settings->addSubPages( $this->subpages )->register();
 
-        add_action('wp_ajax_bp_dialog_rpc', array($this, 'bp_dialog_rpc'));
+        add_action('wp_ajax_bp_update_properties_rpc', array($this, 'bp_update_properties_rpc'));
+        add_action('wp_ajax_bp_update_incexp_rpc', array($this, 'bp_update_incexp_rpc'));
         add_action('wp_ajax_bp_get_all_properties_rpc', array($this, 'bp_get_all_properties_rpc'));
+        add_action('wp_ajax_bp_get_all_incexp_rpc', array($this, 'bp_get_all_incexp_rpc'));
 	}
 
-    public function bp_dialog_rpc(){
+    public function bp_update_properties_rpc(){
         global $wpdb;
         $data['status'] = false;
 
@@ -86,6 +88,49 @@ class PropertiesController extends BaseController
         wp_die();
     }
 
+    public function bp_update_incexp_rpc(){
+        global $wpdb;
+        $data['status'] = false;
+
+        $data = array();
+
+        $form = $_POST['data'];
+        
+        $form_values = array(
+            'incexp_name' => sanitize_text_field($form['incexp_name']),
+            'incexp_type' => sanitize_text_field($form['incexp_type']),
+            'incexp_value' => sanitize_text_field(str_replace(',', '.', $form['incexp_value']))
+        );
+
+        if ($form['action'] == 'update') {
+            
+
+            if (isset($form['id']) && is_numeric($form['id'])) {
+                $wpdb->update('wp_bp_incexp', $form_values, array( 'id' =>  $form['id']));
+                $data['status'] = true;
+            } else {
+                $wpdb->insert('wp_bp_incexp', $form_values);
+                $data['status'] = true;
+                // return 0 on error
+                $new_id = $wpdb->insert_id;
+
+                if($new_id == 0){
+                    $data['status'] = false;
+                }
+            }
+
+        } elseif ($form['action'] == 'delete') {
+            $wpdb->delete('wp_bp_incexp', array( 'id' =>  $form['id']));
+            $data['status'] = true;
+        }
+
+        
+
+        $data['form_values']  = $form_values;
+        wp_send_json($data);
+        wp_die();
+    }
+
     public function bp_get_all_properties_rpc(){
         global $wpdb;
 
@@ -102,6 +147,29 @@ class PropertiesController extends BaseController
                 'address' => $property->address,
                 'construction_year' => $property->construction_year,
                 'land_register' => $property->land_register
+                );
+        }
+
+        $data['error'] = false;
+        $data['total'] = count($properties);
+        wp_send_json($data);
+        wp_die();
+    }
+
+    public function bp_get_all_incexp_rpc(){
+        global $wpdb;
+
+        $incsexps = $wpdb->get_results("SELECT * FROM `wp_bp_incexp`");
+
+        $data = array();
+
+        foreach ($incsexps as $incexp) {
+
+            $data['entries'][] = array(
+                'id' => $incexp->id,
+                'incexp_name' => $incexp->incexp_name,
+                'incexp_type' => $incexp->incexp_type,
+                'incexp_value' => $incexp->incexp_value
                 );
         }
 
@@ -229,6 +297,7 @@ class PropertiesController extends BaseController
                     'patern' => '^[A-Z]{2}\d{1}[A-Z]{1}[\/]\d{8}[\/]\d{1}$'
                 ],
             ],
+            // income/expense
             [
                 'id' => 'incexp_name',
                 'title' => 'Name',
@@ -245,7 +314,7 @@ class PropertiesController extends BaseController
             [
                 'id' => 'incexp_type',
                 'title' => 'Type',
-                'callback' => [$this->properties_callbacks, 'textField'],
+                'callback' => [$this->properties_callbacks, 'incExpFieldType'],
                 'page' => 'bizpol_incexp',
                 'section' => 'incexp_index',
                 'args' => [
@@ -257,26 +326,19 @@ class PropertiesController extends BaseController
             ],
             [
                 'id' => 'incexp_value',
-                'title' => 'Ammount',
+                'title' => 'Amount',
                 'callback' => [$this->properties_callbacks, 'textField'],
                 'page' => 'bizpol_incexp',
                 'section' => 'incexp_index',
                 'args' => [
                     'option_name' => 'bizpol_incexp',
                     'label_for' => 'incexp_value',
-                    'placeholder' => 'Ammonut',
-                    'patern' => '[0-9]{0, 16}[,][0-9]{0, 4}$'
+                    'placeholder' => 'Amount',
+                    'patern' => '^([\d]{1,16}[\,|\.][\d]{2,4})$|^([\d]{1,16})$'
                 ]
             ]];
 
         $this->settings->setFields($args);
-    }
-
-    public function setIncExpFields(){
-            $args = [
-                ];
-
-        $this->settings->setIncExpFields($args);
     }
 
 }

@@ -1,9 +1,9 @@
-/*global bpDataTable */
+/*global bpDataTable, bpRpcAction */
 /*global $ */
 /*global ajaxurl */
-/*global dataTableName */
+/*global bpDataTableName */
 /*global feedDataTable */
-function bpDataTable() {
+var bpDataTable = function () {
     'use strict';
     var initialized = false;
 
@@ -27,7 +27,7 @@ function bpDataTable() {
             $.post(
                 ajaxurl,
                 {
-                    action: 'bp_get_all_properties_rpc'
+                    action: bpRpcAction
                 },
                 function (response) {
                     if (response.error === false) {
@@ -39,4 +39,4 @@ function bpDataTable() {
             );
         }
     };
-}
+};

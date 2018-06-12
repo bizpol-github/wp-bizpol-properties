@@ -65,6 +65,22 @@ class PropertiesCallbacks{
 </select><input ' . (isset($args['type']) ? 'type="' . $args['type'] . '" ' : 'type="text"') . ' style="width: 89%; margin: 0;" id="' . $name . '" name="' . $name . '" value="' . $value . '" placeholder="' . $args['placeholder'] . '" min="' . $args['min'] . '" ' . (isset($args['max']) ? 'max="' . $args['max'] . '" ' : '') . 'required><div class="status dashicons" status="null"></div></span>';
     }
 
+    public function incExpFieldType($args){
+        $name = $args['label_for'];
+        $option_name = $args['option_name'];
+        $value = '';
+        
+        if(isset($_POST['edit_post'])){
+            $input = get_option($option_name);
+            $value = $input[$_POST['edit_post']][$name];
+        }
+
+        echo '<select name="incexp_type" class="regular-text">
+  <option value="income">Income</option>
+  <option value="expense">Expense</option>
+</select>';
+    }
+
     public function dateField($args){
         $name = $args['label_for'];
         $option_name = $args['option_name'];

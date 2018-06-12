@@ -1,5 +1,5 @@
 /*global bpDialog, bpDialogName, bpDataTable, bpDataTableName, bpFormTitle,
-  bpFormDesc, wp_adminFullName, wp_adminId */
+  bpFormDesc, bpUpdateAction, bpDialogActionTitle, wp_adminFullName, wp_adminId */
 /*global $, ajaxurl, alert */
 function bpDialog() {
     'use strict';
@@ -54,9 +54,9 @@ function bpDialog() {
                 $.post(
                     ajaxurl,
                     {
-                        action: 'bp_dialog_rpc',
+                        action: bpUpdateAction,
                         type: 'post',
-                        data: serializeObject(bpNewForm, 'bp_dialog_rpc'),
+                        data: serializeObject(bpNewForm, bpUpdateAction),
                         dataType: 'json',
                         contentType: 'application/json'
                     },
@@ -106,9 +106,12 @@ function bpDialog() {
                 patern = '([A-Za-z0-9-])\\w{' + (min - 1) + ',}';
             }
 
+            console.log(patern);
+
             var regex = new RegExp(patern);
 
             var test = regex.test(text);
+            console.log(test);
 
             if (test) {
                 status.removeClass('dashicons-no').addClass('dashicons-yes').css('color', 'green');
@@ -189,7 +192,7 @@ function bpDialog() {
     };
     this.edit = function (id) {
         this.updateForm(id, false);
-        this.setTitle('Edit', 'Edit property #' + id + ' by ' + wp_adminFullName);
+        this.setTitle('Edit', 'Edit ' + bpDialogActionTitle + ' #' + id + ' by ' + wp_adminFullName);
         bpFormDesc.after('<input type="hidden" name="user_id" value="' + wp_adminId + '"/>');
         bpFormDesc.after('<input type="hidden" name="id" value="' + id + '"/>');
         this.open();
@@ -199,7 +202,7 @@ function bpDialog() {
         bpNewForm.find("input[name='action']").val('delete');
         //bpNewForm.find('table.form-table').remove();
 
-        this.setTitle('Delete', 'Delete property #' + id);
+        this.setTitle('Delete', 'Delete ' + bpDialogActionTitle + ' #' + id);
         bpFormDesc.after('<input type="hidden" name="id" value="' + id + '"/>');
         this.open();
     };
