@@ -55,9 +55,6 @@
 	      newCell.innerHTML = record.incexp_type;
 
 	      newCell = newRow.insertCell(3);
-	      newCell.innerHTML = record.incexp_value;
-
-	      newCell = newRow.insertCell(4);
 	      newCell.innerHTML = '<button name="edit" class="edit small" onclick="bpDialog.edit(' + record.id + ')">Edit</button><button name="delete" class="delete small" onclick="bpDialog.delete(' + record.id + ')">Delete</button>';
 	      newCell.align = 'center';
 
@@ -71,7 +68,7 @@
 
 
 					<?php
-					echo '<table id="incExpTable" class="bp-data-table"><thead><tr><th name="id">ID</th><th name="incexp_name">Name</th><th name="incexp_type">Type</th><th name="incexp_value">Amount</th><th class="text-center" name="actions">Actions</th></tr>';
+					echo '<table id="incExpTable" class="bp-data-table"><thead><tr><th name="id">ID</th><th name="incexp_name">Name</th><th name="incexp_type">Type</th><th class="text-center" name="actions">Actions</th></tr>';
 					
 					echo '</thead><tbody></tbody></table>';
 				?>

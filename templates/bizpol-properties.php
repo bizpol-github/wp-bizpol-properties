@@ -5,12 +5,12 @@
 	?>
 
 	<ul class="nav-tabs">
-        <li class="active"><a href="#tab-1">Properties</a></li>
-        <li class="active"><a href="#tab-2">Property Incomes</a></li>
+        <li id="gerneral-tab" class="active"><a href="#general">Properties</a></li>
+        <li id="single-tab"><a href="#single">Property Incomes</a></li>
     </ul>
 
     <div class="tab-content">
-    	<div id="tab-1" class="tab-pane active">
+    	<div id="general" class="tab-pane active">
 
 <script>
 	var wp_adminId = '<?php echo wp_get_current_user()->id ?>';
@@ -52,7 +52,7 @@
 	      newCell.innerHTML = record.id;
 
 	      newCell = newRow.insertCell(1);
-	      newCell.innerHTML = '<a href="admin.php?page=bizpol_property#tab-2&id=' + record.id + '">' + record.property_name + '</a>';
+	      newCell.innerHTML = '<a href="admin.php?page=bizpol_property&tab=single&id=' + record.id + '">' + record.property_name + '</a>';
 
 	      newCell = newRow.insertCell(2);
 	      newCell.innerHTML = record.prefix;
@@ -86,6 +86,19 @@
 				?>
 			<script>
 			$(document).ready(function(){
+				var GetURLParameter = function(url, sParam)
+				{
+					var sPageURL = url;
+					var sURLVariables = sPageURL.split('&');
+					for (var i = 0; i < sURLVariables.length; i++) 
+					{
+					    var sParameterName = sURLVariables[i].split('=');
+					    if (sParameterName[0] == sParam) 
+					    {
+					        return sParameterName[1];
+					    }
+					}
+				};
 				
 
 				$("#bpAddButton").click(function(){
@@ -97,26 +110,26 @@
 					//alert('Link works!');
 					document.querySelector("ul.nav-tabs li.active").classList.remove("active");
         			document.querySelector(".tab-pane.active").classList.remove("active");
-        
-        
-        			var clickedTab = event.currentTarget;
-        			console.log(clickedTab);
+
         			var anchor = event.target;
-        			var activePaneID = anchor.getAttribute("href");
+        			var href = anchor.getAttribute("href");
+        			var tab = GetURLParameter(href, 'tab');
+        			var prop_id = GetURLParameter(href, 'id');
+        			console.log(tab);
         
-        			console.log(activePaneID);
-        
-        			clickedTab.classList.add("active");
-        			document.querySelector(activePaneID).classList.add("active");
+        			$('#' + tab).addClass("active");
+        			$('#' + tab + '-tab').addClass("active");
 				});
 
 			});
 			</script>
 
 		</div>
-		<div id="tab-2" class="tab-pane">
+		<div id="single" class="tab-pane">
+			<h2>Nieruchomość</h2>
+			<h4></h4>
 			<?php
-					echo '<table id="incExpToPropTable" class="bp-data-table"><thead><tr><th name="id">ID</th><th name="incexp_name">Name</th><th name="incexp_type">Type</th><th name="incexp_value">Amount</th><th class="text-center" name="actions">Actions</th></tr>';
+					echo '<table id="incExpToPropTable" class="bp-data-table"><thead><tr><th name="propety_id">Property ID</th><th name="incexp_id">Income/Expense ID</th><th name="quantity">Quantity</th><th name="incexp_value">Amount</th><th class="text-center" name="actions">Actions</th></tr>';
 					
 					echo '</thead><tbody></tbody></table>';
 				?>
