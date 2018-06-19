@@ -131,6 +131,50 @@ class PropertiesController extends BaseController
         wp_die();
     }
 
+    public function bp_update_incexp2prop_rpc(){
+        global $wpdb;
+        $data['status'] = false;
+
+        $data = array();
+
+        $form = $_POST['data'];
+        
+        $form_values = array(
+            'property_id' => sanitize_text_field($form['property_id']),
+            'incexp_id' => sanitize_text_field($form['incexp_id']),
+            'quantity' => sanitize_text_field($form['quantity']),
+            'incexp_value' => sanitize_text_field($form['incexp_value'])
+        );
+
+        if ($form['action'] == 'update') {
+            
+
+            if (isset($form['id']) && is_numeric($form['id'])) {
+                $wpdb->update('wp_bp_incexp2prop', $form_values, array( 'id' =>  $form['id']));
+                $data['status'] = true;
+            } else {
+                $wpdb->insert('wp_bp_incexp2prop', $form_values);
+                $data['status'] = true;
+                // return 0 on error
+                $new_id = $wpdb->insert_id;
+
+                if($new_id == 0){
+                    $data['status'] = false;
+                }
+            }
+
+        } elseif ($form['action'] == 'delete') {
+            $wpdb->delete('wp_bp_incexp2prop', array( 'id' =>  $form['id']));
+            $data['status'] = true;
+        }
+
+        
+
+        $data['form_values']  = $form_values;
+        wp_send_json($data);
+        wp_die();
+    }
+
     public function bp_get_all_properties_rpc(){
         global $wpdb;
 
@@ -170,6 +214,29 @@ class PropertiesController extends BaseController
                 'incexp_name' => $incexp->incexp_name,
                 'incexp_type' => $incexp->incexp_type,
                 'incexp_value' => $incexp->incexp_value
+                );
+        }
+
+        $data['error'] = false;
+        $data['total'] = count($properties);
+        wp_send_json($data);
+        wp_die();
+    }
+
+    public function bp_get_incexp2prop_rpc(){
+        global $wpdb;
+
+        $incexp2props = $wpdb->get_results("SELECT * FROM `wp_bp_properties`");
+
+        $data = array();
+
+        foreach ($incexp2props as $incexp2prop) {
+
+            $data['entries'][] = array(
+                'property_id' => $property->id,
+                'incexp_id' => $property->property_name,
+                'quantity' => $property->prefix,
+                'incexp_value' => $property->address
                 );
         }
 

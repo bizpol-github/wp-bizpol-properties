@@ -115,10 +115,14 @@
         			var href = anchor.getAttribute("href");
         			var tab = GetURLParameter(href, 'tab');
         			var prop_id = GetURLParameter(href, 'id');
-        			console.log(tab);
+        			var bpPropertiesDataTableName = 'propertiesTable';
+        			var bpIncExpDataTableName = 'incExpTable';
+					//var bpDataTable = new bpDataTable();
+        			console.log(bpIncExpDataTableName);
         
         			$('#' + tab).addClass("active");
         			$('#' + tab + '-tab').addClass("active");
+        			$('.prop_inc_title').append('<h2>Nieruchomość #' + prop_id + '</h2>');
 				});
 
 			});
@@ -126,7 +130,7 @@
 
 		</div>
 		<div id="single" class="tab-pane">
-			<h2>Nieruchomość</h2>
+			<div class="prop_inc_title"></div>
 			<h4></h4>
 			<?php
 					echo '<table id="incExpToPropTable" class="bp-data-table"><thead><tr><th name="propety_id">Property ID</th><th name="incexp_id">Income/Expense ID</th><th name="quantity">Quantity</th><th name="incexp_value">Amount</th><th class="text-center" name="actions">Actions</th></tr>';
