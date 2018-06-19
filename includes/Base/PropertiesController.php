@@ -246,6 +246,10 @@ class PropertiesController extends BaseController
         wp_die();
     }
 
+    // public function get_incexp(){
+        
+    // }
+
 	public function setSubpages()
 	{
         global $wpdb;
@@ -281,6 +285,11 @@ class PropertiesController extends BaseController
                 'option_group' => 'bp_incexp_settings',
                 'option_name' => 'bizpol_incexp',
                 'callback' => [$this->properties_callbacks, 'cptSanitize']
+            ],
+            [
+                'option_group' => 'bp_inc2prop_settings',
+                'option_name' => 'bizpol_inc2prop',
+                'callback' => [$this->properties_callbacks, 'cptSanitize']
             ]
         );
         
@@ -300,6 +309,12 @@ class PropertiesController extends BaseController
                 'title' => 'Income/Expense',
                 'callback' => [$this->properties_callbacks, 'propertiesSectionManager'],
                 'page' => 'bizpol_incexp'
+            ],
+            [   
+                'id' => 'inc2prop_index',
+                'title' => 'Income to property',
+                'callback' => [$this->properties_callbacks, 'propertiesSectionManager'],
+                'page' => 'bizpol_inc2prop'
             ]
         ]; 
         
@@ -309,6 +324,7 @@ class PropertiesController extends BaseController
 
     public function setFields(){
             $args = [
+                //Properties
                 [
                 'id' => 'property_name',
                 'title' => 'Property Name',
@@ -399,6 +415,46 @@ class PropertiesController extends BaseController
                 'section' => 'incexp_index',
                 'args' => [
                     'option_name' => 'bizpol_incexp',
+                    'label_for' => 'incexp_value',
+                    'placeholder' => 'Amount',
+                    'patern' => '^([\d]{1,16}[\,|\.][\d]{2,4})$|^([\d]{1,16})$'
+                ]
+            ],
+            //income to propery
+            [
+                'id' => 'incexp_type',
+                'title' => 'Type',
+                'callback' => [$this->properties_callbacks, 'incExpField'],
+                'page' => 'bizpol_inc2prop',
+                'section' => 'inc2prop_index',
+                'args' => [
+                    'option_name' => 'bizpol_inc2prop',
+                    'label_for' => 'incexp_type',
+                    'placeholder' => 'Type',
+                    'min' => '2',
+                    'data' => 
+                ]
+            ],
+            [
+                'id' => 'quantity',
+                'title' => 'Quantity',
+                'callback' => [$this->properties_callbacks, 'textField'],
+                'page' => 'bizpol_inc2prop',
+                'section' => 'inc2prop_index',
+                'args' => [
+                    'option_name' => 'bizpol_inc2prop',
+                    'label_for' => 'incexp_value',
+                    'placeholder' => 'Amount'
+                ]
+            ],
+            [
+                'id' => 'incexp_value',
+                'title' => 'Amount',
+                'callback' => [$this->properties_callbacks, 'textField'],
+                'page' => 'bizpol_inc2prop',
+                'section' => 'inc2prop_index',
+                'args' => [
+                    'option_name' => 'bizpol_inc2prop',
                     'label_for' => 'incexp_value',
                     'placeholder' => 'Amount',
                     'patern' => '^([\d]{1,16}[\,|\.][\d]{2,4})$|^([\d]{1,16})$'

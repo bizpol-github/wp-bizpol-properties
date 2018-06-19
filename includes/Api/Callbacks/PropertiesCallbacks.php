@@ -81,6 +81,22 @@ class PropertiesCallbacks{
 </select>';
     }
 
+    public function incExpField($args, $data){
+        $name = $args['label_for'];
+        $option_name = $args['option_name'];
+        $value = '';
+        
+        if(isset($_POST['edit_post'])){
+            $input = get_option($option_name);
+            $value = $input[$_POST['edit_post']][$name];
+        }
+
+        echo '<select name="incexp_type" class="regular-text">
+  <option value="income">Income</option>
+  <option value="expense">Expense</option>
+</select>';
+    }
+
     public function dateField($args){
         $name = $args['label_for'];
         $option_name = $args['option_name'];

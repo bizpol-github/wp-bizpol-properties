@@ -5,7 +5,7 @@
 	?>
 
 	<ul class="nav-tabs">
-        <li id="gerneral-tab" class="active"><a href="#general">Properties</a></li>
+        <li id="general-tab" class="active"><a href="#general">Properties</a></li>
         <li id="single-tab"><a href="#single">Property Incomes</a></li>
     </ul>
 
@@ -16,10 +16,10 @@
 	var wp_adminId = '<?php echo wp_get_current_user()->id ?>';
 	var wp_adminFullName = '<?php echo wp_get_current_user()->display_name ?>';
 	var dialog = '';
-	var bpDialogName = 'bpDialog';
 	var bpDataTableName = 'propertiesTable';
 	var bpDataTable = new bpDataTable();
 	var bpDialog = new bpDialog();
+	bpDialog.setID('bpDialog');
 	var bpRpcAction = 'bp_get_all_properties_rpc';
 	var bpUpdateAction = 'bp_update_properties_rpc';
 	var bpDialogActionTitle = 'properties';
@@ -128,24 +128,36 @@
 			});
 			</script>
 
-		</div>
-		<div id="single" class="tab-pane">
-			<div class="prop_inc_title"></div>
-			<h4></h4>
-			<?php
-					echo '<table id="incExpToPropTable" class="bp-data-table"><thead><tr><th name="propety_id">Property ID</th><th name="incexp_id">Income/Expense ID</th><th name="quantity">Quantity</th><th name="incexp_value">Amount</th><th class="text-center" name="actions">Actions</th></tr>';
-					
-					echo '</thead><tbody></tbody></table>';
-				?>
-		</div>
-		<div id="bpDialog">
+			<div id="bpDialog">
 				<form id="bp-dialog-form" method="post" action="" autocomplete="on">
 		        <?php
 		            settings_fields('bp_property_settings');
 		            do_settings_sections('bizpol_property');
 		            submit_button();
 		        ?>
-    		</form>
+    			</form>
+			</div>
+
+		</div>
+		<div id="single" class="tab-pane">
+			<div class="prop_inc_title"></div>
+			<h4></h4>
+			<button id="bpAddButton" class="btn btn-primary" style="margin-bottom: 10px;">Add new</button>
+			<?php
+					echo '<table id="incExpToPropTable" class="bp-data-table"><thead><tr><th name="incexp_name">Income/Expense Name</th><th name="quantity">Quantity</th><th name="incexp_value">Amount</th><th class="text-center" name="actions">Actions</th></tr>';
+					
+					echo '</thead><tbody></tbody></table>';
+				?>
+			<button id="bpBackButton" class="btn btn-primary" style="margin-top: 10px;">Go Back</button>
+			<div id="bpDialogInc2Prop">
+				<form id="bp-dialog" method="post" action="" autocomplete="on">
+		        <?php
+		            settings_fields('bp_inc2prop_settings');
+		            do_settings_sections('bizpol_inc2prop');
+		            submit_button();
+		        ?>
+	    		</form>
+			</div>
 		</div>
     </div>
 	

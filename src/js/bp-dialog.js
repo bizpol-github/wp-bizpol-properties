@@ -8,6 +8,7 @@ function bpDialog() {
     var bpNewForm = '';
     var bpFormTitle = '';
     var bpFormDesc = '';
+    var bpDialogName = 'bpDialog';
 
 
     var resetForm = function () {
@@ -31,6 +32,12 @@ function bpDialog() {
         });
         return o;
     };
+
+    this.setID = function (id) {
+        this.bpDialogName = id;
+        console.log(id);
+    };
+
     this.initialized = false;
     this.newDialog = '';
     this.initialize = function () {
