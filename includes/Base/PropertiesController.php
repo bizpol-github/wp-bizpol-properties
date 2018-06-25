@@ -223,32 +223,36 @@ class PropertiesController extends BaseController
         wp_die();
     }
 
-    public function bp_get_incexp2prop_rpc(){
+    // public function bp_get_incexp2prop_rpc(){
+    //     global $wpdb;
+
+    //     $incexp2props = $wpdb->get_results("SELECT * FROM `wp_bp_properties`");
+
+    //     $data = array();
+
+    //     foreach ($incexp2props as $incexp2prop) {
+
+    //         $data['entries'][] = array(
+    //             'property_id' => $property->id,
+    //             'incexp_id' => $property->property_name,
+    //             'quantity' => $property->prefix,
+    //             'incexp_value' => $property->address
+    //             );
+    //     }
+
+    //     $data['error'] = false;
+    //     $data['total'] = count($properties);
+    //     wp_send_json($data);
+    //     wp_die();
+    // }
+
+    public function get_incexp(){
         global $wpdb;
 
-        $incexp2props = $wpdb->get_results("SELECT * FROM `wp_bp_properties`");
+        $incexp = $wpdb->get_results("SELECT * FROM `wp_bp_incexp`");
+        return $incexp;
 
-        $data = array();
-
-        foreach ($incexp2props as $incexp2prop) {
-
-            $data['entries'][] = array(
-                'property_id' => $property->id,
-                'incexp_id' => $property->property_name,
-                'quantity' => $property->prefix,
-                'incexp_value' => $property->address
-                );
-        }
-
-        $data['error'] = false;
-        $data['total'] = count($properties);
-        wp_send_json($data);
-        wp_die();
     }
-
-    // public function get_incexp(){
-        
-    // }
 
 	public function setSubpages()
 	{
@@ -432,7 +436,7 @@ class PropertiesController extends BaseController
                     'label_for' => 'incexp_type',
                     'placeholder' => 'Type',
                     'min' => '2',
-                    'data' => 
+                    'data' => $this->get_incexp()
                 ]
             ],
             [
@@ -444,7 +448,7 @@ class PropertiesController extends BaseController
                 'args' => [
                     'option_name' => 'bizpol_inc2prop',
                     'label_for' => 'incexp_value',
-                    'placeholder' => 'Amount'
+                    'placeholder' => 'Quantity'
                 ]
             ],
             [

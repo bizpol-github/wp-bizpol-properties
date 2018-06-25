@@ -1,4 +1,4 @@
-/*global bpDialog, bpDialogName, bpDataTable, bpDataTableName, bpFormTitle,
+/*global bpDialog, bpDataTable, bpDataTableName, bpFormTitle,
   bpFormDesc, bpUpdateAction, bpDialogActionTitle, wp_adminFullName, wp_adminId */
 /*global $, ajaxurl, alert */
 function bpDialog() {
@@ -8,13 +8,14 @@ function bpDialog() {
     var bpNewForm = '';
     var bpFormTitle = '';
     var bpFormDesc = '';
-    var bpDialogName = 'bpDialog';
+    var bpDialogName = '';
+    var _this = this;
 
 
     var resetForm = function () {
         bpNewForm.remove();
-        bpDialog.copyForm();
-        //$('#' + bpDialogName).append(bpForm);
+        _this.copyForm();
+        //$('#' + this.bpDialogName).append(bpForm);
     };
     var serializeObject = function (form, wp_action_name) {
         var o = {};
@@ -35,14 +36,12 @@ function bpDialog() {
 
     this.setID = function (id) {
         this.bpDialogName = id;
-        console.log(id);
     };
 
     this.initialized = false;
     this.newDialog = '';
     this.initialize = function () {
-        var _this = this;
-        this.newDialog = $('#' + bpDialogName).dialog({
+        this.newDialog = $('#' + this.bpDialogName).dialog({
             autoOpen: autoOpen,
             width: "50%",
             modal: true,
@@ -54,7 +53,7 @@ function bpDialog() {
         });
         this.copyForm();
 
-        $('#' + bpDialogName).on('submit', '#bp-dialog-form-copy', function (evnt) {
+        $('#' + this.bpDialogName).on('submit', '#bp-dialog-form-copy', function (evnt) {
             evnt.preventDefault();
             var status = _this.checkStatus();
             if (status) {
@@ -70,7 +69,7 @@ function bpDialog() {
                     function (response) {
                         if (response.status === true) {
                             bpDataTable.load();
-                            bpDialog.close();
+                            _this.close();
                             resetForm();
                         }
                         console.log(response);
@@ -86,7 +85,7 @@ function bpDialog() {
         bpForm = $('#bp-dialog-form');
         bpForm.clone()
             .attr('id', 'bp-dialog-form-copy')
-            .appendTo('#' + bpDialogName);
+            .appendTo('#' + this.bpDialogName);
         bpNewForm = $('#bp-dialog-form-copy');
         bpNewForm.show();
         bpForm.hide();
@@ -154,9 +153,9 @@ function bpDialog() {
         });
 
     };
-    this.updateForm = function (id, disabled) {
-        var header = $("#" + bpDataTableName + ' thead tr th');
-        var row = $("#" + bpDataTableName + ' tr#row' + id + ' td');
+    this.updateForm = function (id, tableId, disabled) {
+        var header = $("#" + tableId + ' thead tr th');
+        var row = $("#" + tableId + ' tr#row' + id + ' td');
         var cols = {};
         var i = 0;
         var idx = 0;
@@ -197,15 +196,15 @@ function bpDialog() {
             });
         });
     };
-    this.edit = function (id) {
-        this.updateForm(id, false);
+    this.edit = function (id, tableName) {
+        this.updateForm(id, tableName, false);
         this.setTitle('Edit', 'Edit ' + bpDialogActionTitle + ' #' + id + ' by ' + wp_adminFullName);
         bpFormDesc.after('<input type="hidden" name="user_id" value="' + wp_adminId + '"/>');
         bpFormDesc.after('<input type="hidden" name="id" value="' + id + '"/>');
         this.open();
     };
-    this.delete = function (id) {
-        this.updateForm(id, true);
+    this.delete = function (id, tableName) {
+        this.updateForm(id, tableName, true);
         bpNewForm.find("input[name='action']").val('delete');
         //bpNewForm.find('table.form-table').remove();
 
