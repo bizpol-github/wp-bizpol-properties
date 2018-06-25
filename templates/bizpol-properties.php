@@ -41,7 +41,7 @@
 				<h4></h4>
 			</div>
 			
-			<button id="bpAddIncExpButton" class="btn btn-primary" style="margin-bottom: 10px;">Add new</button>
+			<button id="bpAddIncExp2PropButton" class="btn btn-primary" style="margin-bottom: 10px;" prop_id="">Add new</button>
 			<?php
 					echo '<table id="incExpToPropTable" class="bp-data-table"><thead><tr><th name="incexp_name">Income/Expense Name</th><th name="quantity">Quantity</th><th name="incexp_value">Amount</th><th class="text-center" name="actions">Actions</th></tr>';
 					
@@ -71,19 +71,20 @@
 	//getting properties table
 	var bpDtProp = new bpDt('propertiesTable', 'bp_get_all_properties_rpc');
 
-	var bpDialogAddProp = new bpDialog();
-	bpDialogAddProp.setID('bpDialog');
+	var bpDAddProp = new bpDialog();
+	bpDAddProp.setID('bpDialog');
+	bpDAddProp.setAction('bp_update_properties_rpc');
+	bpDAddProp.setActionTitle('properties'); 
 
-	var bpDialogAddIncExp = new bpDialog();
-	bpDialogAddIncExp.setID('bpDialogInc2Prop');
-
-	var bpUpdateAction = 'bp_update_properties_rpc';
-	var bpDialogActionTitle = 'properties';
+	var bpDAddIncExp = new bpDialog();
+	bpDAddIncExp.setID('bpDialogInc2Prop');
+	bpDAddIncExp.setAction('bp_update_incexp2prop_rpc');
+	bpDAddIncExp.setActionTitle('income/expense');
 
 	$(document).ready(function ($) {
 		//bpDialog.autoOpen(true);
-		bpDialogAddProp.load();
-		bpDialogAddIncExp.load();
+		bpDAddProp.load();
+		bpDAddIncExp.load();
 	});
 
 	bpDtProp.load();
@@ -102,7 +103,7 @@
 	      bpDtProp.addCell(3, newRow, record.address);
 	      bpDtProp.addCell(4, newRow, record.construction_year.substr(0,10));
 	      bpDtProp.addCell(5, newRow, record.land_register);
-	      bpDtProp.addCell(6, newRow, '<button name="edit" class="edit small" onclick="bpDialogAddProp.edit(' + record.id + ', ' + tableId + ')">Edit</button><button name="delete" class="delete small" onclick="bpDialogAddProp.delete(' + record.id + ')">Delete</button>', 'center');
+	      bpDtProp.addCell(6, newRow, '<button name="edit" class="edit small" onclick="bpDAddProp.edit(' + record.id + ', \'' + tableId + '\')">Edit</button><button name="delete" class="delete small" onclick="bpDAddProp.delete(' + record.id + ')">Delete</button>', 'center');
 
 	      rowCounter++;
 		}
@@ -130,11 +131,14 @@
 				
 
 				$("#bpAddButton").click(function(){
-					bpDialogAddProp.open();
+					bpDAddProp.open();
 				});
 
-				$("#bpAddIncExpButton").click(function(){
-					bpDialogAddIncExp.open();
+				$("#bpAddIncExp2PropButton").click(function(){
+					var value = this.getAttribute('prop_id');
+					bpDAddIncExp.addHiddenField('properties_id', value);
+					bpDAddIncExp.open();
+					console.log(value);
 				});
 
 				$(".bp-data-table").on('click', 'a', function(event){
@@ -151,6 +155,7 @@
         			var bpIncExpDataTableName = 'incExpTable';
         			// get row data
         			var row = bpDtProp.getRowData(row_id);
+        			var addButton = $("#bpAddIncExp2PropButton");
         
         			$('#' + tab).addClass("active");
         			$('#' + tab + '-tab').addClass("active");
@@ -170,6 +175,7 @@
 			        });
         			$('.prop_inc_title h2').text('Record #' + rId);
         			$('.prop_inc_title h4').text(displayText);
+        			addButton.attr('prop_id', rId);
 				});
 
 			});

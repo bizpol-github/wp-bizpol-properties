@@ -426,14 +426,14 @@ class PropertiesController extends BaseController
             ],
             //income to propery
             [
-                'id' => 'incexp_type',
+                'id' => 'incexp_id',
                 'title' => 'Type',
                 'callback' => [$this->properties_callbacks, 'incExpField'],
                 'page' => 'bizpol_inc2prop',
                 'section' => 'inc2prop_index',
                 'args' => [
                     'option_name' => 'bizpol_inc2prop',
-                    'label_for' => 'incexp_type',
+                    'label_for' => 'incexp_id',
                     'placeholder' => 'Type',
                     'min' => '2',
                     'data' => $this->get_incexp()

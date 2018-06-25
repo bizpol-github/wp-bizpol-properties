@@ -1,5 +1,5 @@
 /*global bpDialog, bpDataTable, bpDataTableName, bpFormTitle,
-  bpFormDesc, bpUpdateAction, bpDialogActionTitle, wp_adminFullName, wp_adminId */
+  bpFormDesc, bpUpdateAction, wp_adminFullName, wp_adminId */
 /*global $, ajaxurl, alert */
 function bpDialog() {
     'use strict';
@@ -9,14 +9,12 @@ function bpDialog() {
     var bpFormTitle = '';
     var bpFormDesc = '';
     var bpDialogName = '';
+    var bpUpdateAction = '';
+    var bpActionTitle = '';
+    
     var _this = this;
 
-
-    var resetForm = function () {
-        bpNewForm.remove();
-        _this.copyForm();
-        //$('#' + this.bpDialogName).append(bpForm);
-    };
+    
     var serializeObject = function (form, wp_action_name) {
         var o = {};
         o.wp_action = wp_action_name;
@@ -34,8 +32,18 @@ function bpDialog() {
         return o;
     };
 
+    this.bpHiddenFields = {};
+
     this.setID = function (id) {
         this.bpDialogName = id;
+    };
+
+    this.setAction = function (action) {
+        this.bpUpdateAction = action;
+    };
+
+    this.setActionTitle = function (title) {
+        this.bpActionTitle = title;
     };
 
     this.initialized = false;
@@ -49,7 +57,7 @@ function bpDialog() {
             hide: "blind"
         });
         this.newDialog.on("dialogclose", function () {
-            resetForm();
+            _this.resetBpForm();
         });
         this.copyForm();
 
@@ -60,9 +68,9 @@ function bpDialog() {
                 $.post(
                     ajaxurl,
                     {
-                        action: bpUpdateAction,
+                        action: _this.bpUpdateAction,
                         type: 'post',
-                        data: serializeObject(bpNewForm, bpUpdateAction),
+                        data: serializeObject(_this.bpNewForm, _this.bpUpdateAction),
                         dataType: 'json',
                         contentType: 'application/json'
                     },
@@ -70,7 +78,7 @@ function bpDialog() {
                         if (response.status === true) {
                             bpDataTable.load();
                             _this.close();
-                            resetForm();
+                            _this.resetBpForm();
                         }
                         console.log(response);
                     }
@@ -81,24 +89,35 @@ function bpDialog() {
         });
         this.initialized = true;
     };
+
+    this.resetBpForm = function () {
+        this.bpNewForm.remove();
+        this.copyForm();
+        //$('#' + this.bpDialogName).append(bpForm);
+    };
+
     this.copyForm = function () {
-        bpForm = $('#bp-dialog-form');
-        bpForm.clone()
+        this.bpForm = this.newDialog.find('form');
+        this.bpForm.clone()
             .attr('id', 'bp-dialog-form-copy')
             .appendTo('#' + this.bpDialogName);
-        bpNewForm = $('#bp-dialog-form-copy');
-        bpNewForm.show();
-        bpForm.hide();
+        this.bpNewForm = this.newDialog.find('#bp-dialog-form-copy');
+        this.bpNewForm.show();
+        this.bpForm.hide();
+        // set title and description of form
+        this.bpFormTitle = this.bpNewForm.find('h2');
+        this.bpFormDesc = this.bpNewForm.find('h4');
     };
+
     this.autoOpen = function (arg) {
-        autoOpen = arg;
+        this.autoOpen = arg;
     };
+
     this.setTitle = function (t, d) {
-        bpFormTitle = bpNewForm.find('h2');
-        bpFormDesc = bpNewForm.find('h4');
-        bpFormTitle.html(t);
-        bpFormDesc.html(d);
+        this.bpFormTitle.html(t);
+        this.bpFormDesc.html(d);
     };
+
     var setStatus = function (input) {
         var min = input.attr('min');
         var type = input.attr('type');
@@ -128,31 +147,40 @@ function bpDialog() {
             }
         }
     };
+
     this.checkStatus = function () {
-        if (bpNewForm.find(".status[status='false']").length > 0) {
+        if (_this.bpNewForm.find(".status[status='false']").length > 0) {
             return false;
         } else {
             return true;
         }
     };
+
     this.load = function () {
         if (this.initialized === false) {
             this.initialize();
         }
     };
+
     this.open = function () {
+        this.bpFormDesc.text(this.bpActionTitle);
+        this.setHiddenFields();
         this.newDialog.dialog('open');
         this.inputKeyUp();
+        console.log(this.bpHiddenFields);
     };
+
     this.close = function () {
         this.newDialog.dialog('close');
     };
+
     this.inputKeyUp = function () {
         $("#bpDialog").on('keyup paste select', 'input', function () {
             setStatus($(this));
         });
 
     };
+
     this.updateForm = function (id, tableId, disabled) {
         var header = $("#" + tableId + ' thead tr th');
         var row = $("#" + tableId + ' tr#row' + id + ' td');
@@ -166,7 +194,7 @@ function bpDialog() {
             cols[idx] = val;
         }
 
-        var inputs = bpNewForm.find('input');
+        var inputs = this.bpNewForm.find('input');
         $.each(cols, function (key, value) {
             $.each(inputs, function (ignore, content) {
                 if (content.getAttribute('name') === key) {
@@ -179,7 +207,7 @@ function bpDialog() {
                 }
             });
         });
-        var selects = bpNewForm.find('select');
+        var selects = this.bpNewForm.find('select');
         $.each(cols, function (key, value) {
             $.each(selects, function (ignore, select) {
                 if (select.getAttribute('name') === key) {
@@ -195,21 +223,35 @@ function bpDialog() {
                 }
             });
         });
+
+
     };
+
     this.edit = function (id, tableName) {
         this.updateForm(id, tableName, false);
-        this.setTitle('Edit', 'Edit ' + bpDialogActionTitle + ' #' + id + ' by ' + wp_adminFullName);
-        bpFormDesc.after('<input type="hidden" name="user_id" value="' + wp_adminId + '"/>');
-        bpFormDesc.after('<input type="hidden" name="id" value="' + id + '"/>');
+        this.addHiddenField('user_id', wp_adminId);
+        this.addHiddenField('id', id);
         this.open();
+        this.setTitle('Edit', 'Edit ' + this.bpActionTitle + ' #' + id + ' by ' + wp_adminFullName);
     };
+
     this.delete = function (id, tableName) {
         this.updateForm(id, tableName, true);
-        bpNewForm.find("input[name='action']").val('delete');
+        this.bpNewForm.find("input[name='action']").val('delete');
         //bpNewForm.find('table.form-table').remove();
 
-        this.setTitle('Delete', 'Delete ' + bpDialogActionTitle + ' #' + id);
-        bpFormDesc.after('<input type="hidden" name="id" value="' + id + '"/>');
+        this.setTitle('Delete', 'Delete ' + this.bpActionTitle + ' #' + id);
+        this.bpFormDesc.after('<input type="hidden" name="id" value="' + id + '"/>');
         this.open();
+    };
+
+    this.addHiddenField = function (name, value) {
+        this.bpHiddenFields[name] = value;
+    };
+
+    this.setHiddenFields = function () {
+        $.each(this.bpHiddenFields, function (name, value) {
+            _this.bpFormDesc.after('<input type="hidden" name="' + name + '" value="' + value + '"/>');
+        });
     };
 }
