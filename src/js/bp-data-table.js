@@ -39,7 +39,7 @@ function bpDt(id, action) {
             }
             idx++;
         });
-        console.log(cols);
+        //console.log(cols);
         //console.log("#" + this.bpDataTableId)
         return cols;
     };
@@ -87,7 +87,7 @@ function bpDt(id, action) {
             function (response) {
                 if (response.error === false) {
                     $('#' + _this.bpDataTableId + ' tbody tr').remove();
-                    feedDataTable(response, _this.getId());
+                    Object.call(_this.getId + 'Feed', response, _this.getId());
                 }
                 //console.log(response);
             }

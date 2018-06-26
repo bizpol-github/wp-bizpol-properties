@@ -1,7 +1,7 @@
 /*global bpDialog, bpDataTable, bpDataTableName, bpFormTitle,
   bpFormDesc, bpUpdateAction, wp_adminFullName, wp_adminId */
 /*global $, ajaxurl, alert */
-function bpDialog() {
+function bpDialog(table) {
     'use strict';
     var autoOpen = false;
     var bpForm = '';
@@ -13,8 +13,6 @@ function bpDialog() {
     var bpActionTitle = '';
     
     var _this = this;
-
-    
     var serializeObject = function (form, wp_action_name) {
         var o = {};
         o.wp_action = wp_action_name;
@@ -31,6 +29,8 @@ function bpDialog() {
         });
         return o;
     };
+
+    this.bpDialogTable = table;
 
     this.bpHiddenFields = {};
 
@@ -76,11 +76,11 @@ function bpDialog() {
                     },
                     function (response) {
                         if (response.status === true) {
-                            bpDataTable.load();
+                            _this.bpDialogTable.load();
                             _this.close();
                             _this.resetBpForm();
                         }
-                        console.log(response);
+                        //console.log(response);
                     }
                 );
             } else {
@@ -91,6 +91,7 @@ function bpDialog() {
     };
 
     this.resetBpForm = function () {
+        this.bpHiddenFields = {};
         this.bpNewForm.remove();
         this.copyForm();
         //$('#' + this.bpDialogName).append(bpForm);
@@ -131,12 +132,12 @@ function bpDialog() {
                 patern = '([A-Za-z0-9-])\\w{' + (min - 1) + ',}';
             }
 
-            console.log(patern);
+            //console.log(patern);
 
             var regex = new RegExp(patern);
 
             var test = regex.test(text);
-            console.log(test);
+            //console.log(test);
 
             if (test) {
                 status.removeClass('dashicons-no').addClass('dashicons-yes').css('color', 'green');
@@ -167,38 +168,29 @@ function bpDialog() {
         this.setHiddenFields();
         this.newDialog.dialog('open');
         this.inputKeyUp();
-        console.log(this.bpHiddenFields);
+        //console.log(this.bpHiddenFields);
     };
 
     this.close = function () {
+        this.resetBpForm();
         this.newDialog.dialog('close');
     };
 
     this.inputKeyUp = function () {
-        $("#bpDialog").on('keyup paste select', 'input', function () {
+        this.bpNewForm.on('keyup paste select', 'input', function () {
             setStatus($(this));
         });
 
     };
 
-    this.updateForm = function (id, tableId, disabled) {
-        var header = $("#" + tableId + ' thead tr th');
-        var row = $("#" + tableId + ' tr#row' + id + ' td');
-        var cols = {};
-        var i = 0;
-        var idx = 0;
-        var val = '';
-        for (i = 0; i < header.length - 1; i += 1) {
-            idx = header[i].getAttribute('name');
-            val = row[i].textContent;
-            cols[idx] = val;
-        }
+    this.updateForm = function (row, disabled) {
+        var cols = row;
 
         var inputs = this.bpNewForm.find('input');
         $.each(cols, function (key, value) {
             $.each(inputs, function (ignore, content) {
                 if (content.getAttribute('name') === key) {
-                    content.value = value;
+                    content.value = value.replace(/<[^>]*>/g, '');
                     if (disabled === true) {
                         content.disabled = true;
                     } else {
@@ -211,7 +203,7 @@ function bpDialog() {
         $.each(cols, function (key, value) {
             $.each(selects, function (ignore, select) {
                 if (select.getAttribute('name') === key) {
-                    console.dir(select.children);
+                    //console.dir(select.children);
                     $.each(select.children, function (ignore, option) {
                         if (option.value === value) {
                             option.selected = true;
@@ -227,22 +219,24 @@ function bpDialog() {
 
     };
 
-    this.edit = function (id, tableName) {
-        this.updateForm(id, tableName, false);
+    this.edit = function (id) {
+        var row = this.bpDialogTable.getRowData(id);
+
+        this.updateForm(row, false);
         this.addHiddenField('user_id', wp_adminId);
-        this.addHiddenField('id', id);
+        this.addHiddenField('id', row.id);
         this.open();
-        this.setTitle('Edit', 'Edit ' + this.bpActionTitle + ' #' + id + ' by ' + wp_adminFullName);
+        this.setTitle('Edit', 'Edit ' + this.bpActionTitle + ' #' + row.id + ' by ' + wp_adminFullName);
     };
 
-    this.delete = function (id, tableName) {
-        this.updateForm(id, tableName, true);
+    this.delete = function (id) {
+        var row = this.bpDialogTable.getRowData(id);
+        this.updateForm(row, true);
+        this.addHiddenField('user_id', wp_adminId);
+        this.addHiddenField('id', row.id);
         this.bpNewForm.find("input[name='action']").val('delete');
-        //bpNewForm.find('table.form-table').remove();
-
-        this.setTitle('Delete', 'Delete ' + this.bpActionTitle + ' #' + id);
-        this.bpFormDesc.after('<input type="hidden" name="id" value="' + id + '"/>');
         this.open();
+        this.setTitle('Delete', 'Delete ' + this.bpActionTitle + ' #' + row.id);
     };
 
     this.addHiddenField = function (name, value) {

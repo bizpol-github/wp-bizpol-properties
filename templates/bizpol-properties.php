@@ -69,14 +69,15 @@
 	//var bpDataTableName = 'propertiesTable';
 
 	//getting properties table
-	var bpDtProp = new bpDt('propertiesTable', 'bp_get_all_properties_rpc');
+	var bpDialogDT = new bpDt('propertiesTable', 'bp_get_all_properties_rpc');
 
-	var bpDAddProp = new bpDialog();
+	var bpDAddProp = new bpDialog(bpDialogDT);
 	bpDAddProp.setID('bpDialog');
 	bpDAddProp.setAction('bp_update_properties_rpc');
 	bpDAddProp.setActionTitle('properties'); 
 
-	var bpDAddIncExp = new bpDialog();
+	var bpDialogInc2PropDT = new bpDt('incExpToPropTable', 'bp_get_all_incexp2prop_rpc');
+	var bpDAddIncExp = new bpDialog(bpDialogInc2PropDT);
 	bpDAddIncExp.setID('bpDialogInc2Prop');
 	bpDAddIncExp.setAction('bp_update_incexp2prop_rpc');
 	bpDAddIncExp.setActionTitle('income/expense');
@@ -87,29 +88,28 @@
 		bpDAddIncExp.load();
 	});
 
-	bpDtProp.load();
+	bpDialogDT.load();
+	bpDialogInc2PropDT.load();
 
-	function feedDataTable(data, tableId){
+	function bpDialogDTFeed(data, tableId){
 		var rowCounter = 0;
 
 	    for ( var r in data.entries ) {
 	      var record = data.entries[r];
 
-	      var newRow = bpDtProp.addRow(rowCounter);	      
+	      var newRow = bpDialogDT.addRow(rowCounter);    
 
-	      bpDtProp.addCell(0, newRow, record.id);
-	      bpDtProp.addCell(1, newRow, '<a href="admin.php?page=bizpol_property&tab=single&rowId=' + rowCounter + '">' + record.property_name + '</a>');
-	      bpDtProp.addCell(2, newRow, record.prefix);
-	      bpDtProp.addCell(3, newRow, record.address);
-	      bpDtProp.addCell(4, newRow, record.construction_year.substr(0,10));
-	      bpDtProp.addCell(5, newRow, record.land_register);
-	      bpDtProp.addCell(6, newRow, '<button name="edit" class="edit small" onclick="bpDAddProp.edit(' + record.id + ', \'' + tableId + '\')">Edit</button><button name="delete" class="delete small" onclick="bpDAddProp.delete(' + record.id + ')">Delete</button>', 'center');
+	      bpDialogDT.addCell(0, newRow, record.id);
+	      bpDialogDT.addCell(1, newRow, '<a href="admin.php?page=bizpol_property&tab=single&rowId=' + rowCounter + '">' + record.property_name + '</a>');
+	      bpDialogDT.addCell(2, newRow, record.prefix);
+	      bpDialogDT.addCell(3, newRow, record.address);
+	      bpDialogDT.addCell(4, newRow, record.construction_year.substr(0,10));
+	      bpDialogDT.addCell(5, newRow, record.land_register);
+	      bpDialogDT.addCell(6, newRow, '<button name="edit" class="edit small" onclick="bpDAddProp.edit(' + rowCounter + ')">Edit</button><button name="delete" class="delete small" onclick="bpDAddProp.delete(' + rowCounter + ')">Delete</button>', 'center');
 
 	      rowCounter++;
 		}
 	}
-
-	console.log(bpDtProp.getTable());
 
 </script>
 
@@ -136,9 +136,9 @@
 
 				$("#bpAddIncExp2PropButton").click(function(){
 					var value = this.getAttribute('prop_id');
-					bpDAddIncExp.addHiddenField('properties_id', value);
+					bpDAddIncExp.addHiddenField('property_id', value);
 					bpDAddIncExp.open();
-					console.log(value);
+					//console.log(value);
 				});
 
 				$(".bp-data-table").on('click', 'a', function(event){
@@ -154,7 +154,7 @@
         			var bpPropertiesDataTableName = 'propertiesTable';
         			var bpIncExpDataTableName = 'incExpTable';
         			// get row data
-        			var row = bpDtProp.getRowData(row_id);
+        			var row = bpDialogDT.getRowData(row_id);
         			var addButton = $("#bpAddIncExp2PropButton");
         
         			$('#' + tab).addClass("active");

@@ -38,8 +38,12 @@ class PropertiesController extends BaseController
 
         add_action('wp_ajax_bp_update_properties_rpc', array($this, 'bp_update_properties_rpc'));
         add_action('wp_ajax_bp_update_incexp_rpc', array($this, 'bp_update_incexp_rpc'));
+        add_action('wp_ajax_bp_update_incexp2prop_rpc', array($this, 'bp_update_incexp2prop_rpc'));
+
         add_action('wp_ajax_bp_get_all_properties_rpc', array($this, 'bp_get_all_properties_rpc'));
         add_action('wp_ajax_bp_get_all_incexp_rpc', array($this, 'bp_get_all_incexp_rpc'));
+        add_action('wp_ajax_bp_get_all_incexp2prop_rpc', array($this, 'bp_get_all_incexp2prop_rpc'));
+        
 	}
 
     public function bp_update_properties_rpc(){
@@ -143,7 +147,7 @@ class PropertiesController extends BaseController
             'property_id' => sanitize_text_field($form['property_id']),
             'incexp_id' => sanitize_text_field($form['incexp_id']),
             'quantity' => sanitize_text_field($form['quantity']),
-            'incexp_value' => sanitize_text_field($form['incexp_value'])
+            'value' => sanitize_text_field($form['value'])
         );
 
         if ($form['action'] == 'update') {
@@ -223,28 +227,29 @@ class PropertiesController extends BaseController
         wp_die();
     }
 
-    // public function bp_get_incexp2prop_rpc(){
-    //     global $wpdb;
+    public function bp_get_all_incexp2prop_rpc(){
+        global $wpdb;
 
-    //     $incexp2props = $wpdb->get_results("SELECT * FROM `wp_bp_properties`");
+        $incexp2props = $wpdb->get_results("SELECT * FROM `wp_bp_incexp2prop`");
 
-    //     $data = array();
+        $data = array();
 
-    //     foreach ($incexp2props as $incexp2prop) {
+        foreach ($incexp2props as $incexp2prop) {
 
-    //         $data['entries'][] = array(
-    //             'property_id' => $property->id,
-    //             'incexp_id' => $property->property_name,
-    //             'quantity' => $property->prefix,
-    //             'incexp_value' => $property->address
-    //             );
-    //     }
+            $data['entries'][] = array(
+                'id' => $incexp2prop->id,
+                'property_id' => $incexp2prop->property_id,
+                'incexp_id' => $incexp2prop->incexp_id,
+                'quantity' => $incexp2prop->quantity,
+                'value' => $incexp2prop->value
+                );
+        }
 
-    //     $data['error'] = false;
-    //     $data['total'] = count($properties);
-    //     wp_send_json($data);
-    //     wp_die();
-    // }
+        $data['error'] = false;
+        $data['total'] = count($incexp2props);
+        wp_send_json($data);
+        wp_die();
+    }
 
     public function get_incexp(){
         global $wpdb;
@@ -411,19 +416,6 @@ class PropertiesController extends BaseController
                     'min' => '2'
                 ]
             ],
-            [
-                'id' => 'incexp_value',
-                'title' => 'Amount',
-                'callback' => [$this->properties_callbacks, 'textField'],
-                'page' => 'bizpol_incexp',
-                'section' => 'incexp_index',
-                'args' => [
-                    'option_name' => 'bizpol_incexp',
-                    'label_for' => 'incexp_value',
-                    'placeholder' => 'Amount',
-                    'patern' => '^([\d]{1,16}[\,|\.][\d]{2,4})$|^([\d]{1,16})$'
-                ]
-            ],
             //income to propery
             [
                 'id' => 'incexp_id',
@@ -434,8 +426,6 @@ class PropertiesController extends BaseController
                 'args' => [
                     'option_name' => 'bizpol_inc2prop',
                     'label_for' => 'incexp_id',
-                    'placeholder' => 'Type',
-                    'min' => '2',
                     'data' => $this->get_incexp()
                 ]
             ],
@@ -447,21 +437,22 @@ class PropertiesController extends BaseController
                 'section' => 'inc2prop_index',
                 'args' => [
                     'option_name' => 'bizpol_inc2prop',
-                    'label_for' => 'incexp_value',
-                    'placeholder' => 'Quantity'
+                    'label_for' => 'quantity',
+                    'placeholder' => 'Quantity',
+                    'patern' => '^([\d]{1,16}[\,|\.][\d]{1,4})$|^([\d]{1,16})$'
                 ]
             ],
             [
-                'id' => 'incexp_value',
+                'id' => 'value',
                 'title' => 'Amount',
                 'callback' => [$this->properties_callbacks, 'textField'],
                 'page' => 'bizpol_inc2prop',
                 'section' => 'inc2prop_index',
                 'args' => [
                     'option_name' => 'bizpol_inc2prop',
-                    'label_for' => 'incexp_value',
+                    'label_for' => 'value',
                     'placeholder' => 'Amount',
-                    'patern' => '^([\d]{1,16}[\,|\.][\d]{2,4})$|^([\d]{1,16})$'
+                    'patern' => '^([\d]{1,15}[\,|\.][\d]{1,4})$|^([\d]{1,16})$'
                 ]
             ]];
 
