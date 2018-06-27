@@ -1,17 +1,21 @@
 /*global bpDialog, bpDataTable, bpDataTableName, bpFormTitle,
   bpFormDesc, bpUpdateAction, wp_adminFullName, wp_adminId */
 /*global $, ajaxurl, alert */
-function bpDialog(table) {
+function bpDialog(table, title) {
     'use strict';
+    //table object with rpc data
+    this.bpDialogTable = table;
+
+    this.bpDialogName = table.getName();
+    this.bpDialogId = this.bpDialogName + 'Dialog';
+    this.bpUpdateAction = 'bp_rpc_update_' + this.bpDialogName;
+    this.bpActionTitle = title;
+
     var autoOpen = false;
     var bpForm = '';
     var bpNewForm = '';
     var bpFormTitle = '';
     var bpFormDesc = '';
-    var bpDialogName = '';
-    var bpUpdateAction = '';
-    var bpActionTitle = '';
-    
     var _this = this;
     var serializeObject = function (form, wp_action_name) {
         var o = {};
@@ -30,26 +34,13 @@ function bpDialog(table) {
         return o;
     };
 
-    this.bpDialogTable = table;
-
     this.bpHiddenFields = {};
-
-    this.setID = function (id) {
-        this.bpDialogName = id;
-    };
-
-    this.setAction = function (action) {
-        this.bpUpdateAction = action;
-    };
-
-    this.setActionTitle = function (title) {
-        this.bpActionTitle = title;
-    };
 
     this.initialized = false;
     this.newDialog = '';
     this.initialize = function () {
-        this.newDialog = $('#' + this.bpDialogName).dialog({
+        console.log(this.bpDialogId);
+        this.newDialog = $('#' + this.bpDialogId).dialog({
             autoOpen: autoOpen,
             width: "50%",
             modal: true,
@@ -61,7 +52,7 @@ function bpDialog(table) {
         });
         this.copyForm();
 
-        $('#' + this.bpDialogName).on('submit', '#bp-dialog-form-copy', function (evnt) {
+        $('#' + this.bpDialogId).on('submit', '#bp-dialog-form-copy', function (evnt) {
             evnt.preventDefault();
             var status = _this.checkStatus();
             if (status) {
@@ -94,14 +85,14 @@ function bpDialog(table) {
         this.bpHiddenFields = {};
         this.bpNewForm.remove();
         this.copyForm();
-        //$('#' + this.bpDialogName).append(bpForm);
+        //$('#' + this.bpDialogId).append(bpForm);
     };
 
     this.copyForm = function () {
         this.bpForm = this.newDialog.find('form');
         this.bpForm.clone()
             .attr('id', 'bp-dialog-form-copy')
-            .appendTo('#' + this.bpDialogName);
+            .appendTo('#' + this.bpDialogId);
         this.bpNewForm = this.newDialog.find('#bp-dialog-form-copy');
         this.bpNewForm.show();
         this.bpForm.hide();

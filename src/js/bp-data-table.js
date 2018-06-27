@@ -7,20 +7,48 @@
 
 //class constructor Data Table
 //
-function bpDt(id, action) {
+function bpDt(id) {
     'use strict';
     this.initialized = false;
-    this.bpDataTableId = id;
-    this.bpRpcAction = action;
-    this.bpDataTable = $('#' + id);
+    this.bpDataTableName = id;
+    this.bpDataTableId = id + 'Table';
+    this.bpRpcAction = 'bp_rpc_get_all_' + id;
+    this.bpDataTable = $('#' + this.bpDataTableId);
+    this.bpParams = [];
 
     this.initialize = function () {
 
         this.initialized = true;
     };
 
+    this.setParam = function (name, value) {
+        this.bpParams.push({[name]: value});
+    };
+
+    this.clearParam = function () {
+        this.bpParams = [];
+    };
+
+    this.getParams = function () {
+        if (this.bpParams.length > 0) {
+            var params = {};
+            $.each(this.bpParams, function (ignore, param) {
+                $.each(param, function (key, value) {
+                    params[key] = value;
+                });
+            });
+            return '?' + $.param(params);
+        } else {
+            return '';
+        }
+    };
+
     this.getId = function () {
         return this.bpDataTableId;
+    };
+
+    this.getName = function () {
+        return this.bpDataTableName;
     };
 
     this.getTable = function () {
@@ -80,16 +108,18 @@ function bpDt(id, action) {
 
   //$('#batchTotalPages').html(batchIconProgress + batchIconProgressText);
         $.post(
-            ajaxurl,
+            ajaxurl + _this.getParams(),
             {
                 action: _this.bpRpcAction
             },
             function (response) {
                 if (response.error === false) {
                     $('#' + _this.bpDataTableId + ' tbody tr').remove();
-                    Object.call(_this.getId + 'Feed', response, _this.getId());
+                    //console.log(_this.getId());
+                    window[_this.getId() + 'Feed'](response);
                 }
-                //console.log(response);
+                console.log(ajaxurl + _this.getParams());
+                console.log(_this.bpParams);
             }
         );
     };

@@ -36,17 +36,17 @@ class PropertiesController extends BaseController
 
 		$this->settings->addSubPages( $this->subpages )->register();
 
-        add_action('wp_ajax_bp_update_properties_rpc', array($this, 'bp_update_properties_rpc'));
-        add_action('wp_ajax_bp_update_incexp_rpc', array($this, 'bp_update_incexp_rpc'));
-        add_action('wp_ajax_bp_update_incexp2prop_rpc', array($this, 'bp_update_incexp2prop_rpc'));
+        add_action('wp_ajax_bp_rpc_update_properties', array($this, 'bp_rpc_update_properties'));
+        add_action('wp_ajax_bp_rpc_update_incexp', array($this, 'bp_rpc_update_incexp'));
+        add_action('wp_ajax_bp_rpc_update_incexp2prop', array($this, 'bp_rpc_update_incexp2prop'));
 
-        add_action('wp_ajax_bp_get_all_properties_rpc', array($this, 'bp_get_all_properties_rpc'));
+        add_action('wp_ajax_bp_rpc_get_all_properties', array($this, 'bp_rpc_get_all_properties'));
         add_action('wp_ajax_bp_get_all_incexp_rpc', array($this, 'bp_get_all_incexp_rpc'));
-        add_action('wp_ajax_bp_get_all_incexp2prop_rpc', array($this, 'bp_get_all_incexp2prop_rpc'));
+        add_action('wp_ajax_bp_rpc_get_all_incexp2prop', array($this, 'bp_rpc_get_all_incexp2prop'));
         
 	}
 
-    public function bp_update_properties_rpc(){
+    public function bp_rpc_update_properties(){
         global $wpdb;
         $data['status'] = false;
 
@@ -92,7 +92,7 @@ class PropertiesController extends BaseController
         wp_die();
     }
 
-    public function bp_update_incexp_rpc(){
+    public function bp_rpc_update_incexp(){
         global $wpdb;
         $data['status'] = false;
 
@@ -102,8 +102,7 @@ class PropertiesController extends BaseController
         
         $form_values = array(
             'incexp_name' => sanitize_text_field($form['incexp_name']),
-            'incexp_type' => sanitize_text_field($form['incexp_type']),
-            'incexp_value' => sanitize_text_field(str_replace(',', '.', $form['incexp_value']))
+            'incexp_type' => sanitize_text_field($form['incexp_type'])
         );
 
         if ($form['action'] == 'update') {
@@ -135,7 +134,7 @@ class PropertiesController extends BaseController
         wp_die();
     }
 
-    public function bp_update_incexp2prop_rpc(){
+    public function bp_rpc_update_incexp2prop(){
         global $wpdb;
         $data['status'] = false;
 
@@ -143,8 +142,7 @@ class PropertiesController extends BaseController
 
         $form = $_POST['data'];
         
-        $form_values = array(
-            'property_id' => sanitize_text_field($form['property_id']),
+        $form_values = array(            
             'incexp_id' => sanitize_text_field($form['incexp_id']),
             'quantity' => sanitize_text_field($form['quantity']),
             'value' => sanitize_text_field($form['value'])
@@ -157,6 +155,7 @@ class PropertiesController extends BaseController
                 $wpdb->update('wp_bp_incexp2prop', $form_values, array( 'id' =>  $form['id']));
                 $data['status'] = true;
             } else {
+                $form_values['property_id'] = sanitize_text_field($form['property_id']);
                 $wpdb->insert('wp_bp_incexp2prop', $form_values);
                 $data['status'] = true;
                 // return 0 on error
@@ -179,7 +178,7 @@ class PropertiesController extends BaseController
         wp_die();
     }
 
-    public function bp_get_all_properties_rpc(){
+    public function bp_rpc_get_all_properties(){
         global $wpdb;
 
         $properties = $wpdb->get_results("SELECT * FROM `wp_bp_properties`");
@@ -216,21 +215,22 @@ class PropertiesController extends BaseController
             $data['entries'][] = array(
                 'id' => $incexp->id,
                 'incexp_name' => $incexp->incexp_name,
-                'incexp_type' => $incexp->incexp_type,
-                'incexp_value' => $incexp->incexp_value
+                'incexp_type' => $incexp->incexp_type
                 );
         }
 
         $data['error'] = false;
-        $data['total'] = count($properties);
+        $data['total'] = count($incsexps);
         wp_send_json($data);
         wp_die();
     }
 
-    public function bp_get_all_incexp2prop_rpc(){
+    public function bp_rpc_get_all_incexp2prop(){
         global $wpdb;
 
-        $incexp2props = $wpdb->get_results("SELECT * FROM `wp_bp_incexp2prop`");
+        $property_id = $_GET['property_id'];
+
+        $incexp2props = $wpdb->get_results("SELECT i2p.*, i.incexp_name, i.incexp_type FROM `wp_bp_incexp2prop` i2p, `wp_bp_incexp` i WHERE i2p.property_id = " . $property_id . " AND i2p.incexp_id = i.id");
 
         $data = array();
 
@@ -240,6 +240,8 @@ class PropertiesController extends BaseController
                 'id' => $incexp2prop->id,
                 'property_id' => $incexp2prop->property_id,
                 'incexp_id' => $incexp2prop->incexp_id,
+                'incexp_name' => $incexp2prop->incexp_name,
+                'incexp_type' => $incexp2prop->incexp_type,
                 'quantity' => $incexp2prop->quantity,
                 'value' => $incexp2prop->value
                 );
