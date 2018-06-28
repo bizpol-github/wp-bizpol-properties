@@ -41,7 +41,7 @@ class PropertiesController extends BaseController
         add_action('wp_ajax_bp_rpc_update_incexp2prop', array($this, 'bp_rpc_update_incexp2prop'));
 
         add_action('wp_ajax_bp_rpc_get_all_properties', array($this, 'bp_rpc_get_all_properties'));
-        add_action('wp_ajax_bp_get_all_incexp_rpc', array($this, 'bp_get_all_incexp_rpc'));
+        add_action('wp_ajax_bp_rpc_get_all_incexp', array($this, 'bp_rpc_get_all_incexp'));
         add_action('wp_ajax_bp_rpc_get_all_incexp2prop', array($this, 'bp_rpc_get_all_incexp2prop'));
         
 	}
@@ -203,7 +203,7 @@ class PropertiesController extends BaseController
         wp_die();
     }
 
-    public function bp_get_all_incexp_rpc(){
+    public function bp_rpc_get_all_incexp(){
         global $wpdb;
 
         $incsexps = $wpdb->get_results("SELECT * FROM `wp_bp_incexp`");
@@ -429,6 +429,34 @@ class PropertiesController extends BaseController
                     'option_name' => 'bizpol_inc2prop',
                     'label_for' => 'incexp_id',
                     'data' => $this->get_incexp()
+                ]
+            ],
+            [
+                'id' => 'incexp_name',
+                'title' => 'Name',
+                'callback' => [$this->properties_callbacks, 'textField'],
+                'page' => 'bizpol_inc2prop',
+                'section' => 'inc2prop_index',
+                'args' => [
+                    'option_name' => 'bizpol_inc2prop',
+                    'label_for' => 'incexp_name',
+                    'placeholder' => 'Name',
+                    'min' => '3',
+                    'class' => 'hidden'
+                ]
+            ],
+            [
+                'id' => 'incexp_type',
+                'title' => 'Type',
+                'callback' => [$this->properties_callbacks, 'incExpFieldType'],
+                'page' => 'bizpol_inc2prop',
+                'section' => 'inc2prop_index',
+                'args' => [
+                    'option_name' => 'bizpol_inc2prop',
+                    'label_for' => 'incexp_type',
+                    'placeholder' => 'Type',
+                    'min' => '2',
+                    'class' => 'hidden'
                 ]
             ],
             [

@@ -13,7 +13,7 @@
 
 
 					<?php
-					echo '<table id="incExpTable" class="bp-data-table"><thead><tr><th name="id">ID</th><th name="incexp_name">Name</th><th name="incexp_type">Type</th><th class="text-center" name="actions">Actions</th></tr>';
+					echo '<table id="incexpTable" class="bp-data-table"><thead><tr><th name="id">ID</th><th name="incexp_name">Name</th><th name="incexp_type">Type</th><th class="text-center" name="actions">Actions</th></tr>';
 					
 					echo '</thead><tbody></tbody></table>';
 				?>
@@ -29,7 +29,7 @@
 			</script>
 
 		</div>
-		<div id="bpDialogIncExp">
+		<div id="incexpDialog">
 				<form id="bp-dialog-form" method="post" action="" autocomplete="on">
 		        <?php
 		            settings_fields('bp_incexp_settings');
@@ -48,11 +48,8 @@
 	var dialog = '';
 	//var bpDialogName = 'bpDialog';
 
-	var bpIncExpDT = new bpDt('incExpTable', 'bp_get_all_incexp_rpc');
-	var bpDtAddIncExp = new bpDialog(bpIncExpDT);
-	bpDtAddIncExp.setID('bpDialogIncExp');
-	bpDtAddIncExp.setAction('bp_update_incexp_rpc');
-	bpDtAddIncExp.setActionTitle('event');
+	var bpIncExpDT = new bpDt('incexp');
+	var bpDtAddIncExp = new bpDialog(bpIncExpDT, 'incexp');
 
 	$(document).ready(function ($) {
 		//bpDialog.autoOpen(true);
@@ -62,7 +59,7 @@
 
 	bpIncExpDT.load();
 
-	function incExpTableFeed(data){
+	function incexpTableFeed(data){
 		var rowCounter = 0;
 
 	    for ( var r in data.entries ) {

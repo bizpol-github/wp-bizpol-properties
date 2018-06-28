@@ -97,6 +97,7 @@ class PropertiesCallbacks{
             echo '<option value="' . $value->id . '">' . $value->incexp_name . ' (' . $value->incexp_type . ')</option>';
         }
         echo '</select>';
+        echo '<input type="button" class="regular-text" status="null" id="incexp_add" value="Add income/expense" />';
     }
 
     public function dateField($args){

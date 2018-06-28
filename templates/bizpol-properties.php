@@ -140,6 +140,11 @@
 					    }
 					}
 				};
+
+				$(".form-table").on('click', '#incexp_add', function(event){
+					$("input[name='incexp_name']").parents('tr').toggle(800);
+					console.log($('#incexp_name'));
+				});
 				
 
 				$("#bpAddButton").click(function(){
@@ -192,6 +197,8 @@
         			$('.prop_inc_title h4').text(displayText);
         			addButton.attr('prop_id', rId);
 				});
+
+				
 
 			});
 			</script>
