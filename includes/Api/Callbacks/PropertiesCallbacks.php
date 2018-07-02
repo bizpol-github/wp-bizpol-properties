@@ -45,7 +45,7 @@ class PropertiesCallbacks{
             $value = $input[$_POST['edit_post']][$name];
         }
 
-        echo '<input ' . (isset($args['type']) ? 'type="' . $args['type'] . '" ' : 'type="text"') . ' class="regular-text" id="' . $name . '" name="' . $name . '" value="' . $value . '" placeholder="' . $args['placeholder'] . '" min="' . $args['min'] . '" ' . (isset($args['max']) ? ' max="' . $args['max'] . '" ' : '') . (isset($args['patern']) ? ' patern="' . $args['patern'] . '" ' : '') . 'required><div class="status dashicons" status="null"></div>';
+        echo '<input ' . (isset($args['type']) ? 'type="' . $args['type'] . '" ' : 'type="text"') . ' class="regular-text" id="' . $name . '" name="' . $name . '" value="' . $value . '" placeholder="' . $args['placeholder'] . '" min="' . $args['min'] . '" ' . (isset($args['max']) ? ' max="' . $args['max'] . '" ' : '') . (isset($args['patern']) ? ' patern="' . $args['patern'] . '" ' : '') . (isset($args['required']) ? 'required' : '') . '><div class="status dashicons" status="null"></div>';
     }
 
     public function textFieldAddress($args){
@@ -97,7 +97,7 @@ class PropertiesCallbacks{
             echo '<option value="' . $value->id . '">' . $value->incexp_name . ' (' . $value->incexp_type . ')</option>';
         }
         echo '</select>';
-        echo '<input type="button" class="regular-text" status="null" id="incexp_add" value="Add income/expense" />';
+        echo '<div id="incexp-add-button" class="button button-primary" style="margin-top: 10px;"><span class="dashicons dashicons-plus" style=" padding-top: 3px;"></span></div>';
     }
 
     public function dateField($args){

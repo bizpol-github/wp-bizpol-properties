@@ -9,7 +9,7 @@
     <div class="tab-content">
     	<div id="tab-1" class="tab-pane active">
 
-<button id="bpAddButton" class="btn btn-primary" style="margin-bottom: 10px;">Add income/expense</button>
+<button id="bpAddButton" class="button button-primary" style="margin-bottom: 10px;">Add income/expense</button>
 
 
 					<?php

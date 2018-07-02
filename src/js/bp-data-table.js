@@ -15,6 +15,7 @@ function bpDt(id) {
     this.bpRpcAction = 'bp_rpc_get_all_' + id;
     this.bpDataTable = $('#' + this.bpDataTableId);
     this.bpParams = [];
+    this.bpRPCData = {};
 
     this.initialize = function () {
 
@@ -73,15 +74,15 @@ function bpDt(id) {
     };
 
     this.getRowData = function (id) {
-        var headName = this.getTableHeaders();
-        var rowData = this.bpDataTable[0].tBodies[0].rows[id].cells;
-        var data = {};
+        // var headName = this.getTableHeaders();
+        // var rowData = this.bpDataTable[0].tBodies[0].rows[id].cells;
+        // var data = {};
 
-        $.each(headName, function (key, value) {
-            data[value] = rowData[key].innerHTML;
-        });
+        // $.each(headName, function (key, value) {
+        //     data[value] = rowData[key].innerHTML;
+        // });
 
-        return data;
+        return this.bpRPCData.entries[id];
     };
 
     this.addRow = function (id) {
@@ -117,9 +118,11 @@ function bpDt(id) {
                     $('#' + _this.bpDataTableId + ' tbody tr').remove();
                     //console.log(_this.getId());
                     window[_this.getId() + 'Feed'](response);
+                    _this.bpRPCData = response;
+
                 }
-                console.log(ajaxurl + _this.getParams());
-                console.log(_this.bpParams);
+               // console.log(ajaxurl + _this.getParams());
+                console.log(_this.bpRPCData);
             }
         );
     };

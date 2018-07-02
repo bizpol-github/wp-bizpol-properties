@@ -6,7 +6,7 @@ form#bp-dialog-form-copy{
 	& table tr.hidden{
 		height: 0;
 	}
-	& table tr{
+	& table tr td input{
 		transition: height 2s;
 	}
 }

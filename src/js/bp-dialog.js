@@ -42,10 +42,16 @@ function bpDialog(table, title) {
         console.log(this.bpDialogId);
         this.newDialog = $('#' + this.bpDialogId).dialog({
             autoOpen: autoOpen,
-            width: "50%",
+            width: '50%',
             modal: true,
-            show: "blind",
-            hide: "blind"
+            show: {
+                effect: 'fadeIn',
+                duration: 500
+            },
+            hide: {
+                effect: 'fadeOut',
+                duration: 500
+            }
         });
         this.newDialog.on("dialogclose", function () {
             _this.resetBpForm();
@@ -55,6 +61,8 @@ function bpDialog(table, title) {
         $('#' + this.bpDialogId).on('submit', '#bp-dialog-form-copy', function (evnt) {
             evnt.preventDefault();
             var status = _this.checkStatus();
+
+            console.log(status);
             if (status) {
                 $.post(
                     ajaxurl,
@@ -71,7 +79,7 @@ function bpDialog(table, title) {
                             _this.close();
                             _this.resetBpForm();
                         }
-                        //console.log(response);
+                        console.log(response);
                     }
                 );
             } else {

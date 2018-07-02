@@ -346,7 +346,8 @@ class PropertiesController extends BaseController
                     'option_name' => 'bizpol_property',
                     'label_for' => 'property_name',
                     'placeholder' => 'Name',
-                    'min' => '3'
+                    'min' => '3',
+                    'required' => 'required'
                 ]
             ],
             [
@@ -359,7 +360,8 @@ class PropertiesController extends BaseController
                     'option_name' => 'bizpol_property',
                     'label_for' => 'address',
                     'placeholder' => 'Address',
-                    'min' => '2'
+                    'min' => '2',
+                    'required' => 'required'
                 ]
             ],
             [
@@ -375,7 +377,8 @@ class PropertiesController extends BaseController
                     'min' => '10',
                     'max' => '10',
                     'type' => 'date',
-                    'patern' => '[0-9]{2}[-][0-9]{2}[-][0-9]{4}$'
+                    'patern' => '[0-9]{2}[-][0-9]{2}[-][0-9]{4}$',
+                    'required' => 'required'
                 ]
             ],
             [
@@ -388,7 +391,8 @@ class PropertiesController extends BaseController
                     'option_name' => 'bizpol_property',
                     'label_for' => 'land_register',
                     'placeholder' => 'Land Register',
-                    'patern' => '^[A-Z]{2}\d{1}[A-Z]{1}[\/]\d{8}[\/]\d{1}$'
+                    'patern' => '^[A-Z]{2}\d{1}[A-Z]{1}[\/]\d{8}[\/]\d{1}$',
+                    'required' => 'required'
                 ],
             ],
             // income/expense
@@ -402,7 +406,8 @@ class PropertiesController extends BaseController
                     'option_name' => 'bizpol_incexp',
                     'label_for' => 'incexp_name',
                     'placeholder' => 'Name',
-                    'min' => '3'
+                    'min' => '3',
+                    'required' => 'required'
                 ]
             ],
             [
@@ -415,7 +420,8 @@ class PropertiesController extends BaseController
                     'option_name' => 'bizpol_incexp',
                     'label_for' => 'incexp_type',
                     'placeholder' => 'Type',
-                    'min' => '2'
+                    'min' => '2',
+                    'required' => 'required'
                 ]
             ],
             //income to propery
@@ -469,7 +475,8 @@ class PropertiesController extends BaseController
                     'option_name' => 'bizpol_inc2prop',
                     'label_for' => 'quantity',
                     'placeholder' => 'Quantity',
-                    'patern' => '^([\d]{1,16}[\,|\.][\d]{1,4})$|^([\d]{1,16})$'
+                    'patern' => '^([\d]{1,16}[\,|\.][\d]{1,4})$|^([\d]{1,16})$',
+                    'required' => 'required'
                 ]
             ],
             [
@@ -482,7 +489,8 @@ class PropertiesController extends BaseController
                     'option_name' => 'bizpol_inc2prop',
                     'label_for' => 'value',
                     'placeholder' => 'Amount',
-                    'patern' => '^([\d]{1,15}[\,|\.][\d]{1,4})$|^([\d]{1,16})$'
+                    'patern' => '^([\d]{1,15}[\,|\.][\d]{1,4})$|^([\d]{1,16})$',
+                    'required' => 'required'
                 ]
             ]];
 

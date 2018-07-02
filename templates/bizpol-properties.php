@@ -14,7 +14,7 @@
 
 
 
-<button id="bpAddButton" class="btn btn-primary" style="margin-bottom: 10px;">Add property</button>
+<button id="bpAddButton" class="button button-primary" style="margin-bottom: 10px;">Add property</button>
 
 
 					<?php
@@ -41,13 +41,13 @@
 				<h4></h4>
 			</div>
 			
-			<button id="bpAddIncExp2PropButton" class="btn btn-primary" style="margin-bottom: 10px;" prop_id="">Add new</button>
+			<button id="bpAddIncExp2PropButton" class="button button-primary" style="margin-bottom: 10px;" prop_id="">Add new</button>
 			<?php
 					echo '<table id="incexp2propTable" class="bp-data-table"><thead><tr><th name="id">ID</th><th name="incexp_id">Income/Expense Name</th><th name="quantity">Quantity</th><th name="value">Amount</th><th class="text-center" name="actions">Actions</th></tr>';
 					
 					echo '</thead><tbody></tbody></table>';
 				?>
-			<button id="bpBackButton" class="btn btn-primary" style="margin-top: 10px;">Go Back</button>
+			<button id="bpBackButton" class="button button-primary" style="margin-top: 10px;">Go Back</button>
 			<div id="incexp2propDialog">
 				<form id="bp-dialog" method="post" action="" autocomplete="on">
 		        <?php
@@ -93,7 +93,7 @@
 
 	      var newRow = bpDialogDT.addRow(rowCounter);    
 
-	      bpDialogDT.addCell(0, newRow, record.id);
+	      bpDialogDT.addCell(0, newRow, (rowCounter + 1) + ' - (#' + record.id + ')');
 	      bpDialogDT.addCell(1, newRow, '<a href="admin.php?page=bizpol_property&tab=single&rowId=' + rowCounter + '">' + record.property_name + '</a>');
 	      bpDialogDT.addCell(2, newRow, record.prefix);
 	      bpDialogDT.addCell(3, newRow, record.address);
@@ -113,7 +113,7 @@
 
 	      var newRow = bpDialogInc2PropDT.addRow(rowCounter);    
 
-	      bpDialogInc2PropDT.addCell(0, newRow, record.id);
+	      bpDialogInc2PropDT.addCell(0, newRow, (rowCounter + 1) + ' - (#' + record.id + ')');
 	      bpDialogInc2PropDT.addCell(1, newRow, record.incexp_name + ' (' + record.incexp_type + ')');
 	      bpDialogInc2PropDT.addCell(2, newRow, record.quantity);
 	      bpDialogInc2PropDT.addCell(3, newRow, record.value);
@@ -141,9 +141,14 @@
 					}
 				};
 
-				$(".form-table").on('click', '#incexp_add', function(event){
-					$("input[name='incexp_name']").parents('tr').toggle(800);
-					console.log($('#incexp_name'));
+				$("#incexp2propDialog").on('click', '#incexp-add-button', function(event){
+
+					$(this).parents('tr').next().toggle(400);
+					$(this).parents('tr').next().next().toggle(400);
+
+					$(this).find('span').toggleClass('dashicons-plus');
+					$(this).find('span').toggleClass('dashicons-minus');
+					//console.log($(this).parent());
 				});
 				
 
