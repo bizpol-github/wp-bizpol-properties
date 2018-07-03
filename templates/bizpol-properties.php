@@ -3,7 +3,6 @@
 	<?php 
 		settings_errors();
 	?>
-
 	<ul class="nav-tabs">
         <li id="general-tab" class="active"><a href="#general">Properties</a></li>
         <li id="single-tab"><a href="#single">Property Incomes</a></li>
@@ -11,18 +10,28 @@
 
     <div class="tab-content">
     	<div id="general" class="tab-pane active">
+    		<button id="bpAddButton" class="button button-primary" style="margin-bottom: 10px;">Add property</button>
 
-
-
-<button id="bpAddButton" class="button button-primary" style="margin-bottom: 10px;">Add property</button>
-
-
-					<?php
-					echo '<table id="propertiesTable" class="bp-data-table"><thead><tr><th name="id">ID</th><th name="property_name">Name</th><th class="text-center" name="prefix">Prefix</th><th name="address">Address</th><th class="text-center" name="construction_year">Builded</th><th class="text-center" name="land_register">Land Register</th><th class="text-center" name="actions">Status</th><th class="text-center" name="actions">Actions</th></tr>';
-					
-					echo '</thead><tbody></tbody></table>';
-				?>
-			
+    		<table id="propertiesTable" class="bp-data-table">
+    			<thead>
+	    			<tr>
+	    				<th name="id">ID</th><th name="property_name">Name</th>
+	    				<th class="text-center" name="prefix">Prefix</th>
+	    				<th name="address">Address</th>
+	    				<th class="text-center" name="construction_year">Builded</th>
+	    				<th class="text-center" name="land_register">Land Register</th>
+	    				<th class="text-center" name="actions">Status</th>
+	    				<th class="text-center" name="actions">Actions</th>
+	    			</tr>
+	    		</thead>
+	    		<tbody>		
+	    		</tbody>
+	    		<tfoot>
+	    			<tr>
+	    				<td colspan="8" class="bp-data-table-legend">Legend:<span class="dashicons dashicons-trash delete"></span>Delete<span class="dashicons dashicons-edit edit"></span>Edit<span class="dashicons dashicons-visibility edit"></span>Switch status</td>	    					
+	    			</tr>
+	    		</tfoot>
+	    	</table>
 
 			<div id="propertiesDialog">
 				<form id="bp-dialog-form" method="post" action="" autocomplete="on">
@@ -33,20 +42,21 @@
 		        ?>
     			</form>
 			</div>
-
 		</div>
 		<div id="single" class="tab-pane">
 			<div class="prop_inc_title">
 				<h2></h2>
 				<h4></h4>
-			</div>
-			
+			</div>			
 			<button id="bpAddIncExp2PropButton" class="button button-primary" style="margin-bottom: 10px;" prop_id="">Add new</button>
-			<?php
-					echo '<table id="incexp2propTable" class="bp-data-table"><thead><tr><th name="id">ID</th><th name="incexp_id">Income/Expense Name</th><th name="quantity">Quantity</th><th name="value">Amount</th><th class="text-center" name="actions">Actions</th></tr>';
-					
-					echo '</thead><tbody></tbody></table>';
-				?>
+
+			<table id="incexp2propTable" class="bp-data-table">
+				<thead>
+					<tr>
+						<th name="id">ID</th><th name="incexp_id">Income/Expense Name</th>
+						<th name="quantity">Quantity</th><th name="value">Amount</th>
+						<th class="text-center" name="actions">Actions</th>
+					</tr></thead><tbody></tbody></table>
 			<button id="bpBackButton" class="button button-primary" style="margin-top: 10px;">Go Back</button>
 			<div id="incexp2propDialog">
 				<form id="bp-dialog" method="post" action="" autocomplete="on">
@@ -93,9 +103,9 @@
 	      var status = '';
 
 	      if (record.status === '1') {
-	      	record.status = '<span class="dashicons dashicons-visibility"></span>';
+	      	status = '<span class="dashicons dashicons-visibility" onclick="bpDAddProp.switchStatus(' + rowCounter + ')"></span>';
 	      } else {
-	      	record.status = '<span class="dashicons dashicons-hidden"></span>'
+	      	status = '<span class="dashicons dashicons-hidden" onclick="bpDAddProp.switchStatus(' + rowCounter + ')"></span>';
 	      }
 
 	      var newRow = bpDialogDT.addRow(rowCounter);    
@@ -108,7 +118,7 @@
 	      bpDialogDT.addCell(5, newRow, record.land_register);
 
 	      
-	      bpDialogDT.addCell(6, newRow, record.status, 'center');
+	      bpDialogDT.addCell(6, newRow, status, 'center');
 	      bpDialogDT.addCell(7, newRow, '<button name="edit" class="button-link-edit edit small" onclick="bpDAddProp.edit(' + rowCounter + ')"><span class="dashicons dashicons-edit"></span></button><button name="delete" class="button-link-delete delete small" onclick="bpDAddProp.delete(' + rowCounter + ')"><span class="dashicons dashicons-trash"></span></button>', 'center');
 
 	      rowCounter++;

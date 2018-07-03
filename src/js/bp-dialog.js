@@ -238,6 +238,19 @@ function bpDialog(table, title) {
         this.setTitle('Delete', 'Delete ' + this.bpActionTitle + ' #' + row.id);
     };
 
+    this.switchStatus = function (id) {
+        var row = this.bpDialogTable.getRowData(id);
+        this.updateForm(row, true);
+        this.addHiddenField('user_id', wp_adminId);
+        this.addHiddenField('id', row.id);
+        this.addHiddenField('status', row.status);
+        this.bpNewForm.find("input[name='action']").val('status');
+        this.open();
+        this.setTitle('Status', 'Change status ' + this.bpActionTitle + ' #' + row.id);
+
+
+    };
+
     this.addHiddenField = function (name, value) {
         this.bpHiddenFields[name] = value;
     };

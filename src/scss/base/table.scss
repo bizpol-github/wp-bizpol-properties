@@ -12,11 +12,22 @@
 	}
 
 	& th {
-		background-color: #f5f5f5;
+		background-color: lightslategrey;
 	}
 
 	& .text-center {
 		text-align: center;
+	}
+
+	& .bp-data-table-legend {
+		opacity: 0.7;
+		& span {
+			font-size: 17px;
+		}
+
+		& span.delete {
+			color: #dc3232;
+		}
 	}
 }
 

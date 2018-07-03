@@ -115,10 +115,12 @@ function bpDt(id) {
             },
             function (response) {
                 if (response.error === false) {
+
+                    _this.bpRPCData = response;
                     $('#' + _this.bpDataTableId + ' tbody tr').remove();
                     //console.log(_this.getId());
                     window[_this.getId() + 'Feed'](response);
-                    _this.bpRPCData = response;
+                    
 
                 }
                // console.log(ajaxurl + _this.getParams());

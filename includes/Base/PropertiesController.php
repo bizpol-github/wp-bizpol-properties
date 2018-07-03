@@ -67,7 +67,7 @@ class PropertiesController extends BaseController
             
 
             if (isset($form['id']) && is_numeric($form['id'])) {
-                $wpdb->update('wp_bp_properties', $form_values, array( 'id' =>  $form['id']));
+                $wpdb->update('wp_bp_properties', $form_values, array('id' =>  $form['id']));
                 $data['status'] = true;
             } else {
                 $wpdb->insert('wp_bp_properties', $form_values);
@@ -81,11 +81,13 @@ class PropertiesController extends BaseController
             }
 
         } elseif ($form['action'] == 'delete') {
-            $wpdb->delete('wp_bp_properties', array( 'id' =>  $form['id']));
+            $wpdb->delete('wp_bp_properties', array('id' =>  $form['id']));
+            $data['status'] = true;
+        } elseif ($form['action'] == 'status') {
+            $status = ($form['status'] == '1') ? '0' : '1';
+            $wpdb->update('wp_bp_properties', array('status' => $status), array('id' =>  $form['id']));
             $data['status'] = true;
         }
-
-        
 
         $data['form_values']  = $form_values;
         wp_send_json($data);
