@@ -181,20 +181,14 @@ class PropertiesController extends BaseController
     public function bp_rpc_get_all_properties(){
         global $wpdb;
 
-        $properties = $wpdb->get_results("SELECT * FROM `wp_bp_properties`");
+        $properties = $wpdb->get_results("SELECT * FROM `wp_bp_properties`", ARRAY_A);
 
         $data = array();
+        
+        $data['keys'] = array_keys($properties[0]);
 
         foreach ($properties as $property) {
-
-            $data['entries'][] = array(
-                'id' => $property->id,
-                'property_name' => $property->property_name,
-                'prefix' => $property->prefix,
-                'address' => $property->address,
-                'construction_year' => $property->construction_year,
-                'land_register' => $property->land_register
-                );
+            $data['entries'][] = $property; 
         }
 
         $data['error'] = false;
@@ -206,7 +200,7 @@ class PropertiesController extends BaseController
     public function bp_rpc_get_all_incexp(){
         global $wpdb;
 
-        $incsexps = $wpdb->get_results("SELECT * FROM `wp_bp_incexp`");
+        $incsexps = $wpdb->get_results("SELECT * FROM `wp_bp_incexp`", ARRAY_A);
 
         $data = array();
 

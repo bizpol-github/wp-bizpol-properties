@@ -18,7 +18,7 @@
 
 
 					<?php
-					echo '<table id="propertiesTable" class="bp-data-table"><thead><tr><th name="id">ID</th><th name="property_name">Name</th><th name="prefix">Prefix</th><th name="address">Address</th><th class="text-center" name="construction_year">Builded</th><th class="text-center" name="land_register">Land Register</th><th class="text-center" name="actions">Actions</th></tr>';
+					echo '<table id="propertiesTable" class="bp-data-table"><thead><tr><th name="id">ID</th><th name="property_name">Name</th><th class="text-center" name="prefix">Prefix</th><th name="address">Address</th><th class="text-center" name="construction_year">Builded</th><th class="text-center" name="land_register">Land Register</th><th class="text-center" name="actions">Status</th><th class="text-center" name="actions">Actions</th></tr>';
 					
 					echo '</thead><tbody></tbody></table>';
 				?>
@@ -90,16 +90,26 @@
 
 	    for ( var r in data.entries ) {
 	      var record = data.entries[r];
+	      var status = '';
+
+	      if (record.status === '1') {
+	      	record.status = '<span class="dashicons dashicons-visibility"></span>';
+	      } else {
+	      	record.status = '<span class="dashicons dashicons-hidden"></span>'
+	      }
 
 	      var newRow = bpDialogDT.addRow(rowCounter);    
 
 	      bpDialogDT.addCell(0, newRow, (rowCounter + 1) + ' - (#' + record.id + ')');
 	      bpDialogDT.addCell(1, newRow, '<a href="admin.php?page=bizpol_property&tab=single&rowId=' + rowCounter + '">' + record.property_name + '</a>');
-	      bpDialogDT.addCell(2, newRow, record.prefix);
+	      bpDialogDT.addCell(2, newRow, record.prefix, 'center');
 	      bpDialogDT.addCell(3, newRow, record.address);
-	      bpDialogDT.addCell(4, newRow, record.construction_year.substr(0,10));
+	      bpDialogDT.addCell(4, newRow, record.construction_year.substr(0,10), 'center');
 	      bpDialogDT.addCell(5, newRow, record.land_register);
-	      bpDialogDT.addCell(6, newRow, '<button name="edit" class="edit small" onclick="bpDAddProp.edit(' + rowCounter + ')">Edit</button><button name="delete" class="delete small" onclick="bpDAddProp.delete(' + rowCounter + ')">Delete</button>', 'center');
+
+	      
+	      bpDialogDT.addCell(6, newRow, record.status, 'center');
+	      bpDialogDT.addCell(7, newRow, '<button name="edit" class="button-link-edit edit small" onclick="bpDAddProp.edit(' + rowCounter + ')"><span class="dashicons dashicons-edit"></span></button><button name="delete" class="button-link-delete delete small" onclick="bpDAddProp.delete(' + rowCounter + ')"><span class="dashicons dashicons-trash"></span></button>', 'center');
 
 	      rowCounter++;
 		}
@@ -117,7 +127,7 @@
 	      bpDialogInc2PropDT.addCell(1, newRow, record.incexp_name + ' (' + record.incexp_type + ')');
 	      bpDialogInc2PropDT.addCell(2, newRow, record.quantity);
 	      bpDialogInc2PropDT.addCell(3, newRow, record.value);
-	      bpDialogInc2PropDT.addCell(4, newRow, '<button name="edit" class="edit small" onclick="bpDAddIncExp.edit(' + rowCounter + ')">Edit</button><button name="delete" class="delete small" onclick="bpDAddIncExp.delete(' + rowCounter + ')">Delete</button>', 'center');
+	      bpDialogInc2PropDT.addCell(4, newRow, '<button name="edit" class="button button-primary edit small" onclick="bpDAddIncExp.edit(' + rowCounter + ')">Edit</button><button name="delete" class="button button-danger delete small" onclick="bpDAddIncExp.delete(' + rowCounter + ')">Delete</button>', 'center');
 
 	      rowCounter++;
 		}

@@ -73,7 +73,7 @@
 	      //   }
 	      // }).css('cursor', 'pointer');
 	       
-	      bpIncExpDT.addCell(0, newRow, record.id);
+	      bpIncExpDT.addCell(0, newRow, (rowCounter + 1) + ' - (#' + record.id + ')');
 	      bpIncExpDT.addCell(1, newRow, record.incexp_name);
 	      bpIncExpDT.addCell(2, newRow, record.incexp_type);
 	      bpIncExpDT.addCell(3, newRow, '<button name="edit" class="edit small" onclick="bpDtAddIncExp.edit(' + rowCounter + ')">Edit</button><button name="delete" class="delete small" onclick="bpDtAddIncExp.delete(' + rowCounter + ')">Delete</button>', 'center');
