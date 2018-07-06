@@ -16,6 +16,8 @@ function bpDialog(table, title) {
     var bpNewForm = '';
     var bpFormTitle = '';
     var bpFormDesc = '';
+    var bpFormTable = '';
+
     var _this = this;
     var serializeObject = function (form, wp_action_name) {
         var o = {};
@@ -107,6 +109,8 @@ function bpDialog(table, title) {
         // set title and description of form
         this.bpFormTitle = this.bpNewForm.find('h2');
         this.bpFormDesc = this.bpNewForm.find('h4');
+        // set table form
+        this.bpFormTable = this.bpNewForm.find('table.form-table');
     };
 
     this.autoOpen = function (arg) {
@@ -182,14 +186,110 @@ function bpDialog(table, title) {
 
     };
 
-    this.updateForm = function (row, disabled) {
-        var cols = row;
+    this.updateForm = function (data, disabled) {
+        var rows = data;
 
-        var inputs = this.bpNewForm.find('input');
-        $.each(cols, function (key, value) {
+        var ul = $('<ul class="nav-tabs"></ul>').insertAfter(this.bpFormDesc);
+        var div = $('<div class="tab-content">Content</div>').insertAfter(ul);
+        var active = true;
+
+        var bpFormTableCopy = this.bpFormTable;
+        this.bpFormTable.remove();
+
+        $.each(rows, function (ignore, row) {
+            var id = 'item-' + row.id;
+
+            ul.append(function () {
+                var li = $('<li></li>');
+
+                if (active === true) {
+                    li.addClass('active');
+                }
+
+                $('<a>').attr('href', '#' + id).text('#' + row.id).appendTo(li);
+                $(this).append(li);
+            });
+
+            console.log(bpFormTableCopy);
+
+            div.append(function () {
+                var tab = $('<div id="' + id + '" class="tab-pane"></div>');
+                var formTable = bpFormTableCopy.clone();
+
+                if (active === true) {
+                    tab.addClass('active');
+                }
+
+                _this.updateFormTable(formTable, row, disabled);
+
+                formTable.appendTo(tab);
+
+                $(this).append(tab);
+
+            });
+
+
+
+            active = false;
+
+
+            // $.each(row, function (key, value) {
+            //     var input = $('input[name="' + key + '"]');
+
+            //     console.log(input);
+
+
+
+            //     input.val(value);
+            //     if (disabled === true) {
+            //         input.disabled = true;
+            //     } else {
+            //         setStatus(input);
+            //     }
+            // });
+        });
+
+        // var inputs = this.bpNewForm.find('input');
+        // $.each(rows, function (key, value) {
+        //     $.each(inputs, function (ignore, content) {
+        //         if (content.getAttribute('name') === key) {
+        //             content.value = value.replace(/<[^>]*>/g, '');
+        //             content.name = content.name + ['name']
+        //             if (disabled === true) {
+        //                 content.disabled = true;
+        //             } else {
+        //                 setStatus($(this));
+        //             }
+        //         }
+        //     });
+        // });
+        // var selects = this.bpNewForm.find('select');
+        // $.each(rows, function (key, value) {
+        //     $.each(selects, function (ignore, select) {
+        //         if (select.getAttribute('name') === key) {
+        //             //console.dir(select.children);
+        //             $.each(select.children, function (ignore, option) {
+        //                 if (option.value === value) {
+        //                     option.selected = true;
+        //                 }
+        //                 if (disabled === true) {
+        //                     select.disabled = true;
+        //                 }
+        //             });
+        //         }
+        //     });
+        // });
+
+
+    };
+
+    this.updateFormTable = function (table, row, disabled) {
+        var inputs = table.find('input');
+        $.each(row, function (key, value) {
             $.each(inputs, function (ignore, content) {
                 if (content.getAttribute('name') === key) {
                     content.value = value.replace(/<[^>]*>/g, '');
+                    content.name = content.name + ['name'];
                     if (disabled === true) {
                         content.disabled = true;
                     } else {
@@ -198,23 +298,6 @@ function bpDialog(table, title) {
                 }
             });
         });
-        var selects = this.bpNewForm.find('select');
-        $.each(cols, function (key, value) {
-            $.each(selects, function (ignore, select) {
-                if (select.getAttribute('name') === key) {
-                    //console.dir(select.children);
-                    $.each(select.children, function (ignore, option) {
-                        if (option.value === value) {
-                            option.selected = true;
-                        }
-                        if (disabled === true) {
-                            select.disabled = true;
-                        }
-                    });
-                }
-            });
-        });
-
 
     };
 
@@ -224,8 +307,36 @@ function bpDialog(table, title) {
         this.updateForm(row, false);
         this.addHiddenField('user_id', wp_adminId);
         this.addHiddenField('id', row.id);
+
+        this.addHiddenField('seba[1]', 1);
+        this.addHiddenField('seba[2]', 2);
+        this.addHiddenField('seba[3]', 3);
+        this.addHiddenField('seba', 4);
+
         this.open();
         this.setTitle('Edit', 'Edit ' + this.bpActionTitle + ' #' + row.id + ' by ' + wp_adminFullName);
+    };
+
+    this.editBatch = function () {
+        var ids = this.bpDialogTable.getBatch();
+        var rows = [];
+        var dbIds = [];
+
+        $.each(ids, function (ignore, value) {
+            var row = _this.bpDialogTable.getRowData(value);
+            rows.push(row);
+            dbIds[value] = row.id;
+        });
+
+        console.log(rows);
+
+        this.updateForm(rows, false);
+
+       // this.updateForm(row, false);
+        this.addHiddenField('user_id', wp_adminId);
+        this.addHiddenField('batch', 'true');
+        this.open();
+        this.setTitle('Edit Batch', 'Edit ' + this.bpActionTitle + ' # (' + Object.values(dbIds) + ') by ' + wp_adminFullName);
     };
 
     this.delete = function (id) {

@@ -9,6 +9,8 @@
 //
 function bpDt(id) {
     'use strict';
+    var _this = this;
+
     this.initialized = false;
     this.bpDataTableName = id;
     this.bpDataTableId = id + 'Table';
@@ -16,6 +18,7 @@ function bpDt(id) {
     this.bpDataTable = $('#' + this.bpDataTableId);
     this.bpParams = [];
     this.bpRPCData = {};
+    this.bpFlag = {};
 
     this.initialize = function () {
 
@@ -73,15 +76,11 @@ function bpDt(id) {
         return cols;
     };
 
+    this.getBatch = function () {
+        return this.bpFlag;
+    };
+
     this.getRowData = function (id) {
-        // var headName = this.getTableHeaders();
-        // var rowData = this.bpDataTable[0].tBodies[0].rows[id].cells;
-        // var data = {};
-
-        // $.each(headName, function (key, value) {
-        //     data[value] = rowData[key].innerHTML;
-        // });
-
         return this.bpRPCData.entries[id];
     };
 
@@ -100,8 +99,35 @@ function bpDt(id) {
         //return nCell;
     };
 
+    this.flagCheckboxes = function (element) {
+
+        var checkboxes = this.bpDataTable.find("input[name='batch[]'], input[name='batchFlag']");
+
+        checkboxes.each(function () {
+            if (this != element){
+                this.checked = !this.checked;
+                if (this.id != 'batchFlag'){
+                    if (this.checked){
+                        _this.bpFlag[this.id] = this.value;
+                    } else {
+                        delete _this.bpFlag[this.id];
+                    }
+                }
+            }
+        });
+        console.log(this.bpFlag);
+    };
+
+    this.flagCheckbox = function (element) {
+        if (element.checked){
+            this.bpFlag[element.id] = element.value;
+        } else {
+            delete this.bpFlag[element.id];
+        }
+        console.log(this.bpFlag);
+    };
+
     this.load = function () {
-        var _this = this;
         if (this.initialized === false) {
             this.initialize();
         }

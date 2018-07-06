@@ -22,13 +22,18 @@
 	    				<th class="text-center" name="land_register">Land Register</th>
 	    				<th class="text-center" name="actions">Status</th>
 	    				<th class="text-center" name="actions">Actions</th>
+	    				<th align="center" width="20"><input type="checkbox" name="batchFlag" id="batchFlag" onclick="propertiesDT.flagCheckboxes(this);" /></th>
+    </tr>
 	    			</tr>
 	    		</thead>
 	    		<tbody>		
 	    		</tbody>
 	    		<tfoot>
 	    			<tr>
-	    				<td colspan="8" class="bp-data-table-legend">Legend:<span class="dashicons dashicons-trash delete"></span>Delete<span class="dashicons dashicons-edit edit"></span>Edit<span class="dashicons dashicons-visibility edit"></span>Switch status</td>	    					
+	    				<td colspan="7" class="bp-data-table-legend">Legend:<span class="dashicons dashicons-trash delete"></span>Delete<span class="dashicons dashicons-edit edit"></span>Edit<span class="dashicons dashicons-visibility edit"></span>Switch status</td>
+	    				<td align="center"><button name="edit" class="button-link-edit edit small" onclick="propertiesD.editBatch()"><span class="dashicons dashicons-edit"></span></button><button name="delete" class="button-link-delete delete small" onclick="propertiesD.deleteBatch()"><span class="dashicons dashicons-trash"></span></button></td>
+	    				<td align="center" width="20"><input type="checkbox" name="batchFlag" id="batchFlag" onclick="propertiesDT.flagCheckboxes(this);" /></td>
+    </tr>   					
 	    			</tr>
 	    		</tfoot>
 	    	</table>
@@ -79,20 +84,20 @@
 	//var bpDataTableName = 'propertiesTable';
 
 	//getting properties table
-	var bpDialogDT = new bpDt('properties');
+	var propertiesDT = new bpDt('properties');
 	//new object bpDialog(Object bpDt, title)
-	var bpDAddProp = new bpDialog(bpDialogDT, 'properties');
+	var propertiesD = new bpDialog(propertiesDT, 'properties');
 
 	var bpDialogInc2PropDT = new bpDt('incexp2prop');
 	var bpDAddIncExp = new bpDialog(bpDialogInc2PropDT, 'income/expense');
 
 	$(document).ready(function ($) {
 		//bpDialog.autoOpen(true);
-		bpDAddProp.load();
+		propertiesD.load();
 		bpDAddIncExp.load();
 	});
 
-	bpDialogDT.load();
+	propertiesDT.load();
 	//bpDialogInc2PropDT.load();
 
 	function propertiesTableFeed(data){
@@ -103,23 +108,24 @@
 	      var status = '';
 
 	      if (record.status === '1') {
-	      	status = '<span class="dashicons dashicons-visibility" onclick="bpDAddProp.switchStatus(' + rowCounter + ')"></span>';
+	      	status = '<span class="dashicons dashicons-visibility" onclick="propertiesD.switchStatus(' + rowCounter + ')"></span>';
 	      } else {
-	      	status = '<span class="dashicons dashicons-hidden" onclick="bpDAddProp.switchStatus(' + rowCounter + ')"></span>';
+	      	status = '<span class="dashicons dashicons-hidden" onclick="propertiesD.switchStatus(' + rowCounter + ')"></span>';
 	      }
 
-	      var newRow = bpDialogDT.addRow(rowCounter);    
+	      var newRow = propertiesDT.addRow(rowCounter);    
 
-	      bpDialogDT.addCell(0, newRow, (rowCounter + 1) + ' - (#' + record.id + ')');
-	      bpDialogDT.addCell(1, newRow, '<a href="admin.php?page=bizpol_property&tab=single&rowId=' + rowCounter + '">' + record.property_name + '</a>');
-	      bpDialogDT.addCell(2, newRow, record.prefix, 'center');
-	      bpDialogDT.addCell(3, newRow, record.address);
-	      bpDialogDT.addCell(4, newRow, record.construction_year.substr(0,10), 'center');
-	      bpDialogDT.addCell(5, newRow, record.land_register);
+	      propertiesDT.addCell(0, newRow, (rowCounter + 1) + ' - (#' + record.id + ')');
+	      propertiesDT.addCell(1, newRow, '<a href="admin.php?page=bizpol_property&tab=single&rowId=' + rowCounter + '">' + record.property_name + '</a>');
+	      propertiesDT.addCell(2, newRow, record.prefix, 'center');
+	      propertiesDT.addCell(3, newRow, record.address);
+	      propertiesDT.addCell(4, newRow, record.construction_year.substr(0,10), 'center');
+	      propertiesDT.addCell(5, newRow, record.land_register);
 
 	      
-	      bpDialogDT.addCell(6, newRow, status, 'center');
-	      bpDialogDT.addCell(7, newRow, '<button name="edit" class="button-link-edit edit small" onclick="bpDAddProp.edit(' + rowCounter + ')"><span class="dashicons dashicons-edit"></span></button><button name="delete" class="button-link-delete delete small" onclick="bpDAddProp.delete(' + rowCounter + ')"><span class="dashicons dashicons-trash"></span></button>', 'center');
+	      propertiesDT.addCell(6, newRow, status, 'center');
+	      propertiesDT.addCell(7, newRow, '<button name="edit" class="button-link-edit edit small" onclick="propertiesD.edit(' + rowCounter + ')"><span class="dashicons dashicons-edit"></span></button><button name="delete" class="button-link-delete delete small" onclick="propertiesD.delete(' + rowCounter + ')"><span class="dashicons dashicons-trash"></span></button>', 'center');
+	      propertiesDT.addCell(8, newRow, '<input type="checkbox" name="batch[]" value="' + parseInt(rowCounter) + '" id="batch' + parseInt(rowCounter) + '" onclick="propertiesDT.flagCheckbox(this);"/>', 'center');
 
 	      rowCounter++;
 		}
@@ -173,7 +179,7 @@
 				
 
 				$("#bpAddButton").click(function(){
-					bpDAddProp.open();
+					propertiesD.open();
 				});
 
 				$("#bpAddIncExp2PropButton").click(function(){
@@ -196,7 +202,7 @@
         			var bpPropertiesDataTableName = 'propertiesTable';
         			var bpIncExpDataTableName = 'incExp2PropTable';
         			// get row data
-        			var row = bpDialogDT.getRowData(row_id);
+        			var row = propertiesDT.getRowData(row_id);
         			var addButton = $("#bpAddIncExp2PropButton");
         
         			$('#' + tab).addClass("active");
