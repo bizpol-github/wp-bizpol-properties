@@ -115,7 +115,6 @@ function bpDt(id) {
                 }
             }
         });
-        console.log(this.bpFlag);
     };
 
     this.flagCheckbox = function (element) {
@@ -146,8 +145,6 @@ function bpDt(id) {
                     $('#' + _this.bpDataTableId + ' tbody tr').remove();
                     //console.log(_this.getId());
                     window[_this.getId() + 'Feed'](response);
-                    
-
                 }
                // console.log(ajaxurl + _this.getParams());
                 console.log(_this.bpRPCData);

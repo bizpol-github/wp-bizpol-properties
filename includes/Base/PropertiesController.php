@@ -54,42 +54,42 @@ class PropertiesController extends BaseController
 
         $form = $_POST['data'];
         
-        $form_values = array(
-            'property_name' => sanitize_text_field($form['property_name']),
-            'prefix' => sanitize_text_field($form['prefix']),
-            'address' => sanitize_text_field($form['address']),
-            'construction_year' => $form['construction_year'],
-            'land_register' => sanitize_text_field($form['land_register']),
-            'user_id' => sanitize_text_field($form['user_id'])
-        );
+        // $form_values = array(
+        //     'property_name' => sanitize_text_field($form['property_name']),
+        //     'prefix' => sanitize_text_field($form['prefix']),
+        //     'address' => sanitize_text_field($form['address']),
+        //     'construction_year' => $form['construction_year'],
+        //     'land_register' => sanitize_text_field($form['land_register']),
+        //     'user_id' => sanitize_text_field($form['user_id'])
+        // );
 
-        if ($form['action'] == 'update') {
+        // if ($form['action'] == 'update') {
             
 
-            if (isset($form['id']) && is_numeric($form['id'])) {
-                $wpdb->update('wp_bp_properties', $form_values, array('id' =>  $form['id']));
-                $data['status'] = true;
-            } else {
-                $wpdb->insert('wp_bp_properties', $form_values);
-                $data['status'] = true;
-                // return 0 on error
-                $new_id = $wpdb->insert_id;
+        //     if (isset($form['id']) && is_numeric($form['id'])) {
+        //         $wpdb->update('wp_bp_properties', $form_values, array('id' =>  $form['id']));
+        //         $data['status'] = true;
+        //     } else {
+        //         $wpdb->insert('wp_bp_properties', $form_values);
+        //         $data['status'] = true;
+        //         // return 0 on error
+        //         $new_id = $wpdb->insert_id;
 
-                if($new_id == 0){
-                    $data['status'] = false;
-                }
-            }
+        //         if($new_id == 0){
+        //             $data['status'] = false;
+        //         }
+        //     }
 
-        } elseif ($form['action'] == 'delete') {
-            $wpdb->delete('wp_bp_properties', array('id' =>  $form['id']));
-            $data['status'] = true;
-        } elseif ($form['action'] == 'status') {
-            $status = ($form['status'] == '1') ? '0' : '1';
-            $wpdb->update('wp_bp_properties', array('status' => $status), array('id' =>  $form['id']));
-            $data['status'] = true;
-        }
+        // } elseif ($form['action'] == 'delete') {
+        //     $wpdb->delete('wp_bp_properties', array('id' =>  $form['id']));
+        //     $data['status'] = true;
+        // } elseif ($form['action'] == 'status') {
+        //     $status = ($form['status'] == '1') ? '0' : '1';
+        //     $wpdb->update('wp_bp_properties', array('status' => $status), array('id' =>  $form['id']));
+        //     $data['status'] = true;
+        // }
 
-        $data['form_values']  = $form_values;
+        $data['form_values']  = $form;
         wp_send_json($data);
         wp_die();
     }
