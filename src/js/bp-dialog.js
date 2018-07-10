@@ -27,44 +27,66 @@ function bpDialog(table, title) {
         //// (\[[^[]]+)
         /// ^[a-z_-]+
 
-        var pattern = "(\[[^[]]+)";
+        var name_regex = "^[a-z_-]+";
+        var key_regex = /[\w_\-]+(?=\])/g;
+        var id_regex = /[\d]+/g;
+        //var key_regex = '/[\\w_-]+(?=\\])/g';
 
-        console.log(pattern);
+       // console.log(pattern);
 
-         var regex = new RegExp(patern);
-
-            var test = regex.test(text);
+        var n_regex = new RegExp(name_regex);
+           // console.log(test);
 
       //  var id_regex = new RegExp('(?<=[)[^]]+(?=])');
         var a = form.serializeArray();
+        var name = '';
+        var next = false;
 
+        var entry = {};
+
+        o.entries = {};
         //console.log(a);
         $.each(a, function () {
 
-            var name = this.name;
-            console.log(name);
+            name = this.name;
 
-            console.log('regex: ' + test);
+            var test = n_regex.test(name);
 
-            var aaa = name.match(key_regex);
+            if (test) {
+                //console.log(name);
 
-            console.log('match: ' + aaa);
+                //console.log('regex test string: ' + test);
 
+                if (o[this.name]) {
 
+                    if (!o[this.name].push) {
+                        o[this.name] = [o[this.name]];
+                    }
 
+                    o[this.name].push(this.value || '');
+                } else {
+                    o[this.name] = this.value || '';
 
-            if (o[this.name]) {
+                }
+            } else {
+                //console.log(name);
 
-                if (!o[this.name].push) {
-                    o[this.name] = [o[this.name]];
+                var id = name.match(id_regex);
+                var key = name.match(key_regex);
+
+                if (o.entries[id] === undefined) {
+
+                    o.entries[id] = {};
+                    entry = {};
+
                 }
 
-                o[this.name].push(this.value || '');
-            } else {
-                o[this.name] = this.value || '';
+                o.entries[id] = entry;
 
+                entry[key] = this.value;
             }
         });
+        console.log(o);
         return o;
     };
 
@@ -327,31 +349,57 @@ function bpDialog(table, title) {
 
         this.updateForm(rows, false);
         this.addHiddenField('user_id', wp_adminId);
-        this.addHiddenField('batch', 'true');
         this.open();
         this.setTitle('Edit Batch', 'Edit ' + this.bpActionTitle + ' # (' + Object.values(dbIds) + ') by ' + wp_adminFullName);
     };
 
     this.delete = function (id) {
+        var rows = [];
         var row = this.bpDialogTable.getRowData(id);
-        this.updateForm(row, true);
+        rows.push(row);
+        this.updateForm(rows, true);
         this.addHiddenField('user_id', wp_adminId);
         this.addHiddenField('id', row.id);
-        this.bpNewForm.find("input[name='action']").val('delete');
+        this.setAction('delete');
         this.open();
         this.setTitle('Delete', 'Delete ' + this.bpActionTitle + ' #' + row.id);
     };
 
+    this.deleteBatch = function () {
+        var ids = this.bpDialogTable.getBatch();
+        var rows = [];
+        var dbIds = [];
+
+        $.each(ids, function (ignore, value) {
+            var row = _this.bpDialogTable.getRowData(value);
+            rows.push(row);
+            dbIds[value] = row.id;
+        });
+        this.updateForm(rows, true);
+        this.addHiddenField('user_id', wp_adminId);
+        this.setAction('delete');
+        this.open();
+        this.setTitle('Delete Batch', 'Delete ' + this.bpActionTitle + ' # (' + Object.values(dbIds) + ') by ' + wp_adminFullName);
+    };
+
     this.switchStatus = function (id) {
+        var rows = [];
         var row = this.bpDialogTable.getRowData(id);
-        this.updateForm(row, true);
+        rows.push(row);
+        this.updateForm(rows, true);
         this.addHiddenField('user_id', wp_adminId);
         this.addHiddenField('id', row.id);
         this.addHiddenField('status', row.status);
-        this.bpNewForm.find("input[name='action']").val('status');
+        this.setAction('status');
         this.open();
         this.setTitle('Status', 'Change status ' + this.bpActionTitle + ' #' + row.id);
 
+
+    };
+
+    this.setAction = function (action) {
+
+        this.bpNewForm.find("input[name='action']").val(action);
 
     };
 

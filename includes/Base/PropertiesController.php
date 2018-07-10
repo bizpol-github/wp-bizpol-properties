@@ -53,41 +53,63 @@ class PropertiesController extends BaseController
         $data = array();
 
         $form = $_POST['data'];
-        
-        // $form_values = array(
-        //     'property_name' => sanitize_text_field($form['property_name']),
-        //     'prefix' => sanitize_text_field($form['prefix']),
-        //     'address' => sanitize_text_field($form['address']),
-        //     'construction_year' => $form['construction_year'],
-        //     'land_register' => sanitize_text_field($form['land_register']),
-        //     'user_id' => sanitize_text_field($form['user_id'])
-        // );
 
-        // if ($form['action'] == 'update') {
+        if ($form['action'] == 'insert') {
+
+            $form_values = array(
+                'property_name' => sanitize_text_field($form['property_name']),
+                'prefix' => sanitize_text_field($form['prefix']),
+                'address' => sanitize_text_field($form['address']),
+                'construction_year' => $form['construction_year'],
+                'land_register' => sanitize_text_field($form['land_register']),
+                'user_id' => sanitize_text_field($form['user_id'])
+            );
+
+
+            $wpdb->insert('wp_bp_properties', $form_values);
+            $data['status'] = true;
+            // return 0 on error
+            $new_id = $wpdb->insert_id;
+
+            if($new_id == 0){
+                $data['status'] = false;
+            }
+          
+
+        } elseif ($form['action'] == 'update') {
+
+            foreach ($form['entries'] as $key => $value) {
+
+                $form_values = array(
+                    'property_name' => sanitize_text_field($value['property_name']),
+                    'prefix' => sanitize_text_field($value['prefix']),
+                    'address' => sanitize_text_field($value['address']),
+                    'construction_year' => $value['construction_year'],
+                    'land_register' => sanitize_text_field($value['land_register']),
+                    'user_id' => sanitize_text_field($value['user_id'])
+                );
+
+                $wpdb->update('wp_bp_properties', $form_values, array('id' =>  $key));
+            }
             
 
-        //     if (isset($form['id']) && is_numeric($form['id'])) {
-        //         $wpdb->update('wp_bp_properties', $form_values, array('id' =>  $form['id']));
-        //         $data['status'] = true;
-        //     } else {
-        //         $wpdb->insert('wp_bp_properties', $form_values);
-        //         $data['status'] = true;
-        //         // return 0 on error
-        //         $new_id = $wpdb->insert_id;
+            
+            $data['status'] = true;
+           
 
-        //         if($new_id == 0){
-        //             $data['status'] = false;
-        //         }
-        //     }
+        } elseif ($form['action'] == 'delete') {
 
-        // } elseif ($form['action'] == 'delete') {
-        //     $wpdb->delete('wp_bp_properties', array('id' =>  $form['id']));
-        //     $data['status'] = true;
-        // } elseif ($form['action'] == 'status') {
-        //     $status = ($form['status'] == '1') ? '0' : '1';
-        //     $wpdb->update('wp_bp_properties', array('status' => $status), array('id' =>  $form['id']));
-        //     $data['status'] = true;
-        // }
+            foreach ($form['entries'] as $key => $value) {
+                $wpdb->delete('wp_bp_properties', array('id' =>  $key));
+            }
+            
+            $data['status'] = true;
+            
+        } elseif ($form['action'] == 'status') {
+            $status = ($form['status'] == '1') ? '0' : '1';
+            $wpdb->update('wp_bp_properties', array('status' => $status), array('id' =>  $form['id']));
+            $data['status'] = true;
+        }
 
         $data['form_values']  = $form;
         wp_send_json($data);

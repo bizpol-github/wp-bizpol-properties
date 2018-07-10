@@ -179,6 +179,7 @@
 				
 
 				$("#bpAddButton").click(function(){
+					propertiesD.setAction('insert');
 					propertiesD.open();
 				});
 
