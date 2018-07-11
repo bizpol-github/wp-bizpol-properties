@@ -1,6 +1,15 @@
 /*global bpDialog, bpDataTable, bpDataTableName, bpFormTitle,
   bpFormDesc, bpUpdateAction, wp_adminFullName, wp_adminId */
 /*global $, ajaxurl, alert */
+
+
+/**
+ * Dialog content management, includes form submit
+ *
+ * @param      {object}   table   The table genarated by bpDt class
+ * @param      {string}   title   The title presented in header description of dialog   
+ * @return     {boolean}  return some values with called functions
+ */
 function bpDialog(table, title) {
     'use strict';
     //table object with rpc data
@@ -19,6 +28,14 @@ function bpDialog(table, title) {
     var bpFormTable = '';
 
     var _this = this;
+
+    /**
+     * Serialize form object
+     *
+     * @param      {object}  form            The form
+     * @param      {string}  wp_action_name  The wp action name
+     * @return     {object}  Form formated data
+     */
     var serializeObject = function (form, wp_action_name) {
         var o = {};
         o.wp_action = wp_action_name;
@@ -94,6 +111,10 @@ function bpDialog(table, title) {
 
     this.initialized = false;
     this.newDialog = '';
+
+    /**
+     * Sets dialog parameters and content, submit event and sets intialize to true
+     */
     this.initialize = function () {
         console.log(this.bpDialogId);
         this.newDialog = $('#' + this.bpDialogId).dialog({
@@ -113,6 +134,15 @@ function bpDialog(table, title) {
             _this.resetBpForm();
         });
         this.copyForm();
+
+        //input checkbox event to set proper value
+        $('#' + this.bpDialogId).on('change', 'input[type="checkbox"]', function () {
+            if (this.value === 1) {
+                this.value = 0;
+            } else {
+                this.value = 1;
+            }
+        });
 
         $('#' + this.bpDialogId).on('submit', '#bp-dialog-form-copy', function (evnt) {
             evnt.preventDefault();
@@ -145,6 +175,9 @@ function bpDialog(table, title) {
         this.initialized = true;
     };
 
+    /**
+     * Removes created form and restores default settings
+     */
     this.resetBpForm = function () {
         this.bpHiddenFields = {};
         this.bpNewForm.remove();
@@ -152,6 +185,9 @@ function bpDialog(table, title) {
         //$('#' + this.bpDialogId).append(bpForm);
     };
 
+    /**
+     * Creates copy of default form and creates clone to work with
+     */
     this.copyForm = function () {
         this.bpForm = this.newDialog.find('form');
         this.bpForm.clone()
@@ -167,10 +203,23 @@ function bpDialog(table, title) {
         this.bpFormTable = this.bpNewForm.find('table.form-table');
     };
 
+
+    /**
+     * Set @var autoOpen
+     *
+     * @param      {boolean}  arg     The argument
+     */
     this.autoOpen = function (arg) {
         this.autoOpen = arg;
     };
 
+
+    /**
+     * Setting dialog title and description
+     *
+     * @param      {string}  t       Title
+     * @param      {string}  d       Description
+     */
     this.setTitle = function (t, d) {
         this.bpFormTitle.html(t);
         this.bpFormDesc.html(d);
@@ -296,7 +345,24 @@ function bpDialog(table, title) {
             if (input.length > 0) {
 
                 input.attr('name', name);
-                input.val(value);
+
+                if (input.attr('type') === 'checkbox') {
+
+                    if (value === '1') {
+                        console.log('value 1: ' + value);
+
+                        input.prop('checked', 'checked');
+                        input.val(value);
+
+                    } else {
+                        console.log('value 0: ' + value);
+                        input.val(value);
+                    }
+                } else {
+
+                    input.val(value);
+
+                }
 
                 if (disabled === true) {
                     input.prop('disabled', true);

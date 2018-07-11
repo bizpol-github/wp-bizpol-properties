@@ -16,6 +16,7 @@ class PropertiesController extends BaseController
     public $properties_callbacks;
 	public $subpages = array();
 	
+
 	public function register()
 	{
 		$option = get_option('bizpol_properties');
@@ -54,6 +55,41 @@ class PropertiesController extends BaseController
 
         $form = $_POST['data'];
 
+        if (isset($form['entries'])) {
+
+            foreach ($form['entries'] as $key => $value) {
+
+                $form_values = array(
+                    'property_name' => sanitize_text_field($value['property_name']),
+                    'prefix' => sanitize_text_field($value['prefix']),
+                    'address' => sanitize_text_field($value['address']),
+                    'construction_year' => $value['construction_year'],
+                    'land_register' => sanitize_text_field($value['land_register']),
+                    'user_id' => sanitize_text_field($value['user_id']),
+                    'status' => $value['status']
+                );
+
+                if ($form['action'] == 'update') {
+
+                    $wpdb->update('wp_bp_properties', $form_values, array('id' =>  $key));
+
+                } elseif ($form['action'] == 'delete') {
+
+                    $wpdb->delete('wp_bp_properties', array('id' =>  $key));
+
+                } elseif ($form['action'] == 'status') {
+
+                    $status = ($form['status'] == '1') ? '0' : '1';
+                    $wpdb->update('wp_bp_properties', array('status' => $status), array('id' =>  $key));
+                    
+                }
+
+                $data['status'] = true;
+                
+            }
+
+        }
+
         if ($form['action'] == 'insert') {
 
             $form_values = array(
@@ -62,7 +98,8 @@ class PropertiesController extends BaseController
                 'address' => sanitize_text_field($form['address']),
                 'construction_year' => $form['construction_year'],
                 'land_register' => sanitize_text_field($form['land_register']),
-                'user_id' => sanitize_text_field($form['user_id'])
+                'user_id' => sanitize_text_field($form['user_id']),
+                'status' => $form['status']
             );
 
 
@@ -74,41 +111,6 @@ class PropertiesController extends BaseController
             if($new_id == 0){
                 $data['status'] = false;
             }
-          
-
-        } elseif ($form['action'] == 'update') {
-
-            foreach ($form['entries'] as $key => $value) {
-
-                $form_values = array(
-                    'property_name' => sanitize_text_field($value['property_name']),
-                    'prefix' => sanitize_text_field($value['prefix']),
-                    'address' => sanitize_text_field($value['address']),
-                    'construction_year' => $value['construction_year'],
-                    'land_register' => sanitize_text_field($value['land_register']),
-                    'user_id' => sanitize_text_field($value['user_id'])
-                );
-
-                $wpdb->update('wp_bp_properties', $form_values, array('id' =>  $key));
-            }
-            
-
-            
-            $data['status'] = true;
-           
-
-        } elseif ($form['action'] == 'delete') {
-
-            foreach ($form['entries'] as $key => $value) {
-                $wpdb->delete('wp_bp_properties', array('id' =>  $key));
-            }
-            
-            $data['status'] = true;
-            
-        } elseif ($form['action'] == 'status') {
-            $status = ($form['status'] == '1') ? '0' : '1';
-            $wpdb->update('wp_bp_properties', array('status' => $status), array('id' =>  $form['id']));
-            $data['status'] = true;
         }
 
         $data['form_values']  = $form;
@@ -354,7 +356,7 @@ class PropertiesController extends BaseController
     public function setFields(){
             $args = [
                 //Properties
-                [
+            [
                 'id' => 'property_name',
                 'title' => 'Property Name',
                 'callback' => [$this->properties_callbacks, 'textField'],
@@ -411,6 +413,17 @@ class PropertiesController extends BaseController
                     'placeholder' => 'Land Register',
                     'patern' => '^[A-Z]{2}\d{1}[A-Z]{1}[\/]\d{8}[\/]\d{1}$',
                     'required' => 'required'
+                ],
+            ],
+            [
+                'id' => 'status',
+                'title' => 'Status',
+                'callback' => [$this->properties_callbacks, 'switchField'],
+                'page' => 'bizpol_property',
+                'section' => 'property_index',
+                'args' => [
+                    'option_name' => 'bizpol_property',
+                    'label_for' => 'status'
                 ],
             ],
             // income/expense

@@ -128,5 +128,15 @@ class PropertiesCallbacks{
 
         echo '<div class="' . $class . '"><input type="checkbox" id="' . $name . '" name="' . $option_name . '[' . $name . ']" value="1" class="" ' . ($checked ? 'checked' : '') . '><label for="' . $name . '"><div></div></label></div>';
     }
+
+    public function switchField($args){
+        $name = $args['label_for'];
+        $class = $args['class'];
+        $option_name = $args['option_name'];
+
+        //echo '<div class="' . $class . '"><input type="checkbox" id="' . $name . '" name="' . $name . '" value="1" class="" checked><label for="' . $name . '"><div></div></label></div>';
+
+        echo '<label class="switch"><input type="checkbox" id="' . $name . '" name="' . $name . '" value=""><span class="slider round"></span></label>';
+    }
 }
 
