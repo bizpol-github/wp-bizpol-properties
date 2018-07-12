@@ -49,6 +49,7 @@ class PropertiesController extends BaseController
 
     public function bp_rpc_update_properties(){
         global $wpdb;
+
         $data['status'] = false;
 
         $data = array();
@@ -101,7 +102,6 @@ class PropertiesController extends BaseController
                 'user_id' => sanitize_text_field($form['user_id']),
                 'status' => $form['status']
             );
-
 
             $wpdb->insert('wp_bp_properties', $form_values);
             $data['status'] = true;
@@ -207,9 +207,17 @@ class PropertiesController extends BaseController
     public function bp_rpc_get_all_properties(){
         global $wpdb;
 
-        $properties = $wpdb->get_results("SELECT * FROM `wp_bp_properties`", ARRAY_A);
-
         $data = array();
+
+        $data['unlogged'] = false;
+
+        if (!is_user_logged_in()) {
+
+            $data['unlogged'] = true;
+
+        }
+
+        $properties = $wpdb->get_results("SELECT * FROM `wp_bp_properties`", ARRAY_A);        
         
         $data['keys'] = array_keys($properties[0]);
 

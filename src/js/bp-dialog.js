@@ -169,7 +169,7 @@ function bpDialog(table, title) {
                     }
                 );
             } else {
-                alert('error');
+                alert('form error');
             }
         });
         this.initialized = true;
