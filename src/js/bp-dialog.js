@@ -135,15 +135,19 @@ function bpDialog(table, title) {
         });
         this.copyForm();
 
+        //add new item button from bp-data-table.js
+        this.bpDialogTable.setAddButtonEvent(this);
+
         //input checkbox event to set proper value
         $('#' + this.bpDialogId).on('change', 'input[type="checkbox"]', function () {
-            if (this.value === 1) {
+            if (this.value === '1') {
                 this.value = 0;
             } else {
                 this.value = 1;
             }
         });
 
+        //submit form
         $('#' + this.bpDialogId).on('submit', '#bp-dialog-form-copy', function (evnt) {
             evnt.preventDefault();
             var status = _this.checkStatus();
@@ -225,6 +229,12 @@ function bpDialog(table, title) {
         this.bpFormDesc.html(d);
     };
 
+
+    /**
+     * Sets the status.
+     *
+     * @param      {object}  input   The input
+     */
     var setStatus = function (input) {
         var min = input.attr('min');
         var type = input.attr('type');
@@ -255,6 +265,11 @@ function bpDialog(table, title) {
         }
     };
 
+    /**
+     * Status checking
+     *
+     * @return     {boolean}  Returns false or true
+     */
     this.checkStatus = function () {
         if (_this.bpNewForm.find(".status[status='false']").length > 0) {
             return false;
@@ -263,25 +278,18 @@ function bpDialog(table, title) {
         }
     };
 
+    /**
+     * Set @var load
+     */
     this.load = function () {
         if (this.initialized === false) {
             this.initialize();
         }
     };
 
-    this.open = function () {
-        this.bpFormDesc.text(this.bpActionTitle);
-        this.setHiddenFields();
-        this.newDialog.dialog('open');
-        this.inputKeyUp();
-        //console.log(this.bpHiddenFields);
-    };
-
-    this.close = function () {
-        this.resetBpForm();
-        this.newDialog.dialog('close');
-    };
-
+    /**
+     * Set @var inputKeyUp
+     */
     this.inputKeyUp = function () {
         this.bpNewForm.on('keyup paste select', 'input', function () {
             setStatus($(this));
@@ -389,6 +397,30 @@ function bpDialog(table, title) {
         });
     };
 
+    /**
+    * Set @var open
+    */
+    this.open = function () {
+        this.bpFormDesc.text(this.bpActionTitle);
+        this.setHiddenFields();
+        this.newDialog.dialog('open');
+        this.inputKeyUp();
+        //console.log(this.bpHiddenFields);
+    };
+
+    /**
+     * Set @var close
+     */
+    this.close = function () {
+        this.resetBpForm();
+        this.newDialog.dialog('close');
+    };
+
+    /**
+     * Editing property function
+     *
+     * @param      {string}  id      The identifier
+     */
     this.edit = function (id) {
 
         var rows = [];
@@ -402,6 +434,9 @@ function bpDialog(table, title) {
         this.setTitle('Edit', 'Edit ' + this.bpActionTitle + ' #' + row.id + ' by ' + wp_adminFullName);
     };
 
+    /**
+     * Set @var editBatch
+     */
     this.editBatch = function () {
         var ids = this.bpDialogTable.getBatch();
         var rows = [];
@@ -448,6 +483,11 @@ function bpDialog(table, title) {
         this.setTitle('Delete Batch', 'Delete ' + this.bpActionTitle + ' # (' + Object.values(dbIds) + ') by ' + wp_adminFullName);
     };
 
+    /**
+     * Switches property status
+     *
+     * @param      {string}  id      The identifier
+     */
     this.switchStatus = function (id) {
         var rows = [];
         var row = this.bpDialogTable.getRowData(id);
@@ -463,16 +503,30 @@ function bpDialog(table, title) {
 
     };
 
+    /**
+     * Sets the action.
+     *
+     * @param      {<type>}  action  The action
+     */
     this.setAction = function (action) {
 
         this.bpNewForm.find("input[name='action']").val(action);
 
     };
 
+    /**
+     * Adds a hidden field to dialog.
+     *
+     * @param      {object}  name    The name
+     * @param      {object}  value   The value
+     */
     this.addHiddenField = function (name, value) {
         this.bpHiddenFields[name] = value;
     };
 
+    /**
+     * Sets the hidden fields.
+     */
     this.setHiddenFields = function () {
         $.each(this.bpHiddenFields, function (name, value) {
             _this.bpFormDesc.after('<input type="hidden" name="' + name + '" value="' + value + '"/>');
