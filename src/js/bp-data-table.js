@@ -15,16 +15,19 @@ function bpDt(id) {
     this.bpDataTableName = id;
     this.bpDataTableId = id + 'Table';
     this.bpRpcAction = 'bp_rpc_get_all_' + id;
-    this.bpDataTable = $('#' + this.bpDataTableId);
+    this.bpDataTable = {};
     this.bpParams = [];
     this.bpRPCData = {};
     this.bpFlag = {};
+    this.bpD ={};
 
     /**
-     * set @var initialize
+     * set @var initialize only once
      */
     this.initialize = function () {
 
+        //set new dialog
+        this.bpD = new bpDialog(this, 'properties');
         this.initialized = true;
     };
 
@@ -136,15 +139,13 @@ function bpDt(id) {
         //return nCell;
     };
 
-    this.setAddButtonEvent = function (dialog) {
+    this.setAddButtonEvent = function () {
 
         var button = this.bpDataTable.prev();
 
         button.click(function(){
-                    dialog.setAction('insert');
-                    dialog.open();
+                    _this.bpD.insert();
                 });
-
     };
 
     this.flagCheckboxes = function (element) {
@@ -171,13 +172,23 @@ function bpDt(id) {
         } else {
             delete this.bpFlag[element.id];
         }
-        console.log(this.bpFlag);
+        //console.log(this.bpFlag);
     };
 
-    this.load = function () {
+    this.load = function (tableId) {
         if (this.initialized === false) {
             this.initialize();
         }
+
+        if (tableId === undefined) {
+            tableId = this.bpDataTableId;
+        }
+        //set table
+        this.bpDataTable = $('#' + tableId);
+
+        this.setAddButtonEvent();
+
+        console.log('Table id: ' + tableId);
 
   //$('#batchTotalPages').html(batchIconProgress + batchIconProgressText);
         $.post(
@@ -205,7 +216,7 @@ function bpDt(id) {
 
         var tabDiv = $('.' + this.bpDataTableName + 'Tabs');
         var tabs = tabDiv.find('.nav-tabs');
-        var contents = tabDiv.find('.tab-content');        
+        var contents = tabDiv.find('.tab-content');
 
         if (tabs.find('#single-tab-' + row).length === 0) {
 
@@ -242,24 +253,22 @@ function bpDt(id) {
 
             removeButton.insertAfter(aTab);
 
-            //var newName = 
-
             var table = newCont.find('.bp-data-table');
             var tableId = table.attr('id');
-            table.attr('id');
+            table.attr('id', tableId + '-' + row);
 
             var dialog = newCont.find('.bp-data-dialog');
             var dialogId = dialog.attr('id');
 
-            var bpDialogInc2PropDT = new bpDt('incexp2prop');
-            var incexp2propD = new bpDialog(bpDialogInc2PropDT, 'income/expense');
+            var bpNewDT = new bpDt('incexp2prop');
+            var incexp2propD = new bpDialog(bpNewDT, 'income/expense');
 
             incexp2propD.load();
 
-            bpDialogInc2PropDT.clearParam();
-            bpDialogInc2PropDT.setParam('property_id', rowData.id);
+            bpNewDT.clearParam();
+            bpNewDT.setParam('property_id', rowData.id);
 
-            bpDialogInc2PropDT.load();
+            bpNewDT.load(tableId + '-' + row);
 
             console.log(dialogId);
 
@@ -271,8 +280,8 @@ function bpDt(id) {
         tabs.find('#single-tab-' + row).addClass('active');
         contents.find('#single-' + row).addClass('active');
 
-        // var bpDialogInc2PropDT = new bpDt('incexp2prop');
-        // var incexp2propD = new bpDialog(bpDialogInc2PropDT, 'income/expense');
+        // var bpNewDT = new bpDt('incexp2prop');
+        // var incexp2propD = new bpDialog(bpNewDT, 'income/expense');
 
 
 
@@ -282,6 +291,18 @@ function bpDt(id) {
     this.removeTab = function (tab) {
 
         //
+        //
+    };
+
+    this.edit = function (row) {
+
+        this.bpD.edit(row);
+        //
+    };
+
+    this.delete = function (row) {
+
+        this.bpD.delete(row);
         //
     };
 }

@@ -83,16 +83,16 @@
 	//getting properties table
 	var propertiesDT = new bpDt('properties');
 	//new object bpDialog(Object bpDt, title)
-	var propertiesD = new bpDialog(propertiesDT, 'properties');
+	//var propertiesD = new bpDialog(propertiesDT, 'properties');
 
 	// var bpDialogInc2PropDT = new bpDt('incexp2prop');
 	// var incexp2propD = new bpDialog(bpDialogInc2PropDT, 'income/expense');
 
-	$(document).ready(function ($) {
+	//$(document).ready(function ($) {
 		//bpDialog.autoOpen(true);
-		propertiesD.load();
+		//propertiesD.load();
 		//incexp2propD.load();
-	});
+	//});
 
 	propertiesDT.load();
 	//bpDialogInc2PropDT.load();
@@ -122,7 +122,7 @@
 
 	      
 	      table.addCell(6, newRow, status, 'center');
-	      table.addCell(7, newRow, '<button name="edit" class="button-link-edit edit small" onclick="propertiesD.edit(' + rowCounter + ')"><span class="dashicons dashicons-edit"></span></button><button name="delete" class="button-link-delete delete small" onclick="propertiesD.delete(' + rowCounter + ')"><span class="dashicons dashicons-trash"></span></button>', 'center');
+	      table.addCell(7, newRow, '<button name="edit" class="button-link-edit edit small" onclick="propertiesDT.edit(' + rowCounter + ')"><span class="dashicons dashicons-edit"></span></button><button name="delete" class="button-link-delete delete small" onclick="propertiesDT.delete(' + rowCounter + ')"><span class="dashicons dashicons-trash"></span></button>', 'center');
 	      table.addCell(8, newRow, '<input type="checkbox" name="batch[]" value="' + parseInt(rowCounter) + '" id="batch' + parseInt(rowCounter) + '" onclick="' + table.getName() + 'DT.flagCheckbox(this);"/>', 'center');
 
 	      rowCounter++;
