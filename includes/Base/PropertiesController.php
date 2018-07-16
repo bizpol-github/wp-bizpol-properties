@@ -53,7 +53,7 @@ class PropertiesController extends BaseController
     public function bp_rpc_update_properties(){
         global $wpdb;
 
-        $data['status'] = false;
+        $data['ok'] = false;
         $data = array();
         $form = $_POST['data'];
 
@@ -75,13 +75,15 @@ class PropertiesController extends BaseController
                     $wpdb->update('wp_bp_properties', $form_values, array('id' =>  $key));
 
                 } elseif ($form['action'] == 'insert') {
-                    $wpdb->insert('wp_bp_properties', $form_values);
-                    $data['status'] = true;
-                    // return 0 on error
-                    $new_id = $wpdb->insert_id;
-                    if($new_id == 0){
-                        $data['status'] = false;
-                    }
+                    if ($key == 'new') {
+                        $wpdb->insert('wp_bp_properties', $form_values);
+                        $data['ok'] = true;
+                        $new_id = $wpdb->insert_id;
+
+                        if($new_id == 0){
+                            $data['ok'] = false;
+                        }
+                    }                    
                 } elseif ($form['action'] == 'delete') {
                     $wpdb->delete('wp_bp_properties', array('id' =>  $key));
                 } elseif ($form['action'] == 'status') {
@@ -89,7 +91,7 @@ class PropertiesController extends BaseController
                     $wpdb->update('wp_bp_properties', array('status' => $status), array('id' =>  $key));                   
                 }
 
-                $data['status'] = true;
+                $data['ok'] = true;
                 
             }
 

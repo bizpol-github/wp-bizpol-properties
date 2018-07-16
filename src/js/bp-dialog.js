@@ -164,7 +164,7 @@ function bpDialog(table, title) {
                         contentType: 'application/json'
                     },
                     function (response) {
-                        if (response.status === true) {
+                        if (response.ok === true) {
                             _this.bpDialogTable.load();
                             _this.close();
                         }
@@ -442,11 +442,20 @@ function bpDialog(table, title) {
     this.insert = function () {
         var rows = [];
         var headers = this.bpDialogTable.getTableHeaders();
-        this.load();
-        rows.push(headers);
+        var row = {};
+        $.each(headers, function (ignore, value) {
+            if (value === 'id') {
+                row[value] = 'new';
 
-        console.log(headers);
-        this.updateForm(rows, true);
+            } else {
+                row[value] = undefined;
+            }
+        });
+        this.load();
+        rows.push(row);
+
+        console.log(row);
+        this.updateForm(rows, false);
         this.addHiddenField('user_id', wp_adminId);
         this.setAction('insert');
         this.open();

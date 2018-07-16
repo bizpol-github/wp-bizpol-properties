@@ -105,7 +105,7 @@ function bpDt(id) {
         var name = '';
         $.each(header, function (ignore, value) {
             name = value.getAttribute('name');
-            if (name !== 'actions' || name !== 'batchFlag') {
+            if (name !== 'actions' && name !== 'batchFlag') {
                 cols[idx] = name;
             }
             idx++;
