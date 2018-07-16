@@ -440,8 +440,13 @@ function bpDialog(table, title) {
      * @param      {string}  id      The identifier
      */
     this.insert = function () {
+        var rows = [];
+        var headers = this.bpDialogTable.getTableHeaders();
         this.load();
-        this.updateForm([{id: 'new'}], true);
+        rows.push(headers);
+
+        console.log(headers);
+        this.updateForm(rows, true);
         this.addHiddenField('user_id', wp_adminId);
         this.setAction('insert');
         this.open();
@@ -459,6 +464,8 @@ function bpDialog(table, title) {
         var rows = [];
         var row = this.bpDialogTable.getRowData(id);
         rows.push(row);
+
+        console.log(row);
 
         this.updateForm(rows, false);
         this.addHiddenField('user_id', wp_adminId);
@@ -549,7 +556,7 @@ function bpDialog(table, title) {
      */
     this.setAction = function (action) {
 
-        console.log(this.bpNewForm);
+        //console.log(this.bpNewForm);
 
         this.bpNewForm.find("input[name='action']").val(action);
 

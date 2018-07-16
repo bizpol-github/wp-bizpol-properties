@@ -73,6 +73,7 @@ class PropertiesController extends BaseController
 
                 if ($form['action'] == 'update') {
                     $wpdb->update('wp_bp_properties', $form_values, array('id' =>  $key));
+
                 } elseif ($form['action'] == 'insert') {
                     $wpdb->insert('wp_bp_properties', $form_values);
                     $data['status'] = true;
@@ -92,28 +93,6 @@ class PropertiesController extends BaseController
                 
             }
 
-        }
-
-        if ($form['action'] == 'insert') {
-
-            $form_values = array(
-                'property_name' => sanitize_text_field($form['property_name']),
-                'prefix' => sanitize_text_field($form['prefix']),
-                'address' => sanitize_text_field($form['address']),
-                'construction_year' => $form['construction_year'],
-                'land_register' => sanitize_text_field($form['land_register']),
-                'user_id' => sanitize_text_field($form['user_id']),
-                'status' => $form['status']
-            );
-
-            $wpdb->insert('wp_bp_properties', $form_values);
-            $data['status'] = true;
-            // return 0 on error
-            $new_id = $wpdb->insert_id;
-
-            if($new_id == 0){
-                $data['status'] = false;
-            }
         }
 
         $data['form_values']  = $form;

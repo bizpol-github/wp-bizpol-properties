@@ -105,7 +105,7 @@ function bpDt(id) {
         var name = '';
         $.each(header, function (ignore, value) {
             name = value.getAttribute('name');
-            if (name !== 'actions') {
+            if (name !== 'actions' || name !== 'batchFlag') {
                 cols[idx] = name;
             }
             idx++;
@@ -337,9 +337,21 @@ function bpDt(id) {
         //
     };
 
+    this.editBatch = function () {
+
+        this.bpD.editBatch();
+        //
+    };
+
     this.delete = function (row) {
 
         this.bpD.delete(row);
+        //
+    };
+
+    this.deleteBatch = function () {
+
+        this.bpD.deleteBatch();
         //
     };
 }

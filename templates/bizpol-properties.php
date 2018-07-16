@@ -20,9 +20,9 @@
 		    				<th name="address">Address</th>
 		    				<th class="text-center" name="construction_year">Builded</th>
 		    				<th class="text-center" name="land_register">Land Register</th>
-		    				<th class="text-center" name="actions">Status</th>
+		    				<th class="text-center" name="status">Status</th>
 		    				<th class="text-center" name="actions">Actions</th>
-		    				<th align="center" width="20"><input type="checkbox" name="batchFlag" id="batchFlag" onclick="propertiesDT.flagCheckboxes(this);" /></th>
+		    				<th align="center" width="20" name="batchFlag"><input type="checkbox" name="batchFlag" id="batchFlag" onclick="propertiesDT.flagCheckboxes(this);" /></th>
 		    			</tr>
 		    		</thead>
 		    		<tbody>		
@@ -30,7 +30,7 @@
 		    		<tfoot>
 		    			<tr>
 		    				<td colspan="7" class="bp-data-table-legend">Legend:<span class="dashicons dashicons-trash delete"></span>Delete<span class="dashicons dashicons-edit edit"></span>Edit<span class="dashicons dashicons-visibility edit"></span>Switch status</td>
-		    				<td align="center"><button name="edit" class="button-link-edit edit small" onclick="propertiesD.editBatch()"><span class="dashicons dashicons-edit"></span></button><button name="delete" class="button-link-delete delete small" onclick="propertiesD.deleteBatch()"><span class="dashicons dashicons-trash"></span></button></td>
+		    				<td align="center"><button name="edit" class="button-link-edit edit small" onclick="propertiesDT.editBatch()"><span class="dashicons dashicons-edit"></span></button><button name="delete" class="button-link-delete delete small" onclick="propertiesDT.deleteBatch()"><span class="dashicons dashicons-trash"></span></button></td>
 		    				<td align="center" width="20"><input type="checkbox" name="batchFlag" id="batchFlag" onclick="propertiesDT.flagCheckboxes(this);" /></td>   					
 		    			</tr>
 		    		</tfoot>
@@ -120,7 +120,7 @@
 	      table.addCell(4, newRow, record.construction_year.substr(0,10), 'center');
 	      table.addCell(5, newRow, record.land_register);
 	      table.addCell(6, newRow, status, 'center');
-	      table.addCell(7, newRow, '<button name="edit" class="button-link-edit edit small" onclick="propertiesDT.edit(' + rowCounter + ')"><span class="dashicons dashicons-edit"></span></button><button name="delete" class="button-link-delete delete small" onclick="propertiesDT.delete(' + rowCounter + ')"><span class="dashicons dashicons-trash"></span></button>', 'center');
+	      table.addCell(7, newRow, '<button name="edit" class="button-link-edit edit small" onclick="' + table.getName() + 'DT.edit(' + rowCounter + ')"><span class="dashicons dashicons-edit"></span></button><button name="delete" class="button-link-delete delete small" onclick="' + table.getName() + 'DT.delete(' + rowCounter + ')"><span class="dashicons dashicons-trash"></span></button>', 'center');
 	      table.addCell(8, newRow, '<input type="checkbox" name="batch[]" value="' + parseInt(rowCounter) + '" id="batch' + parseInt(rowCounter) + '" onclick="' + table.getName() + 'DT.flagCheckbox(this);"/>', 'center');
 
 	      rowCounter++;
