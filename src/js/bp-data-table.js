@@ -25,7 +25,6 @@ function bpDt(id) {
      * set @var initialize only once
      */
     this.initialize = function () {
-
         //set new dialog
         this.bpD = new bpDialog(this, 'properties');
         this.initialized = true;
@@ -79,7 +78,7 @@ function bpDt(id) {
     /**
      * Getting the name.
      *
-     * @return     {<type>}  The name.
+     * @return     {string}  The name.
      */
     this.getName = function () {
         return this.bpDataTableName;
@@ -97,7 +96,7 @@ function bpDt(id) {
     /**
      * Getting the table headers.
      *
-     * @return     {<type>}  The table headers.
+     * @return     {object}  The table headers.
      */
     this.getTableHeaders = function () {
         var header = $("#" + this.bpDataTableId + ' thead tr th');
@@ -116,20 +115,45 @@ function bpDt(id) {
         return cols;
     };
 
+    /**
+     * Gets the batch.
+     *
+     * @return     {object}  The batch.
+     */
     this.getBatch = function () {
         return this.bpFlag;
     };
 
+    /**
+     * Gets the row data.
+     *
+     * @param      {string}  id      The identifier
+     * @return     {object}  The row data.
+     */
     this.getRowData = function (id) {
         return this.bpRPCData.entries[id];
     };
 
+    /**
+     * Adds a row.
+     *
+     * @param      {string}  id      The identifier
+     * @return     {<type>}  { description_of_the_return_value }
+     */
     this.addRow = function (id) {
         var nRow = this.bpDataTable[0].tBodies[0].insertRow(id);
         nRow.id = 'row' + parseInt(id);
         return nRow;
     };
 
+    /**
+     * Adds a cell.
+     *
+     * @param      {object}  id      The identifier
+     * @param      {object}  row     The row
+     * @param      {object}  data    The data
+     * @param      {<type>}  align   The align
+     */
     this.addCell = function (id, row, data, align) {
         var nCell = row.insertCell(id);
         nCell.innerHTML = data;
@@ -139,6 +163,9 @@ function bpDt(id) {
         //return nCell;
     };
 
+    /**
+     * Set @var setAddButtonEvent
+     */
     this.setAddButtonEvent = function () {
 
         var button = this.bpDataTable.prev();
@@ -210,6 +237,12 @@ function bpDt(id) {
         );
     };
 
+    /**
+     * Adds a new tab.
+     *
+     * @param      {string}  row     The row
+     * @param      {string}  name    The name
+     */
     this.addNewTab = function (row, name) {
 
         var rowData = this.getRowData(row);
@@ -285,7 +318,6 @@ function bpDt(id) {
 
 
 
-        
     };
 
     this.removeTab = function (tab) {
@@ -294,6 +326,11 @@ function bpDt(id) {
         //
     };
 
+    /**
+     * Edit function
+     *
+     * @param      {object}  row     The row
+     */
     this.edit = function (row) {
 
         this.bpD.edit(row);

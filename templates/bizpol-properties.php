@@ -119,8 +119,6 @@
 	      table.addCell(3, newRow, record.address);
 	      table.addCell(4, newRow, record.construction_year.substr(0,10), 'center');
 	      table.addCell(5, newRow, record.land_register);
-
-	      
 	      table.addCell(6, newRow, status, 'center');
 	      table.addCell(7, newRow, '<button name="edit" class="button-link-edit edit small" onclick="propertiesDT.edit(' + rowCounter + ')"><span class="dashicons dashicons-edit"></span></button><button name="delete" class="button-link-delete delete small" onclick="propertiesDT.delete(' + rowCounter + ')"><span class="dashicons dashicons-trash"></span></button>', 'center');
 	      table.addCell(8, newRow, '<input type="checkbox" name="batch[]" value="' + parseInt(rowCounter) + '" id="batch' + parseInt(rowCounter) + '" onclick="' + table.getName() + 'DT.flagCheckbox(this);"/>', 'center');
