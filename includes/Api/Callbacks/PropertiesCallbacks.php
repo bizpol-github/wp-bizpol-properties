@@ -6,7 +6,11 @@
 
 namespace Inc\Api\Callbacks;
 
+/**
+ * Class for properties callbacks.
+ */
 class PropertiesCallbacks{
+
     public function propertiesSectionManager(){
         echo '<h4></h4>';
     }
@@ -35,6 +39,12 @@ class PropertiesCallbacks{
         return $output;
     }
 
+
+    /**
+     * Creates text fields
+     *
+     * @param      <object>  $args   The arguments
+     */
     public function textField($args){
         $name = $args['label_for'];
         $option_name = $args['option_name'];
@@ -48,6 +58,11 @@ class PropertiesCallbacks{
         echo '<input ' . (isset($args['type']) ? 'type="' . $args['type'] . '" ' : 'type="text"') . ' class="regular-text" id="' . $name . '" name="' . $name . '" value="' . $value . '" placeholder="' . $args['placeholder'] . '" min="' . $args['min'] . '" ' . (isset($args['max']) ? ' max="' . $args['max'] . '" ' : '') . (isset($args['patern']) ? ' patern="' . $args['patern'] . '" ' : '') . (isset($args['required']) ? 'required' : '') . '><div class="status dashicons" status="null"></div>';
     }
 
+    /**
+     * Creates address text fields
+     *
+     * @param      <object>  $args   The arguments
+     */
     public function textFieldAddress($args){
         $name = $args['label_for'];
         $option_name = $args['option_name'];
@@ -65,6 +80,11 @@ class PropertiesCallbacks{
 </select><input ' . (isset($args['type']) ? 'type="' . $args['type'] . '" ' : 'type="text"') . ' style="width: 89%; margin: 0;" id="' . $name . '" name="' . $name . '" value="' . $value . '" placeholder="' . $args['placeholder'] . '" min="' . $args['min'] . '" ' . (isset($args['max']) ? 'max="' . $args['max'] . '" ' : '') . 'required><div class="status dashicons" status="null"></div></span>';
     }
 
+    /**
+     * Creates income/expense type field
+     *
+     * @param      <object>  $args   The arguments
+     */
     public function incExpFieldType($args){
         $name = $args['label_for'];
         $option_name = $args['option_name'];
@@ -100,6 +120,12 @@ class PropertiesCallbacks{
         echo '<div id="incexp-add-button" class="button button-primary" style="margin-top: 10px;"><span class="dashicons dashicons-plus" style=" padding-top: 3px;"></span></div>';
     }
 
+
+    /**
+     * Creates date fields
+     *
+     * @param      <object>  $args   The arguments
+     */
     public function dateField($args){
         $name = $args['label_for'];
         $option_name = $args['option_name'];
@@ -115,6 +141,11 @@ class PropertiesCallbacks{
 
     
 
+    /**
+     * Creates checkbox fields
+     *
+     * @param      <object>  $args   The arguments
+     */
     public function checkboxField($args){
         $name = $args['label_for'];
         $class = $args['class'];

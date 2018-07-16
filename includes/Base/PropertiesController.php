@@ -17,7 +17,10 @@ class PropertiesController extends BaseController
 	public $subpages = array();
 	
 
-	public function register()
+	/**
+     * Registering functions
+     */
+    public function register()
 	{
 		$option = get_option('bizpol_properties');
         $activate = isset($option['Properties']) ? $option['Properties']  : false;

@@ -198,7 +198,7 @@ function bpDialog(table, title) {
         this.bpNewForm.attr('id', 'bp-dialog-form-copy')
             .appendTo('#' + this.bpDialogId);
 
-            console.log(this.bpNewForm);
+        console.log(this.bpNewForm);
 
         this.bpNewForm.show();
         this.bpForm.hide();
@@ -257,6 +257,7 @@ function bpDialog(table, title) {
             var test = regex.test(text);
             //console.log(test);
 
+            // icon checking
             if (test) {
                 status.removeClass('dashicons-no').addClass('dashicons-yes').css('color', 'green');
                 status.attr('status', true);
@@ -301,6 +302,12 @@ function bpDialog(table, title) {
 
     };
 
+    /**
+     * Form update
+     *
+     * @param      {object}  data      The data
+     * @param      {<type>}  disabled  The disabled
+     */
     this.updateForm = function (data, disabled) {
         var rows = data;
 
@@ -345,6 +352,13 @@ function bpDialog(table, title) {
         });
     };
 
+    /**
+     * Updating tables
+     *
+     * @param      {object}   table     The table
+     * @param      {object}   row       The row
+     * @param      {boolean}  disabled  The disabled
+     */
     this.updateFormTable = function (table, row, disabled) {
         var input = {};
         var select = {};
@@ -486,6 +500,9 @@ function bpDialog(table, title) {
         this.setTitle('Delete', 'Delete ' + this.bpActionTitle + ' #' + row.id);
     };
 
+    /**
+     * Set @var deleteBatch
+     */
     this.deleteBatch = function () {
         this.load();
         var ids = this.bpDialogTable.getBatch();
