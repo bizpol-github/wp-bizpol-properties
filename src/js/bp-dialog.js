@@ -285,12 +285,9 @@ function bpDialog(table, title) {
      */
     this.load = function () {
 
-        console.log(this.initialized);
-
         if (this.initialized === false) {
             this.initialize();
-
-            console.log('zainicjowany');
+            console.log('Dialog ' + this.bpDialogName + ' zainicjowany');
         }
     };
 
@@ -430,7 +427,9 @@ function bpDialog(table, title) {
      */
     this.insert = function () {
         this.load();
+        this.updateForm([{id: 'new'}], true);
         this.addHiddenField('user_id', wp_adminId);
+        this.setAction('insert');
         this.open();
         this.setTitle('Insert', 'New by ' + wp_adminFullName);
     };
@@ -482,7 +481,6 @@ function bpDialog(table, title) {
         rows.push(row);
         this.updateForm(rows, true);
         this.addHiddenField('user_id', wp_adminId);
-        this.addHiddenField('id', row.id);
         this.setAction('delete');
         this.open();
         this.setTitle('Delete', 'Delete ' + this.bpActionTitle + ' #' + row.id);

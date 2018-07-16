@@ -51,9 +51,7 @@ class PropertiesController extends BaseController
         global $wpdb;
 
         $data['status'] = false;
-
         $data = array();
-
         $form = $_POST['data'];
 
         if (isset($form['entries'])) {
@@ -71,18 +69,20 @@ class PropertiesController extends BaseController
                 );
 
                 if ($form['action'] == 'update') {
-
                     $wpdb->update('wp_bp_properties', $form_values, array('id' =>  $key));
-
+                } elseif ($form['action'] == 'insert') {
+                    $wpdb->insert('wp_bp_properties', $form_values);
+                    $data['status'] = true;
+                    // return 0 on error
+                    $new_id = $wpdb->insert_id;
+                    if($new_id == 0){
+                        $data['status'] = false;
+                    }
                 } elseif ($form['action'] == 'delete') {
-
                     $wpdb->delete('wp_bp_properties', array('id' =>  $key));
-
                 } elseif ($form['action'] == 'status') {
-
                     $status = ($form['status'] == '1') ? '0' : '1';
-                    $wpdb->update('wp_bp_properties', array('status' => $status), array('id' =>  $key));
-                    
+                    $wpdb->update('wp_bp_properties', array('status' => $status), array('id' =>  $key));                   
                 }
 
                 $data['status'] = true;
