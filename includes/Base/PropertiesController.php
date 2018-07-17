@@ -75,15 +75,13 @@ class PropertiesController extends BaseController
                     $wpdb->update('wp_bp_properties', $form_values, array('id' =>  $key));
 
                 } elseif ($form['action'] == 'insert') {
-                    if ($key == 'new') {
-                        $wpdb->insert('wp_bp_properties', $form_values);
-                        $data['ok'] = true;
-                        $new_id = $wpdb->insert_id;
+                    $wpdb->insert('wp_bp_properties', $form_values);
+                    $data['ok'] = true;
+                    $new_id = $wpdb->insert_id;
 
-                        if($new_id == 0){
-                            $data['ok'] = false;
-                        }
-                    }                    
+                    if($new_id == 0){
+                        $data['ok'] = false;
+                    }                  
                 } elseif ($form['action'] == 'delete') {
                     $wpdb->delete('wp_bp_properties', array('id' =>  $key));
                 } elseif ($form['action'] == 'status') {
@@ -96,7 +94,7 @@ class PropertiesController extends BaseController
             }
 
         }
-
+        $data['seba'] = 1;
         $data['form_values']  = $form;
         wp_send_json($data);
         wp_die();

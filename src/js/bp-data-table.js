@@ -110,8 +110,6 @@ function bpDt(id) {
             }
             idx++;
         });
-        //console.log(cols);
-        //console.log("#" + this.bpDataTableId)
         return cols;
     };
 
@@ -171,7 +169,7 @@ function bpDt(id) {
         var button = this.bpDataTable.prev();
 
         button.click(function(){
-                    _this.bpD.insert();
+                    _this.insertNew();
                 });
     };
 
@@ -203,19 +201,12 @@ function bpDt(id) {
     };
 
     this.load = function (tableId) {
-        if (this.initialized === false) {
-            this.initialize();
-        }
 
         if (tableId === undefined) {
             tableId = this.bpDataTableId;
         }
         //set table
         this.bpDataTable = $('#' + tableId);
-
-        this.setAddButtonEvent();
-
-        console.log('Table id: ' + tableId);
 
   //$('#batchTotalPages').html(batchIconProgress + batchIconProgressText);
         $.post(
@@ -232,9 +223,15 @@ function bpDt(id) {
                     window[_this.getId() + 'Feed'](response, _this);
                 }
                // console.log(ajaxurl + _this.getParams());
+                console.log('RPC Data');
                 console.log(_this.bpRPCData);
             }
         );
+
+        if (this.initialized === false) {
+            this.initialize();
+            this.setAddButtonEvent();
+        }
     };
 
     /**
@@ -323,6 +320,12 @@ function bpDt(id) {
     this.removeTab = function (tab) {
 
         //
+        //
+    };
+
+    this.insertNew = function () {
+
+        this.bpD.insertNew();
         //
     };
 
