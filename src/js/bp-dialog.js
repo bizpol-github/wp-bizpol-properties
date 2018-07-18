@@ -29,6 +29,10 @@ function bpDialog(table, title) {
     this.bpFormUl = $('<ul class="nav-tabs"></ul>');
     this.bpFormUlDiv = $('<div class="tab-content"></div>');
 
+    this.bpHiddenFields = {};
+    this.initialized = false;
+    this.newDialog = {};
+
     var _this = this;
 
     /**
@@ -50,7 +54,7 @@ function bpDialog(table, title) {
         var key_regex = /[\w_\-]+(?=\])/g;
         var id_regex = /[\d]+/g;
         //var key_regex = '/[\\w_-]+(?=\\])/g';
-
+  
        // console.log(pattern);
 
         var n_regex = new RegExp(name_regex);
@@ -104,12 +108,7 @@ function bpDialog(table, title) {
         });
         console.log(o);
         return o;
-    };
-
-    this.bpHiddenFields = {};
-
-    this.initialized = false;
-    this.newDialog = {};
+    };    
 
     /**
      * Sets dialog parameters and content, submit event and sets intialize to true
@@ -117,7 +116,7 @@ function bpDialog(table, title) {
     this.initialize = function () {
         this.newDialog = $('#' + this.bpDialogId);
         this.bpForm = this.newDialog.find('form#bp-dialog-form');
-
+        this.bpForm.remove();
 
         this.newDialog.dialog({
             autoOpen: autoOpen,
@@ -134,10 +133,7 @@ function bpDialog(table, title) {
         });
 
         this.newDialog.on("dialogclose", function () {
-
-            console.log('zamykanie');
             _this.resetBpForm();
-
         });
 
         //this.copyForm();
@@ -152,7 +148,7 @@ function bpDialog(table, title) {
         });
 
         //submit form
-        $('#' + this.bpDialogId).on('submit', '#bp-dialog-form-copy', function (evnt) {
+        $('#' + this.bpDialogId).on('submit', '#bp-dialog-form', function (evnt) {
             evnt.preventDefault();
             var status = _this.checkStatus();
 
@@ -172,6 +168,7 @@ function bpDialog(table, title) {
                             _this.bpDialogTable.load();
                             _this.close();
                         }
+                        console.log('Response:');
                         console.log(response);
                     }
                 );
@@ -193,14 +190,6 @@ function bpDialog(table, title) {
         this.bpFormUlDiv.empty();
 
         console.log('reset');
-        console.log(this.bpHiddenFields);
-        console.log(this.bpNewForm);
-        console.log(this.bpFormUl);
-        console.log(this.bpFormUlDiv);
-        console.log(this.bpForm);
-
-        //this.copyForm();
-        //$('#' + this.bpDialogId).append(bpForm);
     };
 
     /**
@@ -208,22 +197,16 @@ function bpDialog(table, title) {
      */
     this.copyForm = function () {
         this.bpNewForm = this.bpForm.clone();
-        this.bpNewForm.attr('id', 'bp-dialog-form-copy')
-            .appendTo(this.newDialog);
+        this.bpNewForm.appendTo(this.newDialog);
 
-        console.log('copy form');
-
+        console.log('create new form');
         console.log(this.bpNewForm);
-
-        this.bpNewForm.show();
-        this.bpForm.hide();
         // set title and description of form
         this.bpFormTitle = this.bpNewForm.find('h2');
         this.bpFormDesc = this.bpNewForm.find('h4');
         // set table form
         this.bpFormTable = this.bpNewForm.find('table.form-table');
     };
-
 
     /**
      * Set @var autoOpen
@@ -233,7 +216,6 @@ function bpDialog(table, title) {
     this.autoOpen = function (arg) {
         this.autoOpen = arg;
     };
-
 
     /**
      * Setting dialog title and description
@@ -245,7 +227,6 @@ function bpDialog(table, title) {
         this.bpFormTitle.html(t);
         this.bpFormDesc.html(d);
     };
-
 
     /**
      * Sets the status.
@@ -264,13 +245,8 @@ function bpDialog(table, title) {
             if (patern === undefined) {
                 patern = '([A-Za-z0-9-])\\w{' + (min - 1) + ',}';
             }
-
-            //console.log(patern);
-
             var regex = new RegExp(patern);
-
             var test = regex.test(text);
-            //console.log(test);
 
             // icon checking
             if (test) {
@@ -319,43 +295,76 @@ function bpDialog(table, title) {
 
     };
 
-    this.addNewTab = function (id, act) {
-        if (act === true) {
+    this.addNewTab = function (row, active, disabled) {
+        if (active === true) {
             this.bpFormUl.insertAfter(this.bpFormDesc);
             this.bpFormUlDiv.insertAfter(this.bpFormUl);
         }
 
-        var active = act;
+        var tabId = 'Tab-' + row.id;
+        var newTab = false;
+
+        if (row.id === 'new') {
+            var liCount = this.bpNewForm.find('ul li').length + 1;
+            console.log('Nowy:');
+            console.log('li:' + liCount);
+            tabId = liCount + '-Tab-' + row.id;
+            newTab = true;
+            row.id = liCount + '-' + row.id;
+
+        }
+
         var bpFormTableCopy = this.bpFormTable;
         var formTable = bpFormTableCopy.clone();
         this.bpFormTable.remove();
 
         this.bpFormUl.append(function () {
             var li = $('<li></li>');
+            var newTabLi = $(this).find('li.insertTab').length;
 
             if (active === true) {
                 li.addClass('active');
             }
 
-            $('<a>').attr('href', '#' + id).text('#' + id).appendTo(li);
+            $('<a>').attr('href', '#' + tabId).text('#' + tabId).appendTo(li);
+
+            if (newTabLi > 0) {
+                console.log('insertTab: ' + newTabLi);
+            }
+
+
             $(this).append(li);
         });
 
         this.bpFormUlDiv.append(function () {
-            var tab = $('<div id="' + id + '" class="tab-pane"></div>');
+            var tabPane = $('<div id="' + tabId + '" class="tab-pane"></div>');
 
             if (active === true) {
-                tab.addClass('active');
+                tabPane.addClass('active');
             }
 
-            formTable.appendTo(tab);
-
-            $(this).append(tab);
-
+            formTable.appendTo(tabPane);
+            $(this).append(tabPane);
         });
 
-        return formTable;
+        this.updateFormTable(formTable, row, disabled, newTab);
+    };
 
+    this.addExtraTab = function () {
+        this.bpFormUl.append(function () {
+            var li = $('<li class="insertTab"></li>');
+            $('<a class="insertTab"></a>').html('<span class="dashicons dashicons-plus"></span>').appendTo(li);
+            $(this).append(li);
+        });
+
+        this.bpFormUl.on('click', 'a.insertTab', function (evnt) {
+            evnt.preventDefault();
+
+            console.log('klikniety nowy tab');
+            _this.insertNewTab();
+
+
+        });
     };
 
     /**
@@ -365,28 +374,12 @@ function bpDialog(table, title) {
      * @param      {<type>}  disabled  The disabled
      */
     this.updateForm = function (data, disabled) {
-        var active = true;
-
-        console.log('Row data:');
-        console.log(data);
+        this.load();
+        var tabActive = true;
 
         $.each(data, function (ignore, row) {
-
-            var id = 'item-' + row.id;
-            var formTable = _this.addNewTab(id, active);
-
-            _this.updateFormTable(formTable, row, disabled);
-
-            active = false;
-
-            //if (row.id === 'new') {
-
-                console.log('new');
-
-                var formTableAdd = _this.addNewTab('add', active);
-
-                _this.updateFormTable(formTableAdd, row, disabled);
-
+            _this.addNewTab(row, tabActive, disabled);
+            tabActive = false;
            // }
         });
     };
@@ -398,19 +391,10 @@ function bpDialog(table, title) {
      * @param      {object}   row       The row
      * @param      {boolean}  disabled  The disabled
      */
-    this.updateFormTable = function (table, row, disabled) {
+    this.updateFormTable = function (table, row, disabled, insert) {
         var input = {};
         var select = {};
         var name = '';
-        var newItem = false;
-
-        if (row.id === 'new') {
-            //check namuber of tabs
-            var li = this.bpNewForm.find('ul li').length;
-            console.log('li:' + li);
-            row.id = '1-' + row.id;
-            newItem = true;
-        }
 
         $.each(row, function (key, value) {
 
@@ -441,7 +425,7 @@ function bpDialog(table, title) {
 
                 if (disabled === true) {
                     input.prop('disabled', true);
-                } else if (!newItem) {
+                } else if (!insert) {
                     setStatus(input);
                 }
             }
@@ -488,7 +472,6 @@ function bpDialog(table, title) {
      * @param      {string}  id      The identifier
      */
     this.insertNew = function () {
-        this.load();
         var rows = [];
         var headers = this.bpDialogTable.getTableHeaders();
         var row = {};
@@ -501,13 +484,33 @@ function bpDialog(table, title) {
             }
         });
         rows.push(row);
-
-        console.log(rows);
         this.updateForm(rows, false);
+        this.addExtraTab();
         this.addHiddenField('user_id', wp_adminId);
         this.setAction('insert');
-        this.open();
         this.setTitle('Insert', 'New by ' + wp_adminFullName);
+        this.open();
+    };
+
+    /**
+     * Editing property function
+     *
+     * @param      {string}  id      The identifier
+     */
+    this.insertNewTab = function () {
+        var rows = [];
+        var headers = this.bpDialogTable.getTableHeaders();
+        var row = {};
+        $.each(headers, function (ignore, value) {
+            if (value === 'id') {
+                row[value] = 'new';
+
+            } else {
+                row[value] = undefined;
+            }
+        });
+        rows.push(row);
+        this.updateForm(rows, false);
     };
 
     /**
@@ -516,25 +519,19 @@ function bpDialog(table, title) {
      * @param      {string}  id      The identifier
      */
     this.edit = function (id) {
-        this.load();
-
         var rows = [];
         var row = this.bpDialogTable.getRowData(id);
         rows.push(row);
-
-        console.log(row);
-
         this.updateForm(rows, false);
         this.addHiddenField('user_id', wp_adminId);
-        this.open();
         this.setTitle('Edit', 'Edit ' + this.bpActionTitle + ' #' + row.id + ' by ' + wp_adminFullName);
+        this.open();
     };
 
     /**
      * Set @var editBatch
      */
     this.editBatch = function () {
-        this.load();
         var ids = this.bpDialogTable.getBatch();
         var rows = [];
         var dbIds = [];
@@ -547,27 +544,25 @@ function bpDialog(table, title) {
 
         this.updateForm(rows, false);
         this.addHiddenField('user_id', wp_adminId);
-        this.open();
         this.setTitle('Edit Batch', 'Edit ' + this.bpActionTitle + ' # (' + Object.values(dbIds) + ') by ' + wp_adminFullName);
+        this.open();
     };
 
     this.delete = function (id) {
-        this.load();
         var rows = [];
         var row = this.bpDialogTable.getRowData(id);
         rows.push(row);
         this.updateForm(rows, true);
         this.addHiddenField('user_id', wp_adminId);
         this.setAction('delete');
-        this.open();
         this.setTitle('Delete', 'Delete ' + this.bpActionTitle + ' #' + row.id);
+        this.open();
     };
 
     /**
      * Set @var deleteBatch
      */
     this.deleteBatch = function () {
-        this.load();
         var ids = this.bpDialogTable.getBatch();
         var rows = [];
         var dbIds = [];
@@ -580,8 +575,8 @@ function bpDialog(table, title) {
         this.updateForm(rows, true);
         this.addHiddenField('user_id', wp_adminId);
         this.setAction('delete');
-        this.open();
         this.setTitle('Delete Batch', 'Delete ' + this.bpActionTitle + ' # (' + Object.values(dbIds) + ') by ' + wp_adminFullName);
+        this.open();
     };
 
     /**
@@ -590,7 +585,6 @@ function bpDialog(table, title) {
      * @param      {string}  id      The identifier
      */
     this.switchStatus = function (id) {
-        this.load();
         var rows = [];
         var row = this.bpDialogTable.getRowData(id);
         rows.push(row);
@@ -599,10 +593,8 @@ function bpDialog(table, title) {
         this.addHiddenField('id', row.id);
         this.addHiddenField('status', row.status);
         this.setAction('status');
+        this.setTitle('Status', 'Change status ' + this.bpActionTitle + ' #' + row.id);        
         this.open();
-        this.setTitle('Status', 'Change status ' + this.bpActionTitle + ' #' + row.id);
-
-
     };
 
     /**

@@ -15,18 +15,25 @@
 	opacity: 0.95;
 	text-align: left;
 
-	& form{
+	& form {
 		margin: 0 15px;
 
 
 	}
+	& ul li a:not(.active) {
+		cursor: pointer;
+	}
 }
 
-.status{
+.status {
 	color: green;
     height: 20px;
     width: 20px;
     position: absolute;
     top: 38%;
     right: 20px;
+}
+
+.tab-content {
+	border: 1px solid #dedede;
 }

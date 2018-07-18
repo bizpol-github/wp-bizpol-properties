@@ -54,18 +54,19 @@ jQuery(document).ready(function($){
         e.preventDefault();
 
         var clickedTab = $(this);
-        var tabul = $(this).parent();
-        var content = tabul.next();
+        if (!clickedTab.hasClass('insertTab')) {
+            console.log('nie ma clasy');
+            var tabul = $(this).parent();
+            var content = tabul.next();
 
-        tabul.find("li.active").removeClass("active");
-        content.find(".tab-pane.active").removeClass("active");
-        var anchor = e.target;
-        var activePaneID = anchor.getAttribute("href");
+            tabul.find("li.active").removeClass("active");
+            content.find(".tab-pane.active").removeClass("active");
+            var anchor = e.target;
+            var activePaneID = anchor.getAttribute("href");
 
-        clickedTab.addClass("active");
-        $(activePaneID).addClass("active");
-
-       console.log(activePaneID);
+            clickedTab.addClass("active");
+            $(activePaneID).addClass("active");
+        }        
     });
 
 

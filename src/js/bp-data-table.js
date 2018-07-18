@@ -357,4 +357,10 @@ function bpDt(id) {
         this.bpD.deleteBatch();
         //
     };
+
+    this.switchStatus = function (row) {
+
+        this.bpD.switchStatus(row);
+        //
+    };
 }

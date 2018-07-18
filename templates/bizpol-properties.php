@@ -105,9 +105,9 @@
 	      var status = '';
 
 	      if (record.status === '1') {
-	      	status = '<span class="dashicons dashicons-visibility" onclick="propertiesD.switchStatus(' + rowCounter + ')"></span>';
+	      	status = '<span class="dashicons dashicons-visibility" onclick="' + table.getName() + 'DT.switchStatus(' + rowCounter + ')"></span>';
 	      } else {
-	      	status = '<span class="dashicons dashicons-hidden" onclick="propertiesD.switchStatus(' + rowCounter + ')"></span>';
+	      	status = '<span class="dashicons dashicons-hidden" onclick="p' + table.getName() + 'DT.switchStatus(' + rowCounter + ')"></span>';
 	      }
 
 	      var newRow = table.addRow(rowCounter);    
