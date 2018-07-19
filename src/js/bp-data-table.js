@@ -265,7 +265,7 @@ function bpDt(id) {
             tabs.append(newTab);
             contents.append(newCont);
 
-            var removeButton = $('<span class="ui-button-icon-primary ui-icon ui-icon-closethick" style="position: absolute; top:3px; right: 5px;"></span>');
+            var removeButton = $('<span class="dashicons dashicons-no-alt"></span>');
 
             removeButton.click(function (evnt) {
                 evnt.preventDefault();
