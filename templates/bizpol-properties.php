@@ -11,7 +11,7 @@
 
 	    <div class="tab-content">
 	    	<div id="general" class="tab-pane active">
-	    		<button id="propertiesAddButton" class="button button-primary" style="margin-bottom: 10px;">Add property</button>
+	    		<button class="button button-primary" style="margin-bottom: 10px;">Add property</button>
 	    		<table id="propertiesTable" class="bp-data-table">
 	    			<thead>
 		    			<tr>
