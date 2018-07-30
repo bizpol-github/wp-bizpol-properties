@@ -41,6 +41,9 @@
 			        <?php
 			            settings_fields('bp_property_settings');
 			            do_settings_sections('bizpol_property');
+			        ?>
+						<div class="bp-tab-pane"></div>
+			        <?php
 			            submit_button();
 			        ?>
 	    			</form>

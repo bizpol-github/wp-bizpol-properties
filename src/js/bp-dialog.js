@@ -26,6 +26,7 @@ function bpDialog(table, title) {
     this.bpFormTitle = '';
     this.bpFormDesc = '';
     this.bpFormTable = {};
+    this.bpTabPane = {};
     this.bpTabUl = $('<ul class="nav-tabs"></ul>');
     this.bpTabUlDiv = $('<div class="tab-content"></div>');
 
@@ -204,6 +205,8 @@ function bpDialog(table, title) {
         // set title and description of form
         this.bpFormTitle = this.bpNewForm.find('h2');
         this.bpFormDesc = this.bpNewForm.find('h4');
+        // set tab pane
+        this.bpTabPane = this.bpNewForm.find('div.bp-tab-pane');
         // set table form
         this.bpFormTable = this.bpNewForm.find('table.form-table');
     };
