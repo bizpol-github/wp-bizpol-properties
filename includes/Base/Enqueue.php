@@ -24,5 +24,6 @@ class Enqueue extends BaseController{
                 wp_enqueue_script('add', $this->plugin_url . 'assets/bp-properties-add.min.js');
                 wp_enqueue_script('data-table', $this->plugin_url . 'src/js/bp-data-table.js');
                 wp_enqueue_script('dialog', $this->plugin_url . 'src/js/bp-dialog.js');
+                wp_enqueue_script('tab-pane', $this->plugin_url . 'src/js/bp-tab-pane.js');
     }
 }

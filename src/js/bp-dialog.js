@@ -26,7 +26,7 @@ function bpDialog(table, title) {
     this.bpFormTitle = '';
     this.bpFormDesc = '';
     this.bpFormTable = {};
-    this.bpTabPane = {};
+    this.bpFormTab = {};
     this.bpTabUl = $('<ul class="nav-tabs"></ul>');
     this.bpTabUlDiv = $('<div class="tab-content"></div>');
 
@@ -206,7 +206,8 @@ function bpDialog(table, title) {
         this.bpFormTitle = this.bpNewForm.find('h2');
         this.bpFormDesc = this.bpNewForm.find('h4');
         // set tab pane
-        this.bpTabPane = this.bpNewForm.find('div.bp-tab-pane');
+        this.bpFormTab = new bpTabPane(this.bpNewForm.find('div.bp-tab-pane'));
+        this.bpFormTab.load();
         // set table form
         this.bpFormTable = this.bpNewForm.find('table.form-table');
     };
@@ -363,6 +364,7 @@ function bpDialog(table, title) {
         });
 
         this.updateFormTable(formTable, row, disabled, newTab);
+        this.bpFormTab.addTab(li, tabPane, active);
     };
 
     this.addExtraTab = function () {
