@@ -205,11 +205,11 @@ function bpDialog(table, title) {
         // set title and description of form
         this.bpFormTitle = this.bpNewForm.find('h2');
         this.bpFormDesc = this.bpNewForm.find('h4');
-        // set tab pane
-        this.bpFormTab = new bpTabPane(this.bpNewForm.find('div.bp-tab-pane'));
-        this.bpFormTab.load();
         // set table form
         this.bpFormTable = this.bpNewForm.find('table.form-table');
+        // set tab pane
+        this.bpFormTab = new bpTabPane(this.bpNewForm.find('div.bp-tab-pane'));
+        this.bpFormTab.load(this.bpFormTable);
     };
 
     /**
@@ -316,6 +316,7 @@ function bpDialog(table, title) {
             }
             console.log('Nowy:');
             console.log('li:' + liCount);
+            
             tabId = liCount + '-Tab-' + row.id;
             newTab = true;
             row.id = liCount + '-' + row.id;
@@ -516,7 +517,7 @@ function bpDialog(table, title) {
         var row = this.getNewEmptyRow();
         rows.push(row);
         this.updateForm(rows, false);
-        this.addExtraTab();
+        //this.addExtraTab();
         this.addHiddenField('user_id', wp_adminId);
         this.setAction('insert');
         this.setTitle('Insert', 'New by ' + wp_adminFullName);
