@@ -55,7 +55,7 @@ class PropertiesCallbacks{
             $value = $input[$_POST['edit_post']][$name];
         }
 
-        echo '<input ' . (isset($args['type']) ? 'type="' . $args['type'] . '" ' : 'type="text"') . ' class="regular-text" id="' . $name . '" name="' . $name . '" value="' . $value . '" placeholder="' . $args['placeholder'] . '" min="' . $args['min'] . '" ' . (isset($args['max']) ? ' max="' . $args['max'] . '" ' : '') . (isset($args['patern']) ? ' patern="' . $args['patern'] . '" ' : '') . (isset($args['required']) ? 'required' : '') . ' style="width: 85%"><div class="status dashicons" status="null"></div>';
+        echo '<input ' . (isset($args['type']) ? 'type="' . $args['type'] . '" ' : 'type="text"') . ' id="' . $name . '" name="' . $name . '" value="' . $value . '" placeholder="' . $args['placeholder'] . '" min="' . $args['min'] . '" ' . (isset($args['max']) ? ' max="' . $args['max'] . '" ' : '') . (isset($args['patern']) ? ' patern="' . $args['patern'] . '" ' : '') . (isset($args['required']) ? 'required' : '') . ' style="width: 100%"><div class="status dashicons" status="null"></div>';
     }
 
     /**
@@ -73,11 +73,11 @@ class PropertiesCallbacks{
             $value = $input[$_POST['edit_post']][$name];
         }
 
-        echo '<span class="regular-text" style="display: inline-block;"><select name="prefix" class="prefix" style="display: inline; width: 11%; margin: 0;">
+        echo '<span><select name="prefix" class="prefix" style="display: inline; width: 35px; margin: 0;">
   <option value="ul">ul.</option>
   <option value="al">al.</option>
   <option value="os">os.</option>
-</select><input ' . (isset($args['type']) ? 'type="' . $args['type'] . '" ' : 'type="text"') . ' style="width: 75%; margin: 0;" id="' . $name . '" name="' . $name . '" value="' . $value . '" placeholder="' . $args['placeholder'] . '" min="' . $args['min'] . '" ' . (isset($args['max']) ? 'max="' . $args['max'] . '" ' : '') . 'required><div class="status dashicons" status="null"></div></span>';
+</select><input ' . (isset($args['type']) ? 'type="' . $args['type'] . '" ' : 'type="text"') . ' style="width: calc(100% - 35px); max-width: 100%; margin: 0;" id="' . $name . '" name="' . $name . '" value="' . $value . '" placeholder="' . $args['placeholder'] . '" min="' . $args['min'] . '" ' . (isset($args['max']) ? 'max="' . $args['max'] . '" ' : '') . 'required><div class="status dashicons" status="null"></div></span>';
     }
 
     /**
@@ -136,7 +136,7 @@ class PropertiesCallbacks{
             $value = $input[$_POST['edit_post']][$name];
         }
 
-        echo '<input ' . (isset($args['type']) ? 'type="' . $args['type'] . '" ' : 'type="date"') . ' class="regular-text" id="' . $name . '" name="' . $name . '" value="' . $value . '" placeholder="' . $args['placeholder'] . '" min="' . $args['min'] . '" ' . (isset($args['max']) ? ' max="' . $args['max'] . '" ' : '') . (isset($args['patern']) ? ' patern="' . $args['patern'] . '" ' : '') . 'style="width: 85%" required>';
+        echo '<input ' . (isset($args['type']) ? 'type="' . $args['type'] . '" ' : 'type="date"') . ' id="' . $name . '" name="' . $name . '" value="' . $value . '" placeholder="' . $args['placeholder'] . '" min="' . $args['min'] . '" ' . (isset($args['max']) ? ' max="' . $args['max'] . '" ' : '') . (isset($args['patern']) ? ' patern="' . $args['patern'] . '" ' : '') . 'style="width: 100%" required>';
     }
 
     

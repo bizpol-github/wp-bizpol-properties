@@ -25,7 +25,6 @@ function bpDialog(table, title) {
     this.bpNewForm = {};
     this.bpFormTitle = '';
     this.bpFormDesc = '';
-    this.bpFormTable = {};
     this.bpFormTab = {};
     this.bpTabUl = $('<ul class="nav-tabs"></ul>');
     this.bpTabUlDiv = $('<div class="tab-content"></div>');
@@ -121,8 +120,10 @@ function bpDialog(table, title) {
 
         this.newDialog.dialog({
             autoOpen: autoOpen,
-            width: '50%',
+            minWidth: '50%',
+            width: '60%',
             modal: true,
+            //resizable: false,
             show: {
                 effect: 'fadeIn',
                 duration: 500
@@ -205,11 +206,8 @@ function bpDialog(table, title) {
         // set title and description of form
         this.bpFormTitle = this.bpNewForm.find('h2');
         this.bpFormDesc = this.bpNewForm.find('h4');
-        // set table form
-        this.bpFormTable = this.bpNewForm.find('table.form-table');
         // set tab pane
-        this.bpFormTab = new bpTabPane(this.bpNewForm.find('div.bp-tab-pane'));
-        this.bpFormTab.load(this.bpFormTable);
+        this.bpFormTab = new bpTabPane(this.bpNewForm);
     };
 
     /**
@@ -299,177 +297,6 @@ function bpDialog(table, title) {
 
     };
 
-    this.addNewTab = function (row, active, disabled) {
-        if (active === true) {
-            this.bpTabUl.insertAfter(this.bpFormDesc);
-            this.bpTabUlDiv.insertAfter(this.bpTabUl);
-        }
-
-        var tabId = 'Tab-' + row.id;
-        var newTab = false;
-
-        if (row.id === 'new') {
-            var liCount = this.bpNewForm.find('ul li').length;
-
-            if (liCount === 0) {
-                liCount += 1;
-            }
-            console.log('Nowy:');
-            console.log('li:' + liCount);
-            
-            tabId = liCount + '-Tab-' + row.id;
-            newTab = true;
-            row.id = liCount + '-' + row.id;
-
-        }
-
-        var bpFormTableCopy = this.bpFormTable;
-        var formTable = bpFormTableCopy.clone();
-        this.bpFormTable.remove();
-
-        var li = '';
-        var tabPane = '';
-
-        this.bpTabUl.append(function () {
-            li = $('<li></li>');
-            var newTabLi = $(this).find('li.insertTab');
-
-            if (active === true) {
-                li.addClass('active');
-            }
-
-            $('<a>').attr('href', '#' + tabId).text('#' + tabId).appendTo(li);
-
-            if (newTabLi.length > 0) {
-                var span = $('<span class="dashicons dashicons-no-alt"></span>');
-                span.click(function () {
-                    li.remove();
-                    tabPane.remove();
-                });
-                span.appendTo(li);
-                newTabLi.before(li);
-            } else {
-                $(this).append(li);
-            }
-        });
-
-        this.bpTabUlDiv.append(function () {
-            tabPane = $('<div id="' + tabId + '" class="tab-pane"></div>');
-
-            if (active === true) {
-                tabPane.addClass('active');
-            }
-
-            formTable.appendTo(tabPane);
-            $(this).append(tabPane);
-        });
-
-        this.updateFormTable(formTable, row, disabled, newTab);
-        this.bpFormTab.addTab(li, tabPane, active);
-    };
-
-    this.addExtraTab = function () {
-        this.bpTabUl.append(function () {
-            var li = $('<li class="insertTab"></li>');
-            $('<a class="insertTab"></a>').html('<span class="dashicons dashicons-plus"></span>').appendTo(li);
-            $(this).append(li);
-        });
-
-        this.bpTabUl.on('click', 'a.insertTab', function (evnt) {
-            evnt.preventDefault();
-
-            console.log('klikniety nowy tab');
-            _this.insertNewTab();
-
-
-        });
-    };
-
-    /**
-     * Form update
-     *
-     * @param      {object}  data      The data
-     * @param      {<type>}  disabled  The disabled
-     */
-    this.updateForm = function (data, disabled) {
-        var tabActive = false;
-
-        if (Object.keys(this.bpNewForm).length === 0) {
-            this.load();
-            tabActive = true;
-        }
-
-
-        $.each(data, function (ignore, row) {
-            _this.addNewTab(row, tabActive, disabled);
-            tabActive = false;
-           // }
-        });
-    };
-
-    /**
-     * Updating tables
-     *
-     * @param      {object}   table     The table
-     * @param      {object}   row       The row
-     * @param      {boolean}  disabled  The disabled
-     */
-    this.updateFormTable = function (table, row, disabled, insert) {
-        var input = {};
-        var select = {};
-        var name = '';
-
-        $.each(row, function (key, value) {
-
-            name = row.id + '[' + key + ']';
-            input = table.find('input[name="' + key + '"]');
-
-            if (input.length > 0) {
-
-                input.attr('name', name);
-
-                if (input.attr('type') === 'checkbox') {
-
-                    if (value === '1') {
-                        console.log('value 1: ' + value);
-
-                        input.prop('checked', 'checked');
-                        input.val(value);
-
-                    } else {
-                        console.log('value 0: ' + 0);
-                        input.val(0);
-                    }
-                } else {
-
-                    input.val(value);
-
-                }
-
-                if (disabled === true) {
-                    input.prop('disabled', true);
-                } else if (!insert) {
-                    setStatus(input);
-                }
-            }
-
-            select = table.find('select[name="' + key + '"]');
-
-            if (select.length > 0) {
-
-                select.attr('name', name);
-
-                $.each(select.children(), function (ignore, option) {
-                    if (option.value === value) {
-                        option.selected = true;
-                    }
-                    if (disabled === true) {
-                        select.disabled = true;
-                    }
-                });
-            }
-        });
-    };
 
     /**
     * Set @var open
@@ -513,27 +340,17 @@ function bpDialog(table, title) {
      * @param      {string}  id      The identifier
      */
     this.insertNew = function () {
+        this.load();
         var rows = [];
         var row = this.getNewEmptyRow();
         rows.push(row);
-        this.updateForm(rows, false);
-        //this.addExtraTab();
+        //this.updateForm(rows, false);
+        this.bpFormTab.load(rows);
+        this.bpFormTab.addExtraTab();
         this.addHiddenField('user_id', wp_adminId);
         this.setAction('insert');
         this.setTitle('Insert', 'New by ' + wp_adminFullName);
         this.open();
-    };
-
-    /**
-     * Editing property function
-     *
-     * @param      {string}  id      The identifier
-     */
-    this.insertNewTab = function () {
-        var rows = [];
-        var row = this.getNewEmptyRow();
-        rows.push(row);
-        this.updateForm(rows, false);
     };
 
     /**
