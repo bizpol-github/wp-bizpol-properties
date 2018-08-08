@@ -345,6 +345,8 @@ function bpDialog(table, title) {
         var row = this.getNewEmptyRow();
         rows.push(row);
         //this.updateForm(rows, false);
+        
+        this.bpFormTab.setEmptyRow(row);
         this.bpFormTab.load(rows);
         this.bpFormTab.addExtraTab();
         this.addHiddenField('user_id', wp_adminId);

@@ -4,15 +4,16 @@ function bpTabPane(element) {
     'use strict';
     this.bpForm = element;
     this.bpFormTable = this.bpForm.find('table.form-table');
+    this.bpFormTableNew = this.bpFormTable.clone();
+    this.bpEmptyRow = {};
 
     this.bpTabPane = this.bpForm.find('div.bp-tab-pane');
     this.bpTabUl = $('<ul class="nav-tabs"></ul>');
     this.bpTabUlDiv = $('<div class="tab-content"></div>');
-    this.bpTabSpan = $('<span class="dashicons dashicons-no-alt"></span>');    
-    this.bpTabCounter = 0;
-    this.bpTabActiveId = 0;
+    this.bpTabSpan = $('<span class="dashicons dashicons-no-alt"></span>');
+    this.bpTabCounter = 1;
+    this.bpTabActiveId = 1;
 
-    
     this.bpTabInit = false;
 
     var _this = this;
@@ -28,7 +29,7 @@ function bpTabPane(element) {
      * Adding ul and div to tab
      */
     this.bpTabInitialize = function () {
-        this.bpTabTable
+        this.bpFormTable.remove();
         this.bpTabUl.appendTo(this.bpTabPane);
         this.bpTabUlDiv.appendTo(this.bpTabPane);
     };
@@ -93,31 +94,77 @@ function bpTabPane(element) {
         });
     };
 
+    this.setEmptyRow = function (row) {
+        this.bpEmptyRow = row;
+    };
+
     this.addNewTab = function (row, disabled) {
 
-        var tabId = 'Tab-' + row.id;
-        var newTab = false;
-        var liCount = this.bpTabCounter + 1;
 
-        if (row.id === 'new') {
-            console.log('Nowy:');
-            console.log('li:' + liCount);
-            tabId = liCount + '-Tab-' + row.id;
-            newTab = true;
-            row.id = liCount + '-' + row.id;
+        // var tabId = 'Tab-' + row.id;
+        // var newTab = false;
+        // var liCount = this.bpTabCounter + 1;
 
-        }
+        // if (row.id === 'new') {
+        //     console.log(this.bpEmptyRow);
+        //     console.log('Nowy:');
+        //     console.log('li:' + liCount);
+        //     tabId = liCount + '-Tab-' + row.id;
+        //     newTab = true;
+        //     row.id = liCount + '-' + row.id;
+        // }
 
-        var formNewTable = this.bpFormTable;
+        // var formNewTable = this.bpFormTable;
+
+        // var formTable = formNewTable.clone();
+        // this.bpFormTable.remove();
+
+        // var li = '';
+        // var tabPane = '';
+
+        // this.bpTabUl.append(function () {
+        //     li = $('<li></li>');
+        //     var newTabLi = $(this).find('li.insertTab');
+
+        //     $('<a>').attr('href', '#' + tabId).text('#' + tabId).appendTo(li);
+
+        //     if (newTabLi.length > 0) {
+        //         var span = $('<span class="dashicons dashicons-no-alt"></span>');
+        //         span.click(function () {
+        //             li.remove();
+        //             tabPane.remove();
+        //         });
+        //         span.appendTo(li);
+        //         newTabLi.before(li);
+        //     } else {
+        //         $(this).append(li);
+        //     }
+        // });
+
+        // this.bpTabUlDiv.append(function () {
+        //     tabPane = $('<div id="' + tabId + '" class="tab-pane"></div>');
+
+        //     formTable.appendTo(tabPane);
+        //     $(this).append(tabPane);
+        // });
+
+        // if (this.bpTabCounter === 0) {
+        //     li.addClass('active');
+        //     tabPane.addClass('active');
+        // }
+
+        // this.updateFormTable(formTable, row, disabled, newTab);
+        // this.bpTabCounter += 1;
+
+        var tabId = row.id + '-' + this.bpTabCounter;
+        var li = $('<li></li>');
+        var tabPane = $('<div id="' + tabId + '" class="tab-pane"></div>');
+
+        var formNewTable = this.bpFormTableNew;
 
         var formTable = formNewTable.clone();
-        this.bpFormTable.remove();
-
-        var li = '';
-        var tabPane = '';
 
         this.bpTabUl.append(function () {
-            li = $('<li></li>');
             var newTabLi = $(this).find('li.insertTab');
 
             $('<a>').attr('href', '#' + tabId).text('#' + tabId).appendTo(li);
@@ -127,6 +174,7 @@ function bpTabPane(element) {
                 span.click(function () {
                     li.remove();
                     tabPane.remove();
+                    _this.bpTabCounter -= 1;
                 });
                 span.appendTo(li);
                 newTabLi.before(li);
@@ -136,19 +184,29 @@ function bpTabPane(element) {
         });
 
         this.bpTabUlDiv.append(function () {
-            tabPane = $('<div id="' + tabId + '" class="tab-pane"></div>');
-
             formTable.appendTo(tabPane);
             $(this).append(tabPane);
         });
 
-        if (this.bpTabCounter === 0) {
+        if (this.bpTabCounter === 1) {
             li.addClass('active');
             tabPane.addClass('active');
         }
 
-        this.updateFormTable(formTable, row, disabled, newTab);
-        
+        this.updateFormTable(formTable, row, disabled, true);
+        this.bpTabCounter += 1;
+    };
+
+    this.setActiveTab = function (counter) {
+        var lis = this.bpTabUl.find('li');
+        lis.removeClass('active');
+        lis.each(function (index) {
+            console.log(_this.bpTabCounter);
+            if (index === _this.bpTabCounter - 2) {
+                $(this).addClass('active');
+            }
+        });
+        console.log(lis);
     };
 
     /**
@@ -162,10 +220,15 @@ function bpTabPane(element) {
         var input = {};
         var select = {};
         var name = '';
+        var nameId = row.id;
+
+        if (insert) {
+            nameId = this.bpTabCounter + '-' + row.id;
+        }
 
         $.each(row, function (key, value) {
 
-            name = row.id + '[' + key + ']';
+            name = nameId + '[' + key + ']';
             input = table.find('input[name="' + key + '"]');
 
             if (input.length > 0) {
@@ -226,10 +289,15 @@ function bpTabPane(element) {
             evnt.preventDefault();
 
             console.log('klikniety nowy tab');
+            console.log(_this.bpEmptyRow);
+            _this.addNewTab(_this.bpEmptyRow, false);
+            _this.setActiveTab(_this.bpTabCounter);
+
+
             // var rows = [];
             // var row = this.getNewEmptyRow();
             // rows.push(row);
-            // _this.updateForm(rows, false);
+            //_this.updateForm(rows, false);
 
 
         });
@@ -240,60 +308,60 @@ function bpTabPane(element) {
      *
      * @param      {string}  id      The identifier
      */
-    this.insertNewTab = function (row, disabled) {
-        var tabId = 'Tab-' + row.id;
-        var newTab = false;
-        var liCount = this.bpTabCounter + 1;
+    // this.insertNewTab = function (row, disabled) {
+    //     var tabId = 'Tab-' + row.id;
+    //     var newTab = false;
+    //     var liCount = this.bpTabCounter + 1;
 
-        if (row.id === 'new') {
-            console.log('Nowy:');
-            console.log('li:' + liCount);
-            tabId = liCount + '-Tab-' + row.id;
-            newTab = true;
-            row.id = liCount + '-' + row.id;
 
-        }
+    //     if (row.id === 'new') {
+    //         console.log('Nowy:');
+    //         console.log('li:' + liCount);
+    //         tabId = liCount + '-Tab-' + row.id;
+    //         newTab = true;
+    //         row.id = liCount + '-' + row.id;
+    //     }
 
-        var formNewTable = this.bpFormTable;
+    //     var formNewTable = this.bpFormTable;
 
-        var formTable = formNewTable.clone();
-        this.bpFormTable.remove();
+    //     var formTable = formNewTable.clone();
+    //     this.bpFormTable.remove();
 
-        var li = '';
-        var tabPane = '';
+    //     var li = '';
+    //     var tabPane = '';
 
-        this.bpTabUl.append(function () {
-            li = $('<li></li>');
-            var newTabLi = $(this).find('li.insertTab');
+    //     this.bpTabUl.append(function () {
+    //         li = $('<li></li>');
+    //         var newTabLi = $(this).find('li.insertTab');
 
-            $('<a>').attr('href', '#' + tabId).text('#' + tabId).appendTo(li);
+    //         $('<a>').attr('href', '#' + tabId).text('#' + tabId).appendTo(li);
 
-            if (newTabLi.length > 0) {
-                var span = $('<span class="dashicons dashicons-no-alt"></span>');
-                span.click(function () {
-                    li.remove();
-                    tabPane.remove();
-                });
-                span.appendTo(li);
-                newTabLi.before(li);
-            } else {
-                $(this).append(li);
-            }
-        });
+    //         if (newTabLi.length > 0) {
+    //             var span = $('<span class="dashicons dashicons-no-alt"></span>');
+    //             span.click(function () {
+    //                 li.remove();
+    //                 tabPane.remove();
+    //             });
+    //             span.appendTo(li);
+    //             newTabLi.before(li);
+    //         } else {
+    //             $(this).append(li);
+    //         }
+    //     });
 
-        this.bpTabUlDiv.append(function () {
-            tabPane = $('<div id="' + tabId + '" class="tab-pane"></div>');
+    //     this.bpTabUlDiv.append(function () {
+    //         tabPane = $('<div id="' + tabId + '" class="tab-pane"></div>');
 
-            formTable.appendTo(tabPane);
-            $(this).append(tabPane);
-        });
+    //         formTable.appendTo(tabPane);
+    //         $(this).append(tabPane);
+    //     });
 
-        if (this.bpTabCounter === 0) {
-            li.addClass('active');
-            tabPane.addClass('active');
-        }
+    //     if (this.bpTabCounter === 0) {
+    //         li.addClass('active');
+    //         tabPane.addClass('active');
+    //     }
 
-        this.updateFormTable(formTable, row, disabled, newTab);s
+    //     this.updateFormTable(formTable, row, disabled, newTab);
 
-    };
+    // };
 }
