@@ -37,7 +37,7 @@
 		    	</table>
 
 				<div id="propertiesDialog">
-					<form id="bp-dialog-form" method="post" action="" autocomplete="on">
+					<form class="bp-dialog-form" method="post" action="" autocomplete="on">
 			        <?php
 			            settings_fields('bp_property_settings');
 			            do_settings_sections('bizpol_property');
@@ -64,10 +64,13 @@
 				</table>
 				<button id="bpBackButton" class="button button-primary" style="margin-top: 10px;">Go Back</button>
 				<div id="incexp2propDialog" class="bp-data-dialog">
-					<form id="bp-dialog" method="post" action="" autocomplete="on">
+					<form class="bp-dialog-form" method="post" action="" autocomplete="on">
 			        <?php
 			            settings_fields('bp_inc2prop_settings');
 			            do_settings_sections('bizpol_inc2prop');
+		            ?>
+						<div class="bp-tab-pane"></div>
+			        <?php
 			            submit_button();
 			        ?>
 		    		</form>
@@ -80,22 +83,9 @@
 <script>
 	var wp_adminId = '<?php echo wp_get_current_user()->id ?>';
 	var wp_adminFullName = '<?php echo wp_get_current_user()->display_name ?>';
-	var dialog = '';
-	//var bpDataTableName = 'propertiesTable';
 
 	//getting properties table
 	var propertiesDT = new bpDt('properties');
-	//new object bpDialog(Object bpDt, title)
-	//var propertiesD = new bpDialog(propertiesDT, 'properties');
-
-	// var bpDialogInc2PropDT = new bpDt('incexp2prop');
-	// var incexp2propD = new bpDialog(bpDialogInc2PropDT, 'income/expense');
-
-	//$(document).ready(function ($) {
-		//bpDialog.autoOpen(true);
-		//propertiesD.load();
-		//incexp2propD.load();
-	//});
 
 	propertiesDT.load();
 	//bpDialogInc2PropDT.load();
@@ -110,7 +100,7 @@
 	      if (record.status === '1') {
 	      	status = '<span class="dashicons dashicons-visibility" onclick="' + table.getName() + 'DT.switchStatus(' + rowCounter + ')"></span>';
 	      } else {
-	      	status = '<span class="dashicons dashicons-hidden" onclick="p' + table.getName() + 'DT.switchStatus(' + rowCounter + ')"></span>';
+	      	status = '<span class="dashicons dashicons-hidden" onclick="' + table.getName() + 'DT.switchStatus(' + rowCounter + ')"></span>';
 	      }
 
 	      var newRow = table.addRow(rowCounter);    

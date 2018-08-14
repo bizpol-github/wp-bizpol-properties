@@ -68,7 +68,7 @@ class PropertiesController extends BaseController
                     'construction_year' => $value['construction_year'],
                     'land_register' => sanitize_text_field($value['land_register']),
                     'user_id' => sanitize_text_field($value['user_id']),
-                    'status' => $value['status']
+                    'status' => (isset($value['status']) ? $value['status'] : 0)
                 );
 
                 if ($form['action'] == 'update') {
@@ -143,45 +143,82 @@ class PropertiesController extends BaseController
     }
 
     public function bp_rpc_update_incexp2prop(){
-        global $wpdb;
-        $data['status'] = false;
-
-        $data = array();
-
-        $form = $_POST['data'];
         
-        $form_values = array(            
-            'incexp_id' => sanitize_text_field($form['incexp_id']),
-            'quantity' => sanitize_text_field($form['quantity']),
-            'value' => sanitize_text_field($form['value'])
-        );
+        
+        
 
-        if ($form['action'] == 'update') {
+        // if ($form['action'] == 'update') {
             
 
-            if (isset($form['id']) && is_numeric($form['id'])) {
-                $wpdb->update('wp_bp_incexp2prop', $form_values, array( 'id' =>  $form['id']));
-                $data['status'] = true;
-            } else {
-                $form_values['property_id'] = sanitize_text_field($form['property_id']);
-                $wpdb->insert('wp_bp_incexp2prop', $form_values);
-                $data['status'] = true;
-                // return 0 on error
-                $new_id = $wpdb->insert_id;
+        //     if (isset($form['id']) && is_numeric($form['id'])) {
+        //         $wpdb->update('wp_bp_incexp2prop', $form_values, array( 'id' =>  $form['id']));
+        //         $data['status'] = true;
+        //     } else {
+        //         $form_values['property_id'] = sanitize_text_field($form['property_id']);
+        //         $wpdb->insert('wp_bp_incexp2prop', $form_values);
+        //         $data['status'] = true;
+        //         // return 0 on error
+        //         $new_id = $wpdb->insert_id;
 
-                if($new_id == 0){
-                    $data['status'] = false;
-                }
-            }
+        //         if($new_id == 0){
+        //             $data['status'] = false;
+        //         }
+        //     }
 
-        } elseif ($form['action'] == 'delete') {
-            $wpdb->delete('wp_bp_incexp2prop', array( 'id' =>  $form['id']));
-            $data['status'] = true;
-        }
+        // } elseif ($form['action'] == 'delete') {
+        //     $wpdb->delete('wp_bp_incexp2prop', array( 'id' =>  $form['id']));
+        //     $data['status'] = true;
+        // }
 
         
 
-        $data['form_values']  = $form_values;
+        // $data['form_values']  = $form_values;
+        // wp_send_json($data);
+        // wp_die();
+        // 
+        global $wpdb;
+
+        $data['ok'] = false;
+        $data = array();
+        $form = $_POST['data'];
+
+        if (isset($form['entries'])) {
+
+            foreach ($form['entries'] as $key => $value) {
+
+               $form_values = array(
+                    'property_id' => $form['property_id'],
+                    'incexp_id' => $value['incexp_id'],
+                    'quantity' => $value['quantity'],
+                    'value' => $value['value'],
+                    'user_id' => $form['user_id']
+                );
+
+                if ($form['action'] == 'update') {
+                    $wpdb->update('wp_bp_incexp2prop', $form_values, array('id' =>  $key));
+
+                } elseif ($form['action'] == 'insert') {
+                    $wpdb->insert('wp_bp_incexp2prop', $form_values);
+                    $data['ok'] = true;
+                    $new_id = $wpdb->insert_id;
+
+                    if($new_id == 0){
+                        $data['ok'] = false;
+                    }                  
+                } elseif ($form['action'] == 'delete') {
+                    $wpdb->delete('wp_bp_incexp2prop', array('id' =>  $key));
+                } elseif ($form['action'] == 'status') {
+                    $status = ($form['status'] == '1') ? '0' : '1';
+                    $wpdb->update('wp_bp_incexp2prop', array('status' => $status), array('id' =>  $key));                   
+                }
+
+                $data['ok'] = true;
+                
+            }
+
+        }
+        $data['seba'] = 1;
+        $data['form_values']  = $form;
         wp_send_json($data);
         wp_die();
     }

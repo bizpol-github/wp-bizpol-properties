@@ -20,7 +20,7 @@ function bpTabPane(element) {
 
     this.load = function (rows, disabled) {
         if (this.bpTabInitialized === false) {
-            this.bpTabInitializedialize();
+            this.bpTabInitialize();
             this.bpTabInitialized = true;
         }
         this.updateForm(rows, disabled);
@@ -28,22 +28,24 @@ function bpTabPane(element) {
     /**
      * Adding ul and div to tab
      */
-    this.bpTabInitializedialize = function () {
+    this.bpTabInitialize = function () {
         this.bpFormTable.remove();
         this.bpTabUl.appendTo(this.bpTabPane);
         this.bpTabUlDiv.appendTo(this.bpTabPane);
+        this.inputKeyUp();
     };
 
-    this.addCloseTabButton = function (li, content) {
-        //adds close button to tab
-        if (li.length > 0) {
-            this.bpTabSpan.click(function () {
-                li.remove();
-                content.remove();
-            });
+    // this.addCloseTabButton = function (li, content) {
+    //     //adds close button to tab
+    //     if (li.length > 0) {
+    //         this.bpTabSpan.click(function () {
+    //             _this.bpClosedTabsId.push()
+    //             li.remove();
+    //             content.remove();
+    //         });
 
-        }
-    };
+    //     }
+    // };
 
     /**
      * Form update
@@ -64,10 +66,16 @@ function bpTabPane(element) {
 
     this.addNewTab = function (row, disabled) {
 
-        var tabId = row.id + '-' + (this.bpTabCounter + 1);
+        var tabId = row.id;
+        var newTab = false;
+
+        if (row.id === 'new') {
+            newTab = true;
+            tabId = row.id + '-' + (this.bpTabCounter + 1);
+        }
+
         var li = $('<li></li>');
         var tabPane = $('<div id="' + tabId + '" class="tab-pane"></div>');
-        var newTab = false;
 
         var formNewTable = this.bpFormTableNew;
 
@@ -81,10 +89,9 @@ function bpTabPane(element) {
             if (newTabLi.length > 0) {
                 var span = $('<span class="dashicons dashicons-no-alt"></span>');
                 span.click(function () {
+                    _this.setActiveTab(li, tabPane, 'close');
                     li.remove();
                     tabPane.remove();
-                    _this.setActiveTab(_this.bpTabCounter - 1);
-                    _this.bpTabCounter -= 1;
                 });
                 span.appendTo(li);
                 newTabLi.before(li);
@@ -103,25 +110,37 @@ function bpTabPane(element) {
             tabPane.addClass('active');
         }
 
-        if (row.id === 'new') {
-            newTab = true;
-        }
 
         this.updateFormTable(formTable, row, disabled, newTab);
         this.bpTabCounter += 1;
-
-        console.log(this.bpTabCounter);
+        this.setActiveTab(li, tabPane);
     };
 
-    this.setActiveTab = function (counter) {
+    this.setActiveTab = function (li, tabPane, action) {
         var lis = this.bpTabUl.find('li');
         lis.removeClass('active');
-        lis.each(function (index) {
-            if (index === counter - 2) {
-                $(this).addClass('active');
-                _this.bpTabActiveId = index;
+
+        var divs = this.bpTabUlDiv.find('div.tab-pane');
+        divs.removeClass('active');
+
+        li.addClass('active');
+        tabPane.addClass('active');
+
+        var last = li.next().hasClass('insertTab');
+
+        if (action === 'close') {
+            if (last === true) {
+                // prev li
+                li.prev().addClass("active");
+                tabPane.prev().addClass("active");
+
+            } else {
+                //next li
+                li.next().addClass("active");
+                tabPane.next().addClass("active");
             }
-        });
+
+        }
     };
 
     /**
@@ -153,13 +172,11 @@ function bpTabPane(element) {
                 if (input.attr('type') === 'checkbox') {
 
                     if (value === '1') {
-                        console.log('value 1: ' + value);
 
                         input.prop('checked', 'checked');
                         input.val(value);
 
                     } else {
-                        console.log('value 0: ' + 0);
                         input.val(0);
                     }
                 } else {
@@ -186,7 +203,7 @@ function bpTabPane(element) {
                         option.selected = true;
                     }
                     if (disabled === true) {
-                        select.disabled = true;
+                        select.prop('disabled', true);
                     }
                 });
             }
@@ -219,7 +236,17 @@ function bpTabPane(element) {
         }
     };
 
-    this.addExtraTab = function () {
+    /**
+     * Set @var inputKeyUp
+     */
+    this.inputKeyUp = function () {
+        this.bpForm.on('keyup paste select', 'input', function () {
+            _this.setStatus($(this));
+        });
+
+    };
+
+    this.addPlusTab = function () {
         this.bpTabUl.append(function () {
             var li = $('<li class="insertTab"></li>');
             $('<a class="insertTab"></a>').html('<span class="dashicons dashicons-plus"></span>').appendTo(li);
@@ -229,70 +256,6 @@ function bpTabPane(element) {
         this.bpTabUl.on('click', 'a.insertTab', function (evnt) {
             evnt.preventDefault();
             _this.addNewTab(_this.bpEmptyRow, false);
-            _this.setActiveTab(_this.bpTabCounter);
-
         });
     };
-
-    /**
-     * Editing property function
-     *
-     * @param      {string}  id      The identifier
-     */
-    // this.insertNewTab = function (row, disabled) {
-    //     var tabId = 'Tab-' + row.id;
-    //     var newTab = false;
-    //     var liCount = this.bpTabCounter + 1;
-
-
-    //     if (row.id === 'new') {
-    //         console.log('Nowy:');
-    //         console.log('li:' + liCount);
-    //         tabId = liCount + '-Tab-' + row.id;
-    //         newTab = true;
-    //         row.id = liCount + '-' + row.id;
-    //     }
-
-    //     var formNewTable = this.bpFormTable;
-
-    //     var formTable = formNewTable.clone();
-    //     this.bpFormTable.remove();
-
-    //     var li = '';
-    //     var tabPane = '';
-
-    //     this.bpTabUl.append(function () {
-    //         li = $('<li></li>');
-    //         var newTabLi = $(this).find('li.insertTab');
-
-    //         $('<a>').attr('href', '#' + tabId).text('#' + tabId).appendTo(li);
-
-    //         if (newTabLi.length > 0) {
-    //             var span = $('<span class="dashicons dashicons-no-alt"></span>');
-    //             span.click(function () {
-    //                 li.remove();
-    //                 tabPane.remove();
-    //             });
-    //             span.appendTo(li);
-    //             newTabLi.before(li);
-    //         } else {
-    //             $(this).append(li);
-    //         }
-    //     });
-
-    //     this.bpTabUlDiv.append(function () {
-    //         tabPane = $('<div id="' + tabId + '" class="tab-pane"></div>');
-
-    //         formTable.appendTo(tabPane);
-    //         $(this).append(tabPane);
-    //     });
-
-    //     if (this.bpTabCounter === 0) {
-    //         li.addClass('active');
-    //         tabPane.addClass('active');
-    //     }
-
-    //     this.updateFormTable(formTable, row, disabled, newTab);
-
-    // };
 }

@@ -3,7 +3,7 @@
 /*global ajaxurl */
 /*global bpDataTableId */
 /*global feedDataTable */
-/*global bpRpcAction */
+/*global bpRpcActionName */
 
 //class constructor Data Table
 //
@@ -13,21 +13,32 @@ function bpDt(id) {
 
     this.initialized = false;
     this.bpDataTableName = id;
-    this.bpDataTableId = id + 'Table';
-    this.bpRpcAction = 'bp_rpc_get_all_' + id;
+    this.bpDataTableFeedName =  id + 'TableFeed';
+    this.bpDataTableId = '#' + id + 'Table';
+    this.bpRpcActionName = 'bp_rpc_get_all_' + id;
     this.bpDataTable = {};
-    this.bpParams = [];
     this.bpRPCData = {};
     this.bpFlag = {};
-    this.bpD ={};
+    this.bpDialog ={};
+
+    this.bpParams = [];
 
     /**
      * set @var initialize only once
      */
     this.initialize = function () {
         //set new dialog
-        this.bpD = new bpDialog(this, 'properties');
+        this.bpDialog = new bpD(this, 'properties');
+
+        this.bpDataTable = $(this.bpDataTableId);
+
+
         this.initialized = true;
+    };
+
+    this.setTableId = function (id) {
+        console.log(id);
+        this.bpDataTableId =   '#' + id;
     };
 
     /**
@@ -99,7 +110,7 @@ function bpDt(id) {
      * @return     {object}  The table headers.
      */
     this.getTableHeaders = function () {
-        var header = $("#" + this.bpDataTableId + ' thead tr th');
+        var header = $(this.bpDataTableId + ' thead tr th');
         var cols = {};
         var idx = 0;
         var name = '';
@@ -169,8 +180,8 @@ function bpDt(id) {
         var button = this.bpDataTable.prev();
 
         button.click(function(){
-                    _this.insertNew();
-                });
+            _this.insertNew();
+        });
     };
 
     this.flagCheckboxes = function (element) {
@@ -200,38 +211,31 @@ function bpDt(id) {
         //console.log(this.bpFlag);
     };
 
-    this.load = function (tableId) {
-
-        if (tableId === undefined) {
-            tableId = this.bpDataTableId;
+    this.load = function () {
+        
+        if (this.initialized === false) {
+            this.initialize();
+            this.setAddButtonEvent();
         }
-        //set table
-        this.bpDataTable = $('#' + tableId);
 
-  //$('#batchTotalPages').html(batchIconProgress + batchIconProgressText);
         $.post(
             ajaxurl + _this.getParams(),
             {
-                action: _this.bpRpcAction
+                action: _this.bpRpcActionName
             },
             function (response) {
                 if (response.error === false) {
 
                     _this.bpRPCData = response;
-                    $('#' + _this.bpDataTableId + ' tbody tr').remove();
-                    //console.log(_this.getId());
-                    window[_this.getId() + 'Feed'](response, _this);
+                    _this.bpDataTable.find('tbody').empty();
+                    window[_this.bpDataTableFeedName](response, _this);
+
                 }
-               // console.log(ajaxurl + _this.getParams());
                 console.log('RPC Data');
-                console.log(_this.bpRPCData);
+                console.log(response);
+                console.log(_this.bpDataTable);
             }
         );
-
-        if (this.initialized === false) {
-            this.initialize();
-            this.setAddButtonEvent();
-        }
     };
 
     /**
@@ -285,20 +289,21 @@ function bpDt(id) {
 
             var table = newCont.find('.bp-data-table');
             var tableId = table.attr('id');
-            table.attr('id', tableId + '-' + row);
+            tableId = tableId + '-' + row;
+            console.log(tableId)
+            table.attr('id', tableId);
 
             var dialog = newCont.find('.bp-data-dialog');
             var dialogId = dialog.attr('id');
 
             var bpNewDT = new bpDt('incexp2prop');
-            var incexp2propD = new bpDialog(bpNewDT, 'income/expense');
-
-            incexp2propD.load();
-
             bpNewDT.clearParam();
             bpNewDT.setParam('property_id', rowData.id);
+            bpNewDT.setTableId(tableId);
+            bpNewDT.load();
 
-            bpNewDT.load(tableId + '-' + row);
+            //var incexp2propD = new bpDialog(bpNewDT, 'income/expense');
+            bpNewDT.bpDialog.addHiddenField('property_id', rowData.id);
 
             console.log(dialogId);
 
@@ -325,7 +330,7 @@ function bpDt(id) {
 
     this.insertNew = function () {
 
-        this.bpD.insertNew();
+        this.bpDialog.insertNew();
         //
     };
 
@@ -336,31 +341,31 @@ function bpDt(id) {
      */
     this.edit = function (row) {
 
-        this.bpD.edit(row);
+        this.bpDialog.edit(row);
         //
     };
 
     this.editBatch = function () {
 
-        this.bpD.editBatch();
+        this.bpDialog.editBatch();
         //
     };
 
     this.delete = function (row) {
 
-        this.bpD.delete(row);
+        this.bpDialog.delete(row);
         //
     };
 
     this.deleteBatch = function () {
 
-        this.bpD.deleteBatch();
+        this.bpDialog.deleteBatch();
         //
     };
 
     this.switchStatus = function (row) {
 
-        this.bpD.switchStatus(row);
+        this.bpDialog.switchStatus(row);
         //
     };
 }
