@@ -212,7 +212,7 @@ function bpDt(id) {
     };
 
     this.load = function () {
-        
+
         if (this.initialized === false) {
             this.initialize();
             this.setAddButtonEvent();
@@ -303,7 +303,7 @@ function bpDt(id) {
             bpNewDT.load();
 
             //var incexp2propD = new bpDialog(bpNewDT, 'income/expense');
-            bpNewDT.bpDialog.addHiddenField('property_id', rowData.id);
+            bpNewDT.bpDialog.addConstantField('property_id', rowData.id);
 
             console.log(dialogId);
 

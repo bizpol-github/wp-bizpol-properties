@@ -30,6 +30,7 @@ function bpD(table, title) {
     this.bpTabUlDiv = $('<div class="tab-content"></div>');
 
     this.bpHiddenFields = {};
+    this.bpConstantFields = {};
     this.initialized = false;
     this.newDialog = {};
 
@@ -428,10 +429,23 @@ function bpD(table, title) {
     };
 
     /**
+     * Adds a constants to hidden field of dialog.
+     *
+     * @param      {object}  name    The name
+     * @param      {object}  value   The value
+     */
+    this.addConstantField = function (name, value) {
+        this.bpConstantFields[name] = value;
+    };
+
+    /**
      * Sets the hidden fields.
      */
     this.setHiddenFields = function () {
         $.each(this.bpHiddenFields, function (name, value) {
+            _this.bpFormDesc.after('<input type="hidden" name="' + name + '" value="' + value + '"/>');
+        });
+        $.each(this.bpConstantFields, function (name, value) {
             _this.bpFormDesc.after('<input type="hidden" name="' + name + '" value="' + value + '"/>');
         });
     };
