@@ -78,9 +78,20 @@
 			</div>
 	    </div>
 	</div>
+
+	<div id="seba" class="propertiesTabs"></div>
+
 </div>
 
 <script>
+	var seba = new bpTabPaneMain('seba');
+	var tableNew = $('table#propertiesTable');
+	var tableClone = tableNew.clone();
+	tableNew.remove();
+	seba.addData('tab1', tableNew);
+	seba.addData('tab2', $('table#incexp2propTable'));
+	seba.load();
+
 	var wp_adminId = '<?php echo wp_get_current_user()->id ?>';
 	var wp_adminFullName = '<?php echo wp_get_current_user()->display_name ?>';
 
@@ -138,82 +149,83 @@
 		}
 	}
 
+	
+
+
 </script>
 
 <script>
-			$(document).ready(function(){
-				var GetURLParameter = function(url, sParam)
-				{
-					var sPageURL = url;
-					var sURLVariables = sPageURL.split('&');
-					for (var i = 0; i < sURLVariables.length; i++) 
-					{
-					    var sParameterName = sURLVariables[i].split('=');
-					    if (sParameterName[0] == sParam) 
-					    {
-					        return sParameterName[1];
-					    }
-					}
-				};
+	$(document).ready(function(){
+		var GetURLParameter = function(url, sParam)
+		{
+			var sPageURL = url;
+			var sURLVariables = sPageURL.split('&');
+			for (var i = 0; i < sURLVariables.length; i++) 
+			{
+			    var sParameterName = sURLVariables[i].split('=');
+			    if (sParameterName[0] == sParam) 
+			    {
+			        return sParameterName[1];
+			    }
+			}
+		};
 
-				$("#incexp2propDialog").on('click', '#incexp-add-button', function(event){
+		$("#incexp2propDialog").on('click', '#incexp-add-button', function(event){
 
-					$(this).parents('tr').next().toggle(400);
-					$(this).parents('tr').next().next().toggle(400);
+			$(this).parents('tr').next().toggle(400);
+			$(this).parents('tr').next().next().toggle(400);
 
-					$(this).find('span').toggleClass('dashicons-plus');
-					$(this).find('span').toggleClass('dashicons-minus');
-					//console.log($(this).parent());
-				});				
+			$(this).find('span').toggleClass('dashicons-plus');
+			$(this).find('span').toggleClass('dashicons-minus');
+			//console.log($(this).parent());
+		});				
 
-				// $("#bpAddIncExp2PropButton").click(function(){
-				// 	var value = this.getAttribute('prop_id');
-				// 	incexp2propD.addHiddenField('property_id', value);
-				// 	incexp2propD.open();
-				// 	//console.log(value);
-				// });
+		// $("#bpAddIncExp2PropButton").click(function(){
+		// 	var value = this.getAttribute('prop_id');
+		// 	incexp2propD.addHiddenField('property_id', value);
+		// 	incexp2propD.open();
+		// 	//console.log(value);
+		// });
 
-				$(".bp-data-table").on('click', 'a', function(event){
-					event.preventDefault();
-					//alert('Link works!');
-					document.querySelector("ul.nav-tabs li.active").classList.remove("active");
-        			document.querySelector(".tab-pane.active").classList.remove("active");
+		$(".bp-data-table").on('click', 'a', function(event){
+			event.preventDefault();
+			//alert('Link works!');
+			document.querySelector("ul.nav-tabs li.active").classList.remove("active");
+			document.querySelector(".tab-pane.active").classList.remove("active");
 
-        			var anchor = event.target;
-        			var href = anchor.getAttribute("href");
-        			var tab = GetURLParameter(href, 'tab');
-        			var row_id = GetURLParameter(href, 'rowId');
-        			var bpPropertiesDataTableName = 'propertiesTable';
-        			var bpIncExpDataTableName = 'incExp2PropTable';
-        			// get row data
-        			var row = propertiesDT.getRowData(row_id);
-        			var addButton = $("#bpAddIncExp2PropButton");
-        
-        			$('#' + tab).addClass("active");
-        			$('#' + tab + '-tab').addClass("active");
+			var anchor = event.target;
+			var href = anchor.getAttribute("href");
+			var tab = GetURLParameter(href, 'tab');
+			var row_id = GetURLParameter(href, 'rowId');
+			var bpPropertiesDataTableName = 'propertiesTable';
+			var bpIncExpDataTableName = 'incExp2PropTable';
+			// get row data
+			var row = propertiesDT.getRowData(row_id);
+			var addButton = $("#bpAddIncExp2PropButton");
 
-        			var rId = 0;
-        			var displayText = '';
+			$('#' + tab).addClass("active");
+			$('#' + tab + '-tab').addClass("active");
 
-        			$.each(row, function (key, value) {
+			var rId = 0;
+			var displayText = '';
 
-        				if (key === 'id') {
-        					rId = value;
-        				}
-        				else {
-        					displayText +=  value.replace(/<[^>]*>/g, '') + '  ';
-        				}
-			            
-			        });
-			        bpDialogInc2PropDT.clearParam();
-			        bpDialogInc2PropDT.setParam('property_id', rId);
-			        bpDialogInc2PropDT.load();
-        			$('.prop_inc_title h2').text('Record #' + rId);
-        			$('.prop_inc_title h4').text(displayText);
-        			addButton.attr('prop_id', rId);
-				});
+			$.each(row, function (key, value) {
 
-				
-
-			});
-			</script>
+				if (key === 'id') {
+					rId = value;
+				}
+				else {
+					displayText +=  value.replace(/<[^>]*>/g, '') + '  ';
+				}
+	            
+	        });
+	        bpDialogInc2PropDT.clearParam();
+	        bpDialogInc2PropDT.setParam('property_id', rId);
+	        bpDialogInc2PropDT.load();
+			$('.prop_inc_title h2').text('Record #' + rId);
+			$('.prop_inc_title h4').text(displayText);
+			addButton.attr('prop_id', rId);
+		});
+		
+	});
+</script>
