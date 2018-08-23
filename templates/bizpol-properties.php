@@ -4,10 +4,6 @@
 		settings_errors();
 	?>
 	<div class="propertiesTabs">
-		<ul class="nav-tabs">
-	        <li id="general-tab" class="active"><a href="#general">Properties</a></li>
-	        <li id="single-tab"><a href="#single">Item</a></li>
-	    </ul>
 
 	    <div class="tab-content">
 	    	<div id="general" class="tab-pane active">
@@ -85,11 +81,13 @@
 
 <script>
 	var seba = new bpTabPaneMain('seba');
-	var tableNew = $('table#propertiesTable');
-	var tableClone = tableNew.clone();
-	tableNew.remove();
-	seba.addData('tab1', tableNew);
-	seba.addData('tab2', $('table#incexp2propTable'));
+	var generalTab = $('div#general');
+	var singleTab = $('div#single')
+	generalTab.remove();
+	singleTab.remove();
+	seba.addData('properties', generalTab);
+	seba.addData('property', singleTab, true);
+	seba.newTab('archii');
 	seba.load();
 
 	var wp_adminId = '<?php echo wp_get_current_user()->id ?>';
