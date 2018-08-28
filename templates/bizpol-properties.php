@@ -6,7 +6,7 @@
 	<div class="propertiesTabs">
 
 	    <div class="tab-content">
-	    	<div id="general" class="tab-pane active">
+	    	<div id="general" class="tab-pane">
 	    		<button class="button button-primary" style="margin-bottom: 10px;">Add property</button>
 	    		<table id="propertiesTable" class="bp-data-table">
 	    			<thead>
@@ -75,20 +75,20 @@
 	    </div>
 	</div>
 
-	<div id="seba" class="propertiesTabs"></div>
+	<div id="bpTPM" class="propertiesTabs"></div>
 
 </div>
 
 <script>
-	var seba = new bpTabPaneMain('seba');
+	var bpTPM = new bpTabPaneMain('bpTPM');
 	var generalTab = $('div#general');
 	var singleTab = $('div#single')
 	generalTab.remove();
 	singleTab.remove();
-	seba.addData('properties', generalTab);
-	seba.addData('property', singleTab, true);
-	seba.newTab('archii');
-	seba.load();
+	bpTPM.addData('properties', 'Properties', generalTab);
+	bpTPM.addData('property', 'property', singleTab, true);
+	bpTPM.load();
+	//bpTPM.newTab('archii');
 
 	var wp_adminId = '<?php echo wp_get_current_user()->id ?>';
 	var wp_adminFullName = '<?php echo wp_get_current_user()->display_name ?>';
@@ -116,7 +116,7 @@
 
 	      table.addCell(0, newRow, (rowCounter + 1) + ' - (#' + record.id + ')');
 	      // propertiesDT.addCell(1, newRow, '<a href="admin.php?page=bizpol_property&tab=single&rowId=' + rowCounter + '">' + record.property_name + '</a>');
-	      table.addCell(1, newRow, '<div onclick="' + table.getName() + 'DT.addNewTab(' + rowCounter + ', \'property_name\')">' + record.property_name + '</div>');
+	      table.addCell(1, newRow, '<div onclick="bpTPM.newTab(\'properties-' + record.id + '\', \'' + record.property_name + '\')">' + record.property_name + '</div>');
 	      table.addCell(2, newRow, record.prefix, 'center');
 	      table.addCell(3, newRow, record.address);
 	      table.addCell(4, newRow, record.construction_year.substr(0,10), 'center');

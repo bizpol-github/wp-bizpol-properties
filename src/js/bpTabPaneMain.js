@@ -13,7 +13,9 @@ function bpTabPaneMain(id) {
 
     var _this = this;
 
-    this.addData = function (id, content, def) {
+    this.addData = function (id, name, content, def) {
+
+        console.log(id);
 
         if (def === true) {
             this.defContent = content;
@@ -21,6 +23,7 @@ function bpTabPaneMain(id) {
             def = false;
             this.dataTabs[id] = content;
             this.dataTabs[id].default = def;
+            this.dataTabs[id].name = name;
 
             if (this.active === '') {
                 this.setActiveTab(id);
@@ -39,12 +42,24 @@ function bpTabPaneMain(id) {
             this.divContent.empty();
         }
 
+        var first = true;
+
         $.each(this.dataTabs, function (key, content) {
 
             if (content.default === false) {
 
                 var li = $('<li></li>');
-                var tabPane = $('<div id="' + key + '" class="tab-pane"></div>');
+                var tabPane = content;
+
+                var removeButton = $('<span class="dashicons dashicons-no-alt"></span>');
+                var a = $('<a>').attr('href', '#' + key).text('#' + content.name);
+
+                var bpTable = tabPane.find('.bp-data-table');
+                var bpTableId = bpTable.attr('id');
+                bpTableId = content;
+                console.log(bpTableId);
+
+                tabPane.attr('id', key);
 
 
                 if (_this.active === key) {
@@ -52,11 +67,32 @@ function bpTabPaneMain(id) {
                     tabPane.addClass('active');
                 }
 
+                removeButton.click(function (evnt) {
+                    evnt.preventDefault();
+
+                    var isActive = li.hasClass('active');
+
+                    li.remove();
+                    tabPane.remove();
+                    delete _this.dataTabs[key];
+
+                    if (isActive) {
+                        _this.ulTabs.children().last().addClass('active');
+                        _this.divContent.children().last().addClass('active');
+                    }
+                });
+
+                if (first === true) {
+                    first = false;
+                } else {
+                    removeButton.appendTo(a);
+                }
+
+                a.appendTo(li);
+
                 li.appendTo(_this.ulTabs);
                 tabPane.append(content);
                 tabPane.appendTo(_this.divContent);
-                $('<a>').attr('href', '#' + key).text('#' + key).appendTo(li);
-
             }
 
             console.log('content:');
@@ -70,11 +106,16 @@ function bpTabPaneMain(id) {
     };
 
     this.setActiveTab = function (id) {
+        this.ulTabs.children().removeClass('active');
+        this.divContent.children().removeClass('active');
         this.active = id;
     };
 
-    this.newTab = function (id) {
-        this.addData(id, this.defContent);
+    this.newTab = function (id, name) {
+        var newT = this.defContent.clone();
+        this.addData(id, name, newT);
+        this.setActiveTab(id);
+        this.load();
     };
 
     this.refresh = function () {

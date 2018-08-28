@@ -290,7 +290,7 @@ function bpDt(id) {
             var table = newCont.find('.bp-data-table');
             var tableId = table.attr('id');
             tableId = tableId + '-' + row;
-            console.log(tableId)
+            console.log(tableId);
             table.attr('id', tableId);
 
             var dialog = newCont.find('.bp-data-dialog');
