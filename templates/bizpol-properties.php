@@ -46,9 +46,9 @@
 				</div>
 			</div>
 			<div id="single" class="tab-pane">
-				<div class="tab-pane-title">AAA</div>			
+				<div class="tab-pane-title"></div>			
 				<button class="button button-primary" style="margin-bottom: 10px;" prop_id="">Add new</button>
-				<table id="incexp2propTable" class="bp-data-table">
+				<table class="bp-data-table">
 					<thead>
 						<tr>
 							<th name="id">ID</th><th name="incexp_id">Income/Expense Name</th>
@@ -94,7 +94,7 @@
 	var wp_adminFullName = '<?php echo wp_get_current_user()->display_name ?>';
 
 	//getting properties table
-	var propertiesDT = new bpDt('properties');
+	var propertiesDT = new bpDt('properties', $('#propertiesTable'));
 
 	propertiesDT.load();
 	//bpDialogInc2PropDT.load();
@@ -116,7 +116,7 @@
 
 	      table.addCell(0, newRow, (rowCounter + 1) + ' - (#' + record.id + ')');
 	      // propertiesDT.addCell(1, newRow, '<a href="admin.php?page=bizpol_property&tab=single&rowId=' + rowCounter + '">' + record.property_name + '</a>');
-	      table.addCell(1, newRow, '<div onclick="bpTPM.newTab(\'properties-' + record.id + '\', \'' + record.property_name + '\')">' + record.property_name + '</div>');
+	      table.addCell(1, newRow, '<div onclick="bpTPM.newTab(\'incexp2prop\', ' + record.id + ', \'' + record.property_name + '\', propertiesDT.getRowData(' +  rowCounter +'))">' + record.property_name + '</div>');
 	      table.addCell(2, newRow, record.prefix, 'center');
 	      table.addCell(3, newRow, record.address);
 	      table.addCell(4, newRow, record.construction_year.substr(0,10), 'center');
@@ -131,6 +131,7 @@
 
 	function incexp2propTableFeed(data, table){
 		var rowCounter = 0;
+		var newTabObject = table;
 
 	    for ( var r in data.entries ) {
 	      var record = data.entries[r];
@@ -141,7 +142,8 @@
 	      table.addCell(1, newRow, record.incexp_name + ' (' + record.incexp_type + ')');
 	      table.addCell(2, newRow, record.quantity);
 	      table.addCell(3, newRow, record.value);
-	      table.addCell(4, newRow, '<button name="edit" class="button button-primary edit small" onclick="incexp2propD.edit(' + rowCounter + ')">Edit</button><button name="delete" class="button button-danger delete small" onclick="incexp2propD.delete(' + rowCounter + ')">Delete</button>', 'center');
+	      table.addCell(4, newRow, '<button name="edit" class="button-link-edit edit small" onclick="newTabObject.edit(' + rowCounter + ')"><span class="dashicons dashicons-edit"></span></button><button name="delete" class="button-link-delete delete small" onclick="' + table.getName() + 'DT.delete(' + rowCounter + ')"><span class="dashicons dashicons-trash"></span></button>', 'center');
+	      //table.addCell(4, newRow, '<button name="edit" class="button button-primary edit small" onclick="incexp2propD.edit(' + rowCounter + ')">Edit</button><button name="delete" class="button button-danger delete small" onclick="incexp2propD.delete(' + rowCounter + ')">Delete</button>', 'center');
 
 	      rowCounter++;
 		}

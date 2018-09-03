@@ -84,6 +84,7 @@ class PropertiesController extends BaseController
                     }                  
                 } elseif ($form['action'] == 'delete') {
                     $wpdb->delete('wp_bp_properties', array('id' =>  $key));
+                    $wpdb->delete('wp_bp_incexp2prop', array('property_id' =>  $key));
                 } elseif ($form['action'] == 'status') {
                     $status = ($form['status'] == '1') ? '0' : '1';
                     $wpdb->update('wp_bp_properties', array('status' => $status), array('id' =>  $key));                   

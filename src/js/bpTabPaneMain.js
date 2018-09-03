@@ -15,20 +15,20 @@ function bpTabPaneMain(id) {
 
     this.addData = function (id, name, content, def) {
 
-        console.log(id);
-
         if (def === true) {
             this.defContent = content;
         } else {
-            def = false;
             this.dataTabs[id] = content;
-            this.dataTabs[id].default = def;
             this.dataTabs[id].name = name;
+            this.dataTabs[id].present = false;
 
             if (this.active === '') {
                 this.setActiveTab(id);
             }
         }
+
+        console.log('dataTabs:');
+        console.log(this.dataTabs);
     };
 
     this.load = function () {
@@ -37,28 +37,17 @@ function bpTabPaneMain(id) {
             this.initialized = true;
         }
 
-        if (this.ulTabs.children.length > 0) {
-            this.ulTabs.empty();
-            this.divContent.empty();
-        }
-
         var first = true;
 
         $.each(this.dataTabs, function (key, content) {
 
-            if (content.default === false) {
+            if (content.present === false) {
 
                 var li = $('<li></li>');
                 var tabPane = content;
 
                 var removeButton = $('<span class="dashicons dashicons-no-alt"></span>');
                 var a = $('<a>').attr('href', '#' + key).text('#' + content.name);
-
-                var bpTable = tabPane.find('.bp-data-table');
-                var bpTableId = bpTable.attr('id');
-                bpTableId = content;
-                console.log(bpTableId);
-
                 tabPane.attr('id', key);
 
 
@@ -82,21 +71,20 @@ function bpTabPaneMain(id) {
                     }
                 });
 
-                if (first === true) {
-                    first = false;
-                } else {
+                if (first === false) {
                     removeButton.appendTo(a);
                 }
 
                 a.appendTo(li);
-
                 li.appendTo(_this.ulTabs);
                 tabPane.append(content);
                 tabPane.appendTo(_this.divContent);
-            }
+                content.present = true;
 
-            console.log('content:');
-            console.log(content);
+                console.log('content:');
+                console.log(content);
+            }
+            first = false;
         });
     };
 
@@ -108,19 +96,37 @@ function bpTabPaneMain(id) {
     this.setActiveTab = function (id) {
         this.ulTabs.children().removeClass('active');
         this.divContent.children().removeClass('active');
+
+        this.ulTabs.find('a[href="#' + id + '"]').parent().addClass('active');
+        this.divContent.find('#' + id).addClass('active');
+
         this.active = id;
     };
 
-    this.newTab = function (id, name) {
-        var newT = this.defContent.clone();
-        this.addData(id, name, newT);
-        this.setActiveTab(id);
-        this.load();
+    this.newTab = function (id, idx, name, description) {
+        var dataId = id + '-' + idx;
+
+        if (!this.dataTabs[dataId]) {
+            var def = this.defContent.clone();
+            var title = def.find('.tab-pane-title');
+
+            title.text(Object.values(description));
+            var newT = def.find('.bp-data-table');
+            var bpNewDT = new bpDt(id, newT);
+            bpNewDT.clearParam();
+            bpNewDT.setParam('property_id', idx);
+            //bpNewDT.setTableId(tableId);
+            bpNewDT.load();
+            bpNewDT.addDialogHiddenFields('property_id', idx);
+            this.addData(dataId, name, def);
+            this.setActiveTab(dataId);
+            this.load();
+        } else {
+            this.setActiveTab(dataId);
+        }
     };
 
     this.refresh = function () {
         this.load();
     };
-
-    console.dir(_this);
 }

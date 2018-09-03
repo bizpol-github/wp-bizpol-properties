@@ -285,6 +285,7 @@ function bpD(table, title) {
 
         var headers = this.bpDialogTable.getTableHeaders();
         var row = {};
+        console.log(headers);
 
         $.each(headers, function (ignore, value) {
             if (value === 'id') {

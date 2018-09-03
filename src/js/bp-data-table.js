@@ -7,7 +7,7 @@
 
 //class constructor Data Table
 //
-function bpDt(id) {
+function bpDt(id, table) {
     'use strict';
     var _this = this;
 
@@ -16,10 +16,10 @@ function bpDt(id) {
     this.bpDataTableFeedName =  id + 'TableFeed';
     this.bpDataTableId = '#' + id + 'Table';
     this.bpRpcActionName = 'bp_rpc_get_all_' + id;
-    this.bpDataTable = {};
+    this.bpDataTable = table;
     this.bpRPCData = {};
     this.bpFlag = {};
-    this.bpDialog ={};
+    this.bpDialog = {};
 
     this.bpParams = [];
 
@@ -30,7 +30,7 @@ function bpDt(id) {
         //set new dialog
         this.bpDialog = new bpD(this, 'properties');
 
-        this.bpDataTable = $(this.bpDataTableId);
+        //this.bpDataTable = $(this.bpDataTableId);
 
 
         this.initialized = true;
@@ -110,7 +110,7 @@ function bpDt(id) {
      * @return     {object}  The table headers.
      */
     this.getTableHeaders = function () {
-        var header = $(this.bpDataTableId + ' thead tr th');
+        var header = this.bpDataTable.find('thead tr th');
         var cols = {};
         var idx = 0;
         var name = '';
@@ -367,5 +367,10 @@ function bpDt(id) {
 
         this.bpDialog.switchStatus(row);
         //
+    };
+
+    this.addDialogHiddenFields = function (name, value) {
+
+        this.bpDialog.addConstantField(name, value);
     };
 }
