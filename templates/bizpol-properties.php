@@ -142,7 +142,7 @@
 	      table.addCell(1, newRow, record.incexp_name + ' (' + record.incexp_type + ')');
 	      table.addCell(2, newRow, record.quantity);
 	      table.addCell(3, newRow, record.value);
-	      table.addCell(4, newRow, '<button name="edit" class="button-link-edit edit small" onclick="newTabObject.edit(' + rowCounter + ')"><span class="dashicons dashicons-edit"></span></button><button name="delete" class="button-link-delete delete small" onclick="' + table.getName() + 'DT.delete(' + rowCounter + ')"><span class="dashicons dashicons-trash"></span></button>', 'center');
+	      table.addCell(4, newRow, '<button name="edit" class="button-link-edit edit small" onclick="' + newTabObject.edit(rowCounter) + '"><span class="dashicons dashicons-edit"></span></button><button name="delete" class="button-link-delete delete small" onclick="' + table.getName() + 'DT.delete(' + rowCounter + ')"><span class="dashicons dashicons-trash"></span></button>', 'center');
 	      //table.addCell(4, newRow, '<button name="edit" class="button button-primary edit small" onclick="incexp2propD.edit(' + rowCounter + ')">Edit</button><button name="delete" class="button button-danger delete small" onclick="incexp2propD.delete(' + rowCounter + ')">Delete</button>', 'center');
 
 	      rowCounter++;
