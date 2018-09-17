@@ -25,11 +25,36 @@
 	}
 }
 
+.inline-block{
+	display: inline-block;
+}
+
+form.bp-dialog-form{
+	& input.bp-input{
+		width: calc(100% - 30px);
+		border-right: none;
+	}
+}
+
 .status {
 	color: green;
-    height: 20px;
-    width: 20px;
-    position: absolute;
-    top: 38%;
-    right: 20px;
+	border: 1px solid #ddd;
+	border-left: none;
+	border-radius: 0;
+	background: white;
+	font-size: 1em;
+	outline: 0;
+	margin: 1px;
+	margin-left: -1px;
+	padding: 1px 0;
+}
+
+.bp-input:focus{
+	border-right: none;
+}
+
+.bp-input:focus + .status{
+	border-color: #5b9dd9;
+    border-right-color: rgb(91, 157, 217);
+	box-shadow: 0 0 2px rgba(30,140,190,.8);
 }

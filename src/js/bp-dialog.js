@@ -20,7 +20,7 @@ function bpD(table, title) {
     this.bpUpdateAction = 'bp_rpc_update_' + this.bpDialogName;
     this.bpActionTitle = title;
 
-    var autoOpen = false;
+   this.autoOpen = false;
     this.bpForm = {};
     this.bpNewForm = {};
     this.bpFormTitle = '';
@@ -128,7 +128,7 @@ function bpD(table, title) {
         this.bpForm.remove();
 
         this.newDialog.dialog({
-            autoOpen: autoOpen,
+            autoOpen: _this.autoOpen,
             minWidth: '50%',
             width: '60%',
             modal: true,

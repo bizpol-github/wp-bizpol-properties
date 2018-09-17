@@ -107,6 +107,7 @@ function bpTabPaneMain(id) {
         var dataId = id + '-' + idx;
 
         if (!this.dataTabs[dataId]) {
+
             var def = this.defContent.clone();
             var title = def.find('.tab-pane-title');
 
@@ -118,6 +119,8 @@ function bpTabPaneMain(id) {
             //bpNewDT.setTableId(tableId);
             bpNewDT.load();
             bpNewDT.addDialogHiddenFields('property_id', idx);
+
+            window[id + '_' + idx] = bpNewDT;
             this.addData(dataId, name, def);
             this.setActiveTab(dataId);
             this.load();

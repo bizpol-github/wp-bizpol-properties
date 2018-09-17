@@ -55,7 +55,7 @@ class PropertiesCallbacks{
             $value = $input[$_POST['edit_post']][$name];
         }
 
-        echo '<input ' . (isset($args['type']) ? 'type="' . $args['type'] . '" ' : 'type="text"') . ' id="' . $name . '" name="' . $name . '" value="' . $value . '" placeholder="' . $args['placeholder'] . '" min="' . $args['min'] . '" ' . (isset($args['max']) ? ' max="' . $args['max'] . '" ' : '') . (isset($args['patern']) ? ' patern="' . $args['patern'] . '" ' : '') . (isset($args['required']) ? 'required' : '') . ' style="width: 100%"><div class="status dashicons" status="null"></div>';
+        echo '<input ' . (isset($args['type']) ? 'type="' . $args['type'] . '" ' : 'type="text"') . ' id="' . $name . '" name="' . $name . '" value="' . $value . '" placeholder="' . $args['placeholder'] . '" min="' . $args['min'] . '" ' . (isset($args['max']) ? ' max="' . $args['max'] . '" ' : '') . (isset($args['patern']) ? ' patern="' . $args['patern'] . '" ' : '') . (isset($args['required']) ? 'required' : '') . ' class="bp-input"><div class="status dashicons" status="null"></div>';
     }
 
     /**

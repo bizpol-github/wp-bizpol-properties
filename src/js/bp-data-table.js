@@ -78,6 +78,21 @@ function bpDt(id, table) {
     };
 
     /**
+     * Getting the parameters.
+     *
+     * @return     {string}  The parameters.
+     */
+    this.getParam = function (name) {
+        var ret = undefined;
+        $.each(this.bpParams, function (ignore, param) {
+            if (param[name]) {
+                ret = param[name];
+            }
+        });
+        return ret;
+    };
+
+    /**
      * Getting the identifier.
      *
      * @return     {string}  The identifier.
@@ -229,6 +244,9 @@ function bpDt(id, table) {
                     _this.bpRPCData = response;
                     _this.bpDataTable.find('tbody').empty();
                     window[_this.bpDataTableFeedName](response, _this);
+
+                    console.log('Object:');
+                    console.log(_this);
 
                 }
                 console.log('RPC Data');

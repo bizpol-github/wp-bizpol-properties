@@ -112,7 +112,7 @@
 	      	status = '<span class="dashicons dashicons-hidden" onclick="' + table.getName() + 'DT.switchStatus(' + rowCounter + ')"></span>';
 	      }
 
-	      var newRow = table.addRow(rowCounter);    
+	      var newRow = table.addRow(rowCounter);
 
 	      table.addCell(0, newRow, (rowCounter + 1) + ' - (#' + record.id + ')');
 	      // propertiesDT.addCell(1, newRow, '<a href="admin.php?page=bizpol_property&tab=single&rowId=' + rowCounter + '">' + record.property_name + '</a>');
@@ -131,7 +131,7 @@
 
 	function incexp2propTableFeed(data, table){
 		var rowCounter = 0;
-		var newTabObject = table;
+		var funcName =  table.getName() + '_' + table.getParam('property_id');
 
 	    for ( var r in data.entries ) {
 	      var record = data.entries[r];
@@ -142,7 +142,7 @@
 	      table.addCell(1, newRow, record.incexp_name + ' (' + record.incexp_type + ')');
 	      table.addCell(2, newRow, record.quantity);
 	      table.addCell(3, newRow, record.value);
-	      table.addCell(4, newRow, '<button name="edit" class="button-link-edit edit small" onclick="' + newTabObject.edit(rowCounter) + '"><span class="dashicons dashicons-edit"></span></button><button name="delete" class="button-link-delete delete small" onclick="' + table.getName() + 'DT.delete(' + rowCounter + ')"><span class="dashicons dashicons-trash"></span></button>', 'center');
+	      table.addCell(4, newRow, '<button name="edit" class="button-link-edit edit small" onclick="' + funcName + '.edit(' + rowCounter + ')"><span class="dashicons dashicons-edit"></span></button><button name="delete" class="button-link-delete delete small" onclick="' + funcName + '.delete(' + rowCounter + ')"><span class="dashicons dashicons-trash"></span></button>', 'center');
 	      //table.addCell(4, newRow, '<button name="edit" class="button button-primary edit small" onclick="incexp2propD.edit(' + rowCounter + ')">Edit</button><button name="delete" class="button button-danger delete small" onclick="incexp2propD.delete(' + rowCounter + ')">Delete</button>', 'center');
 
 	      rowCounter++;
