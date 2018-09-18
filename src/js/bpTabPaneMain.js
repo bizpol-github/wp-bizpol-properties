@@ -47,7 +47,7 @@ function bpTabPaneMain(id) {
                 var tabPane = content;
 
                 var removeButton = $('<span class="dashicons dashicons-no-alt"></span>');
-                var a = $('<a>').attr('href', '#' + key).text('#' + content.name);
+                var a = $('<a>').attr('href', '#' + key).text(content.name);
                 tabPane.attr('id', key);
 
 

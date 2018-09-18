@@ -11,6 +11,10 @@
 		padding: 10px;
 	}
 
+	& .property-link:hover{
+		cursor: pointer;
+	}
+
 	& th {
 		background-color: lightslategrey;
 	}
@@ -35,4 +39,9 @@
 	& td {
 		position: relative;
 	}
+}
+
+span.dashicons-no-alt{
+	position: absolute;
+	left: 238px;
 }

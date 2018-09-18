@@ -240,8 +240,10 @@ function bpTabPane(element) {
      * Set @var inputKeyUp
      */
     this.inputKeyUp = function () {
-        this.bpForm.on('keyup paste select', 'input', function () {
+        this.bpForm.on('keyup paste select click', 'input', function () {
+            
             _this.setStatus($(this));
+            console.log(this);
         });
 
     };

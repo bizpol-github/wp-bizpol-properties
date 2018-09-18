@@ -58,7 +58,7 @@
 					</thead>
 					<tbody></tbody>
 				</table>
-				<button id="bpBackButton" class="button button-primary" style="margin-top: 10px;">Go Back</button>
+				<!-- <button id="bpBackButton" class="button button-primary" style="margin-top: 10px;">Go Back</button> -->
 				<div id="incexp2propDialog" class="bp-data-dialog">
 					<form class="bp-dialog-form" method="post" action="" autocomplete="on">
 			        <?php
@@ -116,7 +116,7 @@
 
 	      table.addCell(0, newRow, (rowCounter + 1) + ' - (#' + record.id + ')');
 	      // propertiesDT.addCell(1, newRow, '<a href="admin.php?page=bizpol_property&tab=single&rowId=' + rowCounter + '">' + record.property_name + '</a>');
-	      table.addCell(1, newRow, '<div onclick="bpTPM.newTab(\'incexp2prop\', ' + record.id + ', \'' + record.property_name + '\', propertiesDT.getRowData(' +  rowCounter +'))">' + record.property_name + '</div>');
+	      table.addCell(1, newRow, '<div class="property-link" onclick="bpTPM.newTab(\'incexp2prop\', ' + record.id + ', \'' + record.property_name + '\', propertiesDT.getRowData(' +  rowCounter +'))">' + record.property_name + '</div>');
 	      table.addCell(2, newRow, record.prefix, 'center');
 	      table.addCell(3, newRow, record.address);
 	      table.addCell(4, newRow, record.construction_year.substr(0,10), 'center');
@@ -140,8 +140,8 @@
 
 	      table.addCell(0, newRow, (rowCounter + 1) + ' - (#' + record.id + ')');
 	      table.addCell(1, newRow, record.incexp_name + ' (' + record.incexp_type + ')');
-	      table.addCell(2, newRow, record.quantity);
-	      table.addCell(3, newRow, record.value);
+	      table.addCell(2, newRow, record.quantity, 'center');
+	      table.addCell(3, newRow, record.value, 'center');
 	      table.addCell(4, newRow, '<button name="edit" class="button-link-edit edit small" onclick="' + funcName + '.edit(' + rowCounter + ')"><span class="dashicons dashicons-edit"></span></button><button name="delete" class="button-link-delete delete small" onclick="' + funcName + '.delete(' + rowCounter + ')"><span class="dashicons dashicons-trash"></span></button>', 'center');
 	      //table.addCell(4, newRow, '<button name="edit" class="button button-primary edit small" onclick="incexp2propD.edit(' + rowCounter + ')">Edit</button><button name="delete" class="button button-danger delete small" onclick="incexp2propD.delete(' + rowCounter + ')">Delete</button>', 'center');
 
