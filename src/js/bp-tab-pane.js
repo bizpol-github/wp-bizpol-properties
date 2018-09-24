@@ -216,7 +216,7 @@ function bpTabPane(element) {
         var status = input.next();
         var text = input.val();
 
-        if (type === 'text') {
+        if (type === 'text' || type === 'date') {
             var patern = input.attr('patern');
 
             if (patern === undefined) {
@@ -240,8 +240,7 @@ function bpTabPane(element) {
      * Set @var inputKeyUp
      */
     this.inputKeyUp = function () {
-        this.bpForm.on('keyup paste select click', 'input', function () {
-            
+        this.bpForm.on('keyup paste select change', 'input', function () {
             _this.setStatus($(this));
             console.log(this);
         });

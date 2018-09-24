@@ -14,7 +14,6 @@ function bpTabPaneMain(id) {
     var _this = this;
 
     this.addData = function (id, name, content, def) {
-
         if (def === true) {
             this.defContent = content;
         } else {
@@ -22,13 +21,11 @@ function bpTabPaneMain(id) {
             this.dataTabs[id].name = name;
             this.dataTabs[id].present = false;
 
+
             if (this.active === '') {
                 this.setActiveTab(id);
             }
         }
-
-        console.log('dataTabs:');
-        console.log(this.dataTabs);
     };
 
     this.load = function () {
@@ -80,9 +77,6 @@ function bpTabPaneMain(id) {
                 tabPane.append(content);
                 tabPane.appendTo(_this.divContent);
                 content.present = true;
-
-                console.log('content:');
-                console.log(content);
             }
             first = false;
         });
@@ -105,6 +99,7 @@ function bpTabPaneMain(id) {
 
     this.newTab = function (id, idx, name, description) {
         var dataId = id + '-' + idx;
+        var bpNewDT = {};
 
         if (!this.dataTabs[dataId]) {
 
@@ -113,15 +108,15 @@ function bpTabPaneMain(id) {
 
             title.text(Object.values(description));
             var newT = def.find('.bp-data-table');
-            var bpNewDT = new bpDt(id, newT);
+            bpNewDT = new bpDt(id, newT);
             bpNewDT.clearParam();
             bpNewDT.setParam('property_id', idx);
             //bpNewDT.setTableId(tableId);
             bpNewDT.load();
             bpNewDT.addDialogHiddenFields('property_id', idx);
 
-            window[id + '_' + idx] = bpNewDT;
             this.addData(dataId, name, def);
+            this.dataTabs[dataId].table = bpNewDT;
             this.setActiveTab(dataId);
             this.load();
         } else {
@@ -129,7 +124,7 @@ function bpTabPaneMain(id) {
         }
     };
 
-    this.refresh = function () {
-        this.load();
+    this.getDataTable = function (id) {
+        return this.dataTabs[id].table;
     };
 }

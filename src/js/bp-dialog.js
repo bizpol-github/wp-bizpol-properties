@@ -1,4 +1,4 @@
-/*global bpDialog, bpDataTable, bpDataTableName, bpFormTitle,
+/*global bpD, bpDataTable, bpDataTableName, bpFormTitle,
   bpFormDesc, bpUpdateAction, wp_adminFullName, wp_adminId */
 /*global $, ajaxurl, alert */
 
@@ -20,7 +20,7 @@ function bpD(table, title) {
     this.bpUpdateAction = 'bp_rpc_update_' + this.bpDialogName;
     this.bpActionTitle = title;
 
-   this.autoOpen = false;
+    this.autoOpen = false;
     this.bpForm = {};
     this.bpNewForm = {};
     this.bpFormTitle = '';
@@ -210,9 +210,6 @@ function bpD(table, title) {
     this.copyForm = function () {
         this.bpNewForm = this.bpForm.clone();
         this.bpNewForm.appendTo(this.newDialog);
-
-        console.log('create new form');
-        console.log(this.bpNewForm);
         // set title and description of form
         this.bpFormTitle = this.bpNewForm.find('h2');
         this.bpFormDesc = this.bpNewForm.find('h4');
@@ -260,7 +257,6 @@ function bpD(table, title) {
 
         if (this.initialized === false) {
             this.initialize();
-            console.log('Dialog ' + this.bpDialogName + ' zainicjowany');
         }
 
         this.copyForm();
@@ -285,7 +281,6 @@ function bpD(table, title) {
 
         var headers = this.bpDialogTable.getTableHeaders();
         var row = {};
-        console.log(headers);
 
         $.each(headers, function (ignore, value) {
             if (value === 'id') {

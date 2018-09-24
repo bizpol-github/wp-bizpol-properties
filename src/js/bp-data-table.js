@@ -29,6 +29,7 @@ function bpDt(id, table) {
     this.initialize = function () {
         //set new dialog
         this.bpDialog = new bpD(this, 'properties');
+        this.addFooter();
 
         //this.bpDataTable = $(this.bpDataTableId);
 
@@ -37,7 +38,6 @@ function bpDt(id, table) {
     };
 
     this.setTableId = function (id) {
-        console.log(id);
         this.bpDataTableId =   '#' + id;
     };
 
@@ -167,7 +167,20 @@ function bpDt(id, table) {
     this.addRow = function (id) {
         var nRow = this.bpDataTable[0].tBodies[0].insertRow(id);
         nRow.id = 'row' + parseInt(id);
+        console.log(this.bpDataTable[0]);
         return nRow;
+    };
+
+    this.addFooter = function () {
+        var nRow = this.bpDataTable[0].createTFoot().insertRow(0);
+        var cell = nRow.insertCell(0);
+        cell.innerHTML = 'Legend:<span class="dashicons dashicons-trash delete"></span>Delete<span class="dashicons dashicons-edit edit"></span>Edit<span class="dashicons dashicons-visibility edit"></span>Switch status';
+        cell.colSpan = 7;
+        cell.classList.add('bp-data-table-legend');
+        var cell = nRow.insertCell(1);
+        cell.innerHTML = '<button name="edit" class="button-link-edit edit small" onclick=""><span class="dashicons dashicons-edit"></span></button><button name="delete" class="button-link-delete delete small" onclick=""><span class="dashicons dashicons-trash"></span></button>';
+        var cell = nRow.insertCell(2);
+        cell.innerHTML = '<input type="checkbox" name="batchFlag" onclick="" />';
     };
 
     /**
@@ -206,7 +219,7 @@ function bpDt(id, table) {
         checkboxes.each(function () {
             if (this != element){
                 this.checked = !this.checked;
-                if (this.id != 'batchFlag'){
+                if (this.name != 'batchFlag'){
                     if (this.checked){
                         _this.bpFlag[this.id] = this.value;
                     } else {
@@ -218,12 +231,35 @@ function bpDt(id, table) {
     };
 
     this.flagCheckbox = function (element) {
+        var checkboxes = this.bpDataTable.find("input[name='batch[]']");
+        var counter = 0;
+
         if (element.checked){
             this.bpFlag[element.id] = element.value;
         } else {
             delete this.bpFlag[element.id];
         }
-        //console.log(this.bpFlag);
+
+        $.each(this.bpFlag, function () {
+            counter += 1;
+        });
+
+        var batchFlag = this.bpDataTable.find("input[name='batchFlag']");
+
+        if (checkboxes.length === counter) {
+            batchFlag.each(function () {
+                this.checked = true;
+            });
+        } else {
+             batchFlag.each(function () {
+                if (this.checked) {
+                    this.checked = false;
+                }
+            });
+        }
+
+
+        //console.log(checkboxes.length);
     };
 
     this.load = function () {
@@ -245,13 +281,7 @@ function bpDt(id, table) {
                     _this.bpDataTable.find('tbody').empty();
                     window[_this.bpDataTableFeedName](response, _this);
 
-                    console.log('Object:');
-                    console.log(_this);
-
                 }
-                console.log('RPC Data');
-                console.log(response);
-                console.log(_this.bpDataTable);
             }
         );
     };
@@ -308,7 +338,6 @@ function bpDt(id, table) {
             var table = newCont.find('.bp-data-table');
             var tableId = table.attr('id');
             tableId = tableId + '-' + row;
-            console.log(tableId);
             table.attr('id', tableId);
 
             var dialog = newCont.find('.bp-data-dialog');
@@ -322,8 +351,6 @@ function bpDt(id, table) {
 
             //var incexp2propD = new bpDialog(bpNewDT, 'income/expense');
             bpNewDT.bpDialog.addConstantField('property_id', rowData.id);
-
-            console.log(dialogId);
 
         }
 

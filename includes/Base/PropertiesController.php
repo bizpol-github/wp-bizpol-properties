@@ -425,7 +425,7 @@ class PropertiesController extends BaseController
                     'min' => '10',
                     'max' => '10',
                     'type' => 'date',
-                    'patern' => '[0-9]{2}[-][0-9]{2}[-][0-9]{4}$',
+                    'patern' => '[0-9]{4}[-][0-9]{2}[-][0-9]{2}$',
                     'required' => 'required'
                 ]
             ],

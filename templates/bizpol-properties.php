@@ -3,76 +3,79 @@
 	<?php 
 		settings_errors();
 	?>
-	<div class="propertiesTabs">
 
-	    <div class="tab-content">
-	    	<div id="general" class="tab-pane">
-	    		<button class="button button-primary" style="margin-bottom: 10px;">Add property</button>
-	    		<table id="propertiesTable" class="bp-data-table">
-	    			<thead>
-		    			<tr>
-		    				<th name="id">ID</th><th name="property_name">Name</th>
-		    				<th class="text-center" name="prefix">Prefix</th>
-		    				<th name="address">Address</th>
-		    				<th class="text-center" name="construction_year">Builded</th>
-		    				<th class="text-center" name="land_register">Land Register</th>
-		    				<th class="text-center" name="status">Status</th>
-		    				<th class="text-center" name="actions">Actions</th>
-		    				<th align="center" width="20" name="batchFlag"><input type="checkbox" name="batchFlag" id="batchFlag" onclick="propertiesDT.flagCheckboxes(this);" /></th>
-		    			</tr>
-		    		</thead>
-		    		<tbody>		
-		    		</tbody>
-		    		<tfoot>
-		    			<tr>
-		    				<td colspan="7" class="bp-data-table-legend">Legend:<span class="dashicons dashicons-trash delete"></span>Delete<span class="dashicons dashicons-edit edit"></span>Edit<span class="dashicons dashicons-visibility edit"></span>Switch status</td>
-		    				<td align="center"><button name="edit" class="button-link-edit edit small" onclick="propertiesDT.editBatch()"><span class="dashicons dashicons-edit"></span></button><button name="delete" class="button-link-delete delete small" onclick="propertiesDT.deleteBatch()"><span class="dashicons dashicons-trash"></span></button></td>
-		    				<td align="center" width="20"><input type="checkbox" name="batchFlag" id="batchFlag" onclick="propertiesDT.flagCheckboxes(this);" /></td>   					
-		    			</tr>
-		    		</tfoot>
-		    	</table>
+	<!-- Full properties data feeded into the table and properties dialog from jQuery -->
 
-				<div id="propertiesDialog">
-					<form class="bp-dialog-form" method="post" action="" autocomplete="on">
-			        <?php
-			            settings_fields('bp_property_settings');
-			            do_settings_sections('bizpol_property');
-			        ?>
-						<div class="bp-tab-pane"></div>
-			        <?php
-			            submit_button();
-			        ?>
-	    			</form>
-				</div>
-			</div>
-			<div id="single" class="tab-pane">
-				<div class="tab-pane-title"></div>			
-				<button class="button button-primary" style="margin-bottom: 10px;" prop_id="">Add new</button>
-				<table class="bp-data-table">
-					<thead>
-						<tr>
-							<th name="id">ID</th><th name="incexp_id">Income/Expense Name</th>
-							<th name="quantity">Quantity</th><th name="value">Amount</th>
-							<th class="text-center" name="actions">Actions</th>
-						</tr>
-					</thead>
-					<tbody></tbody>
-				</table>
-				<!-- <button id="bpBackButton" class="button button-primary" style="margin-top: 10px;">Go Back</button> -->
-				<div id="incexp2propDialog" class="bp-data-dialog">
-					<form class="bp-dialog-form" method="post" action="" autocomplete="on">
-			        <?php
-			            settings_fields('bp_inc2prop_settings');
-			            do_settings_sections('bizpol_inc2prop');
-		            ?>
-						<div class="bp-tab-pane"></div>
-			        <?php
-			            submit_button();
-			        ?>
-		    		</form>
-				</div>
-			</div>
-	    </div>
+	<div id="general" class="tab-pane">
+		<button class="button button-primary" style="margin-bottom: 10px;">Add property</button>
+		<table id="propertiesTable" class="bp-data-table">
+			<thead>
+    			<tr>
+    				<th name="id">ID</th><th name="property_name">Name</th>
+    				<th class="text-center" name="prefix">Prefix</th>
+    				<th name="address">Address</th>
+    				<th class="text-center" name="construction_year">Builded</th>
+    				<th class="text-center" name="land_register">Land Register</th>
+    				<th class="text-center" name="status">Status</th>
+    				<th class="text-center" name="actions">Actions</th>
+    				<th align="center" width="20" name="batchFlag"><input type="checkbox" name="batchFlag" onclick="propertiesDT.flagCheckboxes(this);" /></th>
+    			</tr>
+    		</thead>
+    		<tbody>		
+    		</tbody>
+    		<tfoot>
+    			<tr>
+    				<td colspan="7" class="bp-data-table-legend">Legend:<span class="dashicons dashicons-trash delete"></span>Delete<span class="dashicons dashicons-edit edit"></span>Edit<span class="dashicons dashicons-visibility edit"></span>Switch status</td>
+    				<td align="center"><button name="edit" class="button-link-edit edit small" onclick="propertiesDT.editBatch()"><span class="dashicons dashicons-edit"></span></button><button name="delete" class="button-link-delete delete small" onclick="propertiesDT.deleteBatch()"><span class="dashicons dashicons-trash"></span></button></td>
+    				<td align="center" width="20"><input type="checkbox" name="batchFlag" onclick="propertiesDT.flagCheckboxes(this);" /></td>   					
+    			</tr>
+    		</tfoot>
+    	</table>
+
+		<div id="propertiesDialog">
+			<form class="bp-dialog-form" method="post" action="" autocomplete="on">
+	        <?php
+	            settings_fields('bp_property_settings');
+	            do_settings_sections('bizpol_property');
+	        ?>
+				<div class="bp-tab-pane"></div>
+	        <?php
+	            submit_button();
+	        ?>
+			</form>
+		</div>
+	</div>
+
+	<!-- Full property data by id feeded into the table and properties dialog from jQuery -->
+
+
+	<div id="single" class="tab-pane">
+		<div class="tab-pane-title"></div>			
+		<button class="button button-primary" style="margin-bottom: 10px;" prop_id="">Add new</button>
+		<table class="bp-data-table">
+			<thead>
+				<tr>
+					<th name="id">ID</th><th name="incexp_id">Income/Expense Name</th>
+					<th name="quantity">Quantity</th><th name="value">Amount</th>
+					<th class="text-center" name="actions">Actions</th>
+					<th align="center" width="20" name="batchFlag"><input type="checkbox" name="batchFlag" onclick="" /></th>
+				</tr>
+			</thead>
+			<tbody></tbody>
+			<tfoot></tfoot>
+		</table>
+		<div id="incexp2propDialog" class="bp-data-dialog">
+			<form class="bp-dialog-form" method="post" action="" autocomplete="on">
+	        <?php
+	            settings_fields('bp_inc2prop_settings');
+	            do_settings_sections('bizpol_inc2prop');
+            ?>
+				<div class="bp-tab-pane"></div>
+	        <?php
+	            submit_button();
+	        ?>
+    		</form>
+		</div>
 	</div>
 
 	<div id="bpTPM" class="propertiesTabs"></div>
@@ -80,24 +83,21 @@
 </div>
 
 <script>
+	var wp_adminId = '<?php echo wp_get_current_user()->id ?>';
+	var wp_adminFullName = '<?php echo wp_get_current_user()->display_name ?>';
 	var bpTPM = new bpTabPaneMain('bpTPM');
 	var generalTab = $('div#general');
-	var singleTab = $('div#single')
+	var singleTab = $('div#single');
 	generalTab.remove();
 	singleTab.remove();
+
+
 	bpTPM.addData('properties', 'Properties', generalTab);
 	bpTPM.addData('property', 'property', singleTab, true);
 	bpTPM.load();
-	//bpTPM.newTab('archii');
 
-	var wp_adminId = '<?php echo wp_get_current_user()->id ?>';
-	var wp_adminFullName = '<?php echo wp_get_current_user()->display_name ?>';
-
-	//getting properties table
 	var propertiesDT = new bpDt('properties', $('#propertiesTable'));
-
 	propertiesDT.load();
-	//bpDialogInc2PropDT.load();
 
 	function propertiesTableFeed(data, table){
 		var rowCounter = 0;
@@ -131,7 +131,7 @@
 
 	function incexp2propTableFeed(data, table){
 		var rowCounter = 0;
-		var funcName =  table.getName() + '_' + table.getParam('property_id');
+		var funcName =  table.getName() + '-' + table.getParam('property_id');
 
 	    for ( var r in data.entries ) {
 	      var record = data.entries[r];
@@ -142,8 +142,8 @@
 	      table.addCell(1, newRow, record.incexp_name + ' (' + record.incexp_type + ')');
 	      table.addCell(2, newRow, record.quantity, 'center');
 	      table.addCell(3, newRow, record.value, 'center');
-	      table.addCell(4, newRow, '<button name="edit" class="button-link-edit edit small" onclick="' + funcName + '.edit(' + rowCounter + ')"><span class="dashicons dashicons-edit"></span></button><button name="delete" class="button-link-delete delete small" onclick="' + funcName + '.delete(' + rowCounter + ')"><span class="dashicons dashicons-trash"></span></button>', 'center');
-	      //table.addCell(4, newRow, '<button name="edit" class="button button-primary edit small" onclick="incexp2propD.edit(' + rowCounter + ')">Edit</button><button name="delete" class="button button-danger delete small" onclick="incexp2propD.delete(' + rowCounter + ')">Delete</button>', 'center');
+	      table.addCell(4, newRow, '<button name="edit" class="button-link-edit edit small" onclick="bpTPM.getDataTable(\'' + funcName + '\').edit(' + rowCounter + ')"><span class="dashicons dashicons-edit"></span></button><button name="delete" class="button-link-delete delete small" onclick="bpTPM.getDataTable(\'' + funcName + '\').delete(' + rowCounter + ')"><span class="dashicons dashicons-trash"></span></button>', 'center');
+	      table.addCell(5, newRow, '<input type="checkbox" name="batch[]" value="' + parseInt(rowCounter) + '" id="batch' + parseInt(rowCounter) + '" onclick="bpTPM.getDataTable(\'' + funcName + '\').flagCheckbox(this);"/>', 'center');
 
 	      rowCounter++;
 		}
