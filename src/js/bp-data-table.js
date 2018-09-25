@@ -22,6 +22,7 @@ function bpDt(id, table) {
     this.bpDialog = {};
 
     this.bpParams = [];
+    this.funcName = id + 'DT';
 
     /**
      * set @var initialize only once
@@ -29,6 +30,7 @@ function bpDt(id, table) {
     this.initialize = function () {
         //set new dialog
         this.bpDialog = new bpD(this, 'properties');
+        this.setHeaderCheckbox();
         this.addFooter();
 
         //this.bpDataTable = $(this.bpDataTableId);
@@ -158,6 +160,25 @@ function bpDt(id, table) {
         return this.bpRPCData.entries[id];
     };
 
+    this.getFuncName = function () {
+        return this.funcName;
+    };
+
+    this.setFuncName = function (name) {
+        this.funcName = name;
+    };
+
+    this.setHeaderCheckbox = function () {
+        var bpTable = this.bpDataTable[0];
+        var header = bpTable.tHead.rows[0];
+        var colNum = bpTable.rows[0].cells.length;
+        var checkbox = header.cells.item(colNum-1);
+        var cbxChild = checkbox.children.item(0);
+        cbxChild.onclick = function () {
+            _this.flagCheckboxes(this);
+        }
+    };
+
     /**
      * Adds a row.
      *
@@ -167,20 +188,23 @@ function bpDt(id, table) {
     this.addRow = function (id) {
         var nRow = this.bpDataTable[0].tBodies[0].insertRow(id);
         nRow.id = 'row' + parseInt(id);
-        console.log(this.bpDataTable[0]);
         return nRow;
     };
 
     this.addFooter = function () {
-        var nRow = this.bpDataTable[0].createTFoot().insertRow(0);
+        var bpTable = this.bpDataTable[0];
+        var colNum = bpTable.rows[0].cells.length;
+        var funcName = this.getFuncName();
+        var nRow = bpTable.createTFoot().insertRow(0);
         var cell = nRow.insertCell(0);
         cell.innerHTML = 'Legend:<span class="dashicons dashicons-trash delete"></span>Delete<span class="dashicons dashicons-edit edit"></span>Edit<span class="dashicons dashicons-visibility edit"></span>Switch status';
-        cell.colSpan = 7;
+        cell.colSpan = colNum-2;
         cell.classList.add('bp-data-table-legend');
         var cell = nRow.insertCell(1);
-        cell.innerHTML = '<button name="edit" class="button-link-edit edit small" onclick=""><span class="dashicons dashicons-edit"></span></button><button name="delete" class="button-link-delete delete small" onclick=""><span class="dashicons dashicons-trash"></span></button>';
+        cell.innerHTML = '<button name="edit" class="button-link-edit edit small" onclick="' + funcName + '.editBatch();"><span class="dashicons dashicons-edit"></span></button><button name="delete" class="button-link-delete delete small" onclick="' + funcName + '.deleteBatch();"><span class="dashicons dashicons-trash"></span></button>';
+        cell.align = 'center';
         var cell = nRow.insertCell(2);
-        cell.innerHTML = '<input type="checkbox" name="batchFlag" onclick="" />';
+        cell.innerHTML = '<input type="checkbox" name="batchFlag" onclick="' + funcName + '.flagCheckboxes(this);" />';
     };
 
     /**

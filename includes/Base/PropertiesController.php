@@ -307,6 +307,7 @@ class PropertiesController extends BaseController
         $incexp = $wpdb->get_results("SELECT * FROM `wp_bp_incexp`");
         return $incexp;
 
+
     }
 
 	public function setSubpages()
@@ -484,6 +485,7 @@ class PropertiesController extends BaseController
                 ]
             ],
             //income to propery
+
             [
                 'id' => 'incexp_id',
                 'title' => 'Type',
@@ -493,7 +495,8 @@ class PropertiesController extends BaseController
                 'args' => [
                     'option_name' => 'bizpol_inc2prop',
                     'label_for' => 'incexp_id',
-                    'data' => $this->get_incexp()
+                    'data' => $this->get_incexp(),
+                    'patern' => '[^0]{1}[\d]*',
                 ]
             ],
             [

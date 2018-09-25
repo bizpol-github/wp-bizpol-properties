@@ -111,13 +111,18 @@ class PropertiesCallbacks{
             $value = $input[$_POST['edit_post']][$name];
         }
 
-        echo '<select name="' . $name . '" class="regular-text">';
+        echo '<span class="select-input"><select name="' . $name . '" class="bp-select" ' . (isset($args['patern']) ? ' patern="' . $args['patern'] . '" ' : '') . '>';
+
+        echo '<option value="0">--Select--</option>';
 
         foreach ($args['data'] as $value) {
             echo '<option value="' . $value->id . '">' . $value->incexp_name . ' (' . $value->incexp_type . ')</option>';
         }
-        echo '</select>';
-        echo '<div id="incexp-add-button" class="button button-primary" style="margin-top: 10px;"><span class="dashicons dashicons-plus" style=" padding-top: 3px;"></span></div>';
+        echo '</select><div class="status dashicons" status="null"></div></span>';
+    }
+
+    public function incExpButton($args){
+        echo '<span class="select-input"><div id="incexp-add-button" class="button button-primary" style="text-align: center; font-weight: bold;" onclick="incexp2propAdd(this);"><span class="dashicons dashicons-plus" style=" padding-top: 3px;"></span>Add manually</div></span>';
     }
 
 

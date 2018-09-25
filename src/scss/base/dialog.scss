@@ -41,6 +41,12 @@ form.bp-dialog-form{
 	& span.select-input > input.bp-input{
 		width: calc(100% - 70px);
 	}
+	& span.select-input > select.bp-select{
+		width: calc(100% - 30px);
+	}
+	& span.select-input > .button{
+		width: calc(100% - 30px);
+	}
 }
 
 .status {

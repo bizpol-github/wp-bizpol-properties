@@ -236,12 +236,37 @@ function bpTabPane(element) {
         }
     };
 
+    this.setSelectStatus = function (select) {
+        var status = select.next();
+        var value = select.val();
+
+        var patern = select.attr('patern');
+
+        var regex = new RegExp(patern);
+        var test = regex.test(value);
+
+        console.log(test);
+
+        if (test) {
+            status.removeClass('dashicons-no').addClass('dashicons-yes').css('color', 'green');
+            status.attr('status', true);
+        } else {
+            status.removeClass('dashicons-yes').addClass('dashicons-no').css('color', 'red');
+            status.attr('status', false);
+        }
+
+    };
+
     /**
      * Set @var inputKeyUp
      */
     this.inputKeyUp = function () {
         this.bpForm.on('keyup paste select change', 'input', function () {
             _this.setStatus($(this));
+            console.log(this);
+        });
+        this.bpForm.on('select change', 'select', function () {
+            _this.setSelectStatus($(this));
             console.log(this);
         });
 

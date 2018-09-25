@@ -1,4 +1,4 @@
-/*global bpTabPaneMain, _this, $ */
+/*global bpTabPaneMain, _this, $, window */
 function bpTabPaneMain(id) {
     'use strict';
 
@@ -98,7 +98,7 @@ function bpTabPaneMain(id) {
     };
 
     this.newTab = function (id, idx, name, description) {
-        var dataId = id + '-' + idx;
+        var dataId = id + '_' + idx;
         var bpNewDT = {};
 
         if (!this.dataTabs[dataId]) {
@@ -111,12 +111,13 @@ function bpTabPaneMain(id) {
             bpNewDT = new bpDt(id, newT);
             bpNewDT.clearParam();
             bpNewDT.setParam('property_id', idx);
+            bpNewDT.setFuncName(dataId);
             //bpNewDT.setTableId(tableId);
             bpNewDT.load();
             bpNewDT.addDialogHiddenFields('property_id', idx);
+            window[dataId] = bpNewDT;
 
             this.addData(dataId, name, def);
-            this.dataTabs[dataId].table = bpNewDT;
             this.setActiveTab(dataId);
             this.load();
         } else {
