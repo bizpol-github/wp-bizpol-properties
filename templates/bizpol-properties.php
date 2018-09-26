@@ -234,6 +234,24 @@
 	}
 
 	function incexp2propAdd(element){
+
+		var buttonVal = $(element).val();
+		var buttonName = element.name;
+		var hiddenName = buttonName.replace('button', 'new');
+
+		if (buttonVal === "+ Add manually") {
+			$(element).val('- Back');
+
+			$('<input>').attr({
+			    type: 'hidden',
+			    name: hiddenName,
+			    value: true
+			}).insertAfter(element);
+
+		} else {
+			$(element).val('+ Add manually');
+		}
+		console.log(element.name);
 		var first = $(element).parents('tr').next();
 		var second = first.next();
 		var third = second.next();

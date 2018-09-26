@@ -188,13 +188,18 @@ function bpTabPane(element) {
                 if (disabled === true) {
                     input.prop('disabled', true);
                 } else if (!insert) {
-                    _this.setStatus(input);
+                    _this.setStatusInput(input);
+                    
                 }
             }
 
             select = table.find('select[name="' + key + '"]');
 
+
+
             if (select.length > 0) {
+                console.log('select');
+                console.log(select.length);
 
                 select.attr('name', name);
 
@@ -202,15 +207,20 @@ function bpTabPane(element) {
                     if (option.value === value) {
                         option.selected = true;
                     }
+
                     if (disabled === true) {
                         select.prop('disabled', true);
                     }
                 });
+
+                if (!insert) {
+                    _this.setStatusSelect(select);
+                }
             }
         });
     };
 
-    this.setStatus = function (input) {
+    this.setStatusInput = function (input) {
         var min = input.attr('min');
         var type = input.attr('type');
         var status = input.next();
@@ -236,7 +246,7 @@ function bpTabPane(element) {
         }
     };
 
-    this.setSelectStatus = function (select) {
+    this.setStatusSelect = function (select) {
         var status = select.next();
         var value = select.val();
 
@@ -245,7 +255,7 @@ function bpTabPane(element) {
         var regex = new RegExp(patern);
         var test = regex.test(value);
 
-        console.log(test);
+        //console.log(status);
 
         if (test) {
             status.removeClass('dashicons-no').addClass('dashicons-yes').css('color', 'green');
@@ -262,11 +272,11 @@ function bpTabPane(element) {
      */
     this.inputKeyUp = function () {
         this.bpForm.on('keyup paste select change', 'input', function () {
-            _this.setStatus($(this));
+            _this.setStatusInput($(this));
             console.log(this);
         });
         this.bpForm.on('select change', 'select', function () {
-            _this.setSelectStatus($(this));
+            _this.setStatusSelect($(this));
             console.log(this);
         });
 

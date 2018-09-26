@@ -95,10 +95,11 @@ class PropertiesCallbacks{
             $value = $input[$_POST['edit_post']][$name];
         }
 
-        echo '<select name="' . $name . '" class="regular-text">
-  <option value="income">Income</option>
-  <option value="expense">Expense</option>
-</select>';
+        echo '<span class="select-input"><select name="' . $name . '" class="bp-select" ' . (isset($args['patern']) ? ' patern="' . $args['patern'] . '" ' : '') . '>
+                <option value="0">--Select--</option>
+                <option value="income">Income</option>
+                <option value="expense">Expense</option>
+              </select><div class="status dashicons" status="null"></div></span>';
     }
 
     public function incExpField($args){
@@ -122,7 +123,11 @@ class PropertiesCallbacks{
     }
 
     public function incExpButton($args){
-        echo '<span class="select-input"><div id="incexp-add-button" class="button button-primary" style="text-align: center; font-weight: bold;" onclick="incexp2propAdd(this);"><span class="dashicons dashicons-plus" style=" padding-top: 3px;"></span>Add manually</div></span>';
+        $name = $args['label_for'];
+        echo '<span class="select-input">
+                <input type="button" name="' . $name . '" value="+ Add manualy" class="button button-primary" style="text-align: center; font-weight:bold;" onclick="incexp2propAdd(this);">                
+        </span>';
+        //<span class="dashicons dashicons-plus" style=" padding-top: 3px;"></span>Add manually</span>
     }
 
 

@@ -187,9 +187,24 @@ class PropertiesController extends BaseController
 
             foreach ($form['entries'] as $key => $value) {
 
-               $form_values = array(
+                if(isset($value['incexp_new']) && $value['incexp_new'] == true){
+
+                    //check if data exist in database
+                    $incexp = $wpdb->get_results("SELECT * FROM `wp_bp_incexp` WHERE incexp_name='" . $value['incexp_name'] . "' AND incexp_type='" . $value['incexp_type'] . "'");
+                    
+                    //add data to database
+                    //
+                    //change values incexp2prop
+                    $data['dane_do_dodania'] = count($incexp);
+                }
+
+
+
+                $form_values = array(
                     'property_id' => $form['property_id'],
                     'incexp_id' => $value['incexp_id'],
+                    'incexp_name' => $value['incexp_name'],
+                    'incexp_type' => $value['incexp_type'],
                     'quantity' => $value['quantity'],
                     'value' => $value['value'],
                     'user_id' => $form['user_id']
@@ -287,6 +302,7 @@ class PropertiesController extends BaseController
             $data['entries'][] = array(
                 'id' => $incexp2prop->id,
                 'property_id' => $incexp2prop->property_id,
+                'incexp_button' => '+ Add manually',
                 'incexp_id' => $incexp2prop->incexp_id,
                 'incexp_name' => $incexp2prop->incexp_name,
                 'incexp_type' => $incexp2prop->incexp_type,
@@ -485,7 +501,17 @@ class PropertiesController extends BaseController
                 ]
             ],
             //income to propery
-
+            [
+                'id' => 'incexp_button',
+                'title' => '',
+                'callback' => [$this->properties_callbacks, 'incExpButton'],
+                'page' => 'bizpol_inc2prop',
+                'section' => 'inc2prop_index',
+                'args' => [
+                    'option_name' => 'bizpol_inc2prop',
+                    'label_for' => 'incexp_button',
+                ]
+            ],
             [
                 'id' => 'incexp_id',
                 'title' => 'Type',
@@ -523,7 +549,7 @@ class PropertiesController extends BaseController
                     'option_name' => 'bizpol_inc2prop',
                     'label_for' => 'incexp_type',
                     'placeholder' => 'Type',
-                    'min' => '2',
+                    'patern' => '[^0]{1}[\d]*',
                     'class' => 'hidden'
                 ]
             ],

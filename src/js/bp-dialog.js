@@ -200,8 +200,6 @@ function bpD(table, title) {
         this.bpNewForm = {};
         this.bpTabUl.empty();
         this.bpTabUlDiv.empty();
-
-        console.log('reset');
     };
 
     /**
@@ -285,7 +283,6 @@ function bpD(table, title) {
         $.each(headers, function (ignore, value) {
             if (value === 'id') {
                 row[value] = 'new';
-
             } else {
                 row[value] = undefined;
             }
