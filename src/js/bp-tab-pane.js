@@ -151,6 +151,8 @@ function bpTabPane(element) {
      * @param      {boolean}  disabled  The disabled
      */
     this.updateFormTable = function (table, row, disabled, insert) {
+
+        console.log(row);
         var input = {};
         var select = {};
         var name = '';

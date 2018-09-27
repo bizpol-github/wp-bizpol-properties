@@ -250,6 +250,7 @@
 
 		} else {
 			$(element).val('+ Add manually');
+			$('input[name="' + hiddenName + '"]').remove();
 		}
 		console.log(element.name);
 		var first = $(element).parents('tr').next();

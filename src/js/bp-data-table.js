@@ -141,6 +141,16 @@ function bpDt(id, table) {
         return cols;
     };
 
+     /**
+     * Getting the column names from controller.
+     *
+     * @return     {object}  The table headers.
+     */
+    this.getColumnNames = function () {        
+        
+        return this.bpRPCData['columns'];
+    };
+
     /**
      * Gets the batch.
      *
@@ -304,6 +314,8 @@ function bpDt(id, table) {
                     _this.bpRPCData = response;
                     _this.bpDataTable.find('tbody').empty();
                     window[_this.bpDataTableFeedName](response, _this);
+                    console.log('RESPOMSE:');
+                    console.log(response);
 
                 }
             }

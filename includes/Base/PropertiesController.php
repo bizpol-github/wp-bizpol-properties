@@ -187,28 +187,39 @@ class PropertiesController extends BaseController
 
             foreach ($form['entries'] as $key => $value) {
 
+                $form_values = array(
+                    'property_id' => $form['property_id'],
+                    'incexp_id' => $value['incexp_id'],
+                    'quantity' => $value['quantity'],
+                    'value' => $value['value'],
+                    'user_id' => $form['user_id']
+                );
+
                 if(isset($value['incexp_new']) && $value['incexp_new'] == true){
 
                     //check if data exist in database
                     $incexp = $wpdb->get_results("SELECT * FROM `wp_bp_incexp` WHERE incexp_name='" . $value['incexp_name'] . "' AND incexp_type='" . $value['incexp_type'] . "'");
                     
                     //add data to database
-                    //
-                    //change values incexp2prop
-                    $data['dane_do_dodania'] = count($incexp);
+                    if (count($incexp) < 1) {
+                        $incexp_values = array(
+                            'incexp_name' => $value['incexp_name'],
+                            'incexp_type' => $value['incexp_type'],                          
+                            'user_id' => $form['user_id']
+                        );
+
+
+                        $wpdb->insert('wp_bp_incexp', $incexp_values);
+                        $data['status_incexp'] = true;
+                        // return 0 on error
+                        $new_id = $wpdb->insert_id;
+
+                        $form_values['incexp_id'] = $new_id;
+
+                    }
+                    
                 }
-
-
-
-                $form_values = array(
-                    'property_id' => $form['property_id'],
-                    'incexp_id' => $value['incexp_id'],
-                    'incexp_name' => $value['incexp_name'],
-                    'incexp_type' => $value['incexp_type'],
-                    'quantity' => $value['quantity'],
-                    'value' => $value['value'],
-                    'user_id' => $form['user_id']
-                );
+                
 
                 if ($form['action'] == 'update') {
                     $wpdb->update('wp_bp_incexp2prop', $form_values, array('id' =>  $key));
@@ -254,7 +265,7 @@ class PropertiesController extends BaseController
 
         $properties = $wpdb->get_results("SELECT * FROM `wp_bp_properties`", ARRAY_A);        
         
-        $data['keys'] = array_keys($properties[0]);
+        $data['columns'] = $wpdb->get_col_info();
 
         foreach ($properties as $property) {
             $data['entries'][] = $property; 
@@ -310,6 +321,10 @@ class PropertiesController extends BaseController
                 'value' => $incexp2prop->value
                 );
         }
+
+        $data['columns'] = $wpdb->get_col_info();
+        //Add extra column name
+        $data['columns'][] = 'incexp_button';
 
         $data['error'] = false;
         $data['total'] = count($incexp2props);

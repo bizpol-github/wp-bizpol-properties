@@ -277,7 +277,7 @@ function bpD(table, title) {
 
     this.getNewEmptyRow = function () {
 
-        var headers = this.bpDialogTable.getTableHeaders();
+        var headers = this.bpDialogTable.getColumnNames();
         var row = {};
 
         $.each(headers, function (ignore, value) {
