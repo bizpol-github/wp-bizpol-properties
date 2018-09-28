@@ -43,7 +43,7 @@
 
 
 	<div id="single" class="tab-pane">
-		<div class="tab-pane-title"></div>			
+		<div class="tab-pane-header"></div>			
 		<button class="button button-primary" style="margin-bottom: 10px;" prop_id="">Add new</button>
 		<table class="bp-data-table">
 			<thead>
@@ -239,7 +239,7 @@
 		var buttonName = element.name;
 		var hiddenName = buttonName.replace('button', 'new');
 
-		if (buttonVal === "+ Add manually") {
+		if (buttonVal === "+ Add manualy") {
 			$(element).val('- Back');
 
 			$('<input>').attr({
@@ -249,7 +249,7 @@
 			}).insertAfter(element);
 
 		} else {
-			$(element).val('+ Add manually');
+			$(element).val('+ Add manualy');
 			$('input[name="' + hiddenName + '"]').remove();
 		}
 		console.log(element.name);

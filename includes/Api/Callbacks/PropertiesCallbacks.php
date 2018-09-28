@@ -126,7 +126,6 @@ class PropertiesCallbacks{
         $name = $args['label_for'];
         echo '<span class="select-input">
                 <input type="button" name="' . $name . '" value="+ Add manualy" class="button button-primary" style="text-align: center; font-weight:bold;" onclick="incexp2propAdd(this);">
-                <input type="hidden" name="inexp_new" value="false">
         </span>';
         //<span class="dashicons dashicons-plus" style=" padding-top: 3px;"></span>Add manually</span>
     }

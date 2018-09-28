@@ -313,7 +313,7 @@ class PropertiesController extends BaseController
             $data['entries'][] = array(
                 'id' => $incexp2prop->id,
                 'property_id' => $incexp2prop->property_id,
-                'incexp_button' => '+ Add manually',
+                'incexp_button' => '+ Add manualy',
                 'incexp_id' => $incexp2prop->incexp_id,
                 'incexp_name' => $incexp2prop->incexp_name,
                 'incexp_type' => $incexp2prop->incexp_type,

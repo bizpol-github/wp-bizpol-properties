@@ -100,13 +100,17 @@ function bpTabPaneMain(id) {
     this.newTab = function (id, idx, name, description) {
         var dataId = id + '_' + idx;
         var bpNewDT = {};
+        var title ={};
 
         if (!this.dataTabs[dataId]) {
 
             var def = this.defContent.clone();
-            var title = def.find('.tab-pane-title');
-
-            title.text(Object.values(description));
+            //set title
+            
+            title = new bpTabPaneMainTitle(def.find('.tab-pane-header'), description);
+            title.setGroup('title', ['id','property_name'], 100);
+            title.load();
+            
             var newT = def.find('.bp-data-table');
             bpNewDT = new bpDt(id, newT);
             bpNewDT.clearParam();
@@ -127,5 +131,54 @@ function bpTabPaneMain(id) {
 
     this.getDataTable = function (id) {
         return this.dataTabs[id].table;
+    };
+}
+
+function bpTabPaneMainTitle(element, row) {
+    'use strict';
+
+    //constructor
+    this.mainDiv = element;
+    this.titleData = row;
+    this.groups = {};
+    this.initialized = false;
+
+    var _this = this;
+
+    this.load = function () {
+        var title = '';
+
+        $.each(this.groups, function (key, content) {
+            var div = $('<div style="float:left">');
+            div.addClass('header-' + key);
+
+            var groupValue = [];
+
+            $.each(content.group, function (ignore, name) {
+
+                groupValue.push(_this.titleData[name]);
+
+            });
+
+            div.text(groupValue);
+
+            _this.mainDiv.append(div);
+
+            title += key;
+            title += content;
+
+        });
+
+       // this.mainDiv.text(title);
+
+
+    };
+
+    this.setGroup = function (name, group, size) {
+        this.groups[name] = {
+            group: group,
+            size: size
+        };
+
     };
 }
