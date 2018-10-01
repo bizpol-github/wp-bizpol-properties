@@ -49,7 +49,7 @@
 			<thead>
 				<tr>
 					<th name="id">ID</th><th name="incexp_id">Income/Expense Name</th>
-					<th name="quantity">Quantity</th><th name="value">Amount</th>
+					<th name="quantity">Quantity</th><th name="value">Amount</th><th name="incexp_posting_month">Month</th><th name="incexp_posting_year">Year</th>
 					<th class="text-center" name="actions">Actions</th>
 					<th align="center" width="20" name="batchFlag"><input type="checkbox" name="batchFlag" /></th>
 				</tr>
@@ -226,11 +226,39 @@
 	      table.addCell(1, newRow, record.incexp_name + ' (' + record.incexp_type + ')');
 	      table.addCell(2, newRow, record.quantity, 'center');
 	      table.addCell(3, newRow, record.value, 'center');
-	      table.addCell(4, newRow, '<button name="edit" class="button-link-edit edit small" onclick="' + funcName + '.edit(' + rowCounter + ');"><span class="dashicons dashicons-edit"></span></button><button name="delete" class="button-link-delete delete small" onclick="' + funcName + '.delete(' + rowCounter + ');"><span class="dashicons dashicons-trash"></span></button>', 'center');
-	      table.addCell(5, newRow, '<input type="checkbox" name="batch[]" value="' + parseInt(rowCounter) + '" id="batch' + parseInt(rowCounter) + '" onclick="' + funcName + '.flagCheckbox(this);"/>', 'center');
+	      table.addCell(4, newRow, record.incexp_posting_month, 'center');
+	      table.addCell(5, newRow, record.incexp_posting_year, 'center');
+	      table.addCell(6, newRow, '<button name="edit" class="button-link-edit edit small" onclick="' + funcName + '.edit(' + rowCounter + ');"><span class="dashicons dashicons-edit"></span></button><button name="delete" class="button-link-delete delete small" onclick="' + funcName + '.delete(' + rowCounter + ');"><span class="dashicons dashicons-trash"></span></button>', 'center');
+	      table.addCell(7, newRow, '<input type="checkbox" name="batch[]" value="' + parseInt(rowCounter) + '" id="batch' + parseInt(rowCounter) + '" onclick="' + funcName + '.flagCheckbox(this);"/>', 'center');
 
 	      rowCounter++;
 		}
+
+		var summary = table.getTable().prev().prev().find('.header-summary');
+
+		$.each(data.summary, function (key, value) {
+			var div = $('<div>');
+	        div.addClass('summary-' + key);
+	        div.html(value);
+	        div.appendTo(summary);
+		});
+
+		// var divIncome = $('<div>');
+  //       //div.addClass('summary-' + key);
+  //       divIncome.text(data.income);
+
+  //       var divExpense = $('<div>');
+  //       //div.addClass('summary-' + key);
+  //       divExpense.text(data.expense);
+
+  //       var divIncExpDiff = $('<div>');
+  //       //div.addClass('summary-' + key);
+  //       divIncExpDiff.text(data.summary);
+
+		// divIncome.appendTo(summary);
+		// divExpense.appendTo(summary);
+		// divIncExpDiff.appendTo(summary);
+		
 	}
 
 	function incexp2propAdd(element){

@@ -181,10 +181,6 @@ function bpTabPane(element) {
                     } else {
                         input.val(0);
                     }
-                } else if (input.attr('type') === 'button'){
-
-                    //
-
                 } else {
 
                     input.val(value);
@@ -195,7 +191,6 @@ function bpTabPane(element) {
                     input.prop('disabled', true);
                 } else if (!insert) {
                     _this.setStatusInput(input);
-                    
                 }
             }
 

@@ -100,17 +100,21 @@ function bpTabPaneMain(id) {
     this.newTab = function (id, idx, name, description) {
         var dataId = id + '_' + idx;
         var bpNewDT = {};
-        var title ={};
+        var title = {};
 
         if (!this.dataTabs[dataId]) {
 
             var def = this.defContent.clone();
             //set title
-            
+
+            var header = def.find('.tab-pane-header');
+            console.log(header);
             title = new bpTabPaneMainTitle(def.find('.tab-pane-header'), description);
-            title.setGroup('title', ['id','property_name'], 100);
+            title.setGroup('title', ['id', 'property_name'], 100);
+            title.setGroup('address', ['prefix', 'address'], 50);
+            title.setGroup('summary', [], 50);
             title.load();
-            
+
             var newT = def.find('.bp-data-table');
             bpNewDT = new bpDt(id, newT);
             bpNewDT.clearParam();
@@ -159,6 +163,7 @@ function bpTabPaneMainTitle(element, row) {
                 groupValue.push(_this.titleData[name]);
 
             });
+            div.css('width', content.size + '%');
 
             div.text(groupValue);
 

@@ -192,6 +192,8 @@ class PropertiesController extends BaseController
                     'incexp_id' => $value['incexp_id'],
                     'quantity' => $value['quantity'],
                     'value' => $value['value'],
+                    'incexp_posting_month' => $value['incexp_posting_month'],
+                    'incexp_posting_year' => $value['incexp_posting_year'],
                     'user_id' => $form['user_id']
                 );
 
@@ -300,13 +302,16 @@ class PropertiesController extends BaseController
     }
 
     public function bp_rpc_get_all_incexp2prop(){
-        global $wpdb;
+        global $wpdb, $wp_locale;
 
         $property_id = $_GET['property_id'];
 
         $incexp2props = $wpdb->get_results("SELECT i2p.*, i.incexp_name, i.incexp_type FROM `wp_bp_incexp2prop` i2p, `wp_bp_incexp` i WHERE i2p.property_id = " . $property_id . " AND i2p.incexp_id = i.id");
 
         $data = array();
+
+        $income = 0;
+        $expense = 0;
 
         foreach ($incexp2props as $incexp2prop) {
 
@@ -318,9 +323,21 @@ class PropertiesController extends BaseController
                 'incexp_name' => $incexp2prop->incexp_name,
                 'incexp_type' => $incexp2prop->incexp_type,
                 'quantity' => $incexp2prop->quantity,
-                'value' => $incexp2prop->value
+                'value' => $incexp2prop->value,
+                'incexp_posting_month' => $incexp2prop->incexp_posting_month,
+                'incexp_posting_year' => $incexp2prop->incexp_posting_year,
                 );
+
+            if ($incexp2prop->incexp_type === 'income') {
+                $income += $incexp2prop->quantity * $incexp2prop->value;
+            } else {
+                $expense += $incexp2prop->quantity * $incexp2prop->value;
+            }
         }
+
+        $data['summary']['income'] = number_format_i18n($income, 2);
+        $data['summary']['expense'] = number_format_i18n($expense, 2);
+        $data['summary']['total'] = number_format_i18n($income - $expense, 2);
 
         $data['columns'] = $wpdb->get_col_info();
         //Add extra column name
@@ -593,6 +610,34 @@ class PropertiesController extends BaseController
                     'label_for' => 'value',
                     'placeholder' => 'Amount',
                     'patern' => '^([\d]{1,15}[\,|\.][\d]{1,4})$|^([\d]{1,16})$',
+                    'required' => 'required'
+                ]
+            ],
+        [
+                'id' => 'incexp_posting_month',
+                'title' => 'Month',
+                'callback' => [$this->properties_callbacks, 'textField'],
+                'page' => 'bizpol_inc2prop',
+                'section' => 'inc2prop_index',
+                'args' => [
+                    'option_name' => 'bizpol_inc2prop',
+                    'label_for' => 'incexp_posting_month',
+                    'placeholder' => 'Month',
+                    'patern' => '[\d]{1,2}',
+                    'required' => 'required'
+                ]
+            ],
+        [
+                'id' => 'incexp_posting_year',
+                'title' => 'Year',
+                'callback' => [$this->properties_callbacks, 'textField'],
+                'page' => 'bizpol_inc2prop',
+                'section' => 'inc2prop_index',
+                'args' => [
+                    'option_name' => 'bizpol_inc2prop',
+                    'label_for' => 'incexp_posting_year',
+                    'placeholder' => 'Year',
+                    'patern' => '[\d]{1,4}',
                     'required' => 'required'
                 ]
             ]];

@@ -146,8 +146,7 @@ function bpDt(id, table) {
      *
      * @return     {object}  The table headers.
      */
-    this.getColumnNames = function () {        
-        
+    this.getColumnNames = function () {
         return this.bpRPCData['columns'];
     };
 
@@ -168,6 +167,16 @@ function bpDt(id, table) {
      */
     this.getRowData = function (id) {
         return this.bpRPCData.entries[id];
+    };
+
+    /**
+     * Gets the row data.
+     *
+     * @param      {string}  id      The identifier
+     * @return     {object}  The row data.
+     */
+    this.getAllData = function () {
+        return this.bpRPCData;
     };
 
     this.getFuncName = function () {
