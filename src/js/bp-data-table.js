@@ -21,6 +21,8 @@ function bpDt(id, table) {
     this.bpFlag = {};
     this.bpDialog = {};
 
+    this.bpEmptyRowExtraFields = [];
+
     this.bpParams = [];
     this.funcName = id + 'DT';
 
@@ -51,6 +53,10 @@ function bpDt(id, table) {
      */
     this.setParam = function (name, value) {
         this.bpParams.push({[name]: value});
+    };
+
+    this.setEmptyRowExtraFields = function (id, value) {
+        this.bpEmptyRowExtraFields.push({[id]: value});
     };
 
     /**

@@ -233,8 +233,15 @@
 
 	      rowCounter++;
 		}
+		//add extra input value fields to form in dialog
+
+		table.setEmptyRowExtraFields('incexp_button', '+ Add manualy');
+
+
+		
 
 		var summary = table.getTable().prev().prev().find('.header-summary');
+		summary.empty();
 
 		$.each(data.summary, function (key, value) {
 			var div = $('<div>');

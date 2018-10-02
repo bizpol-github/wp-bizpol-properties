@@ -318,7 +318,6 @@ class PropertiesController extends BaseController
             $data['entries'][] = array(
                 'id' => $incexp2prop->id,
                 'property_id' => $incexp2prop->property_id,
-                'incexp_button' => '+ Add manualy',
                 'incexp_id' => $incexp2prop->incexp_id,
                 'incexp_name' => $incexp2prop->incexp_name,
                 'incexp_type' => $incexp2prop->incexp_type,
@@ -340,8 +339,6 @@ class PropertiesController extends BaseController
         $data['summary']['total'] = number_format_i18n($income - $expense, 2);
 
         $data['columns'] = $wpdb->get_col_info();
-        //Add extra column name
-        $data['columns'][] = 'incexp_button';
 
         $data['error'] = false;
         $data['total'] = count($incexp2props);
@@ -616,7 +613,7 @@ class PropertiesController extends BaseController
         [
                 'id' => 'incexp_posting_month',
                 'title' => 'Month',
-                'callback' => [$this->properties_callbacks, 'textField'],
+                'callback' => [$this->properties_callbacks, 'monthSelect'],
                 'page' => 'bizpol_inc2prop',
                 'section' => 'inc2prop_index',
                 'args' => [
@@ -637,7 +634,7 @@ class PropertiesController extends BaseController
                     'option_name' => 'bizpol_inc2prop',
                     'label_for' => 'incexp_posting_year',
                     'placeholder' => 'Year',
-                    'patern' => '[\d]{1,4}',
+                    'patern' => '(19[789]\d|20[0-6]\d)',
                     'required' => 'required'
                 ]
             ]];

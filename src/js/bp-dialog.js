@@ -278,18 +278,39 @@ function bpD(table, title) {
     this.getNewEmptyRow = function () {
 
         var headers = this.bpDialogTable.getColumnNames();
+
         var row = {};
 
-        $.each(headers, function (ignore, value) {
-            if (value === 'id') {
-                row[value] = 'new';
+        $.each(headers, function (ignore, column) {
+            if (column === 'id') {
+                row[column] = 'new';
             } else {
-                row[value] = undefined;
+                row[column] = undefined;
             }
         });
 
         return row;
 
+    };
+
+    this.getFormData = function (id) {
+        var headersExtra = this.bpDialogTable.bpEmptyRowExtraFields;
+        var row = {};
+        if (id === undefined) {
+            row = this.getNewEmptyRow();
+        } else {
+            row = this.bpDialogTable.getRowData(id);
+        }
+
+        if (headersExtra.length > 0) {
+            $.each(headersExtra, function (ignore, extra) {
+                $.each(extra, function (name, value) {
+                    row[name] = value;
+                });
+            });
+        }
+
+        return row;
     };
 
     /**
@@ -300,7 +321,9 @@ function bpD(table, title) {
     this.insertNew = function () {
         this.load();
         var rows = [];
-        var row = this.getNewEmptyRow();
+        //var row = this.getNewEmptyRow();
+        var row = this.getFormData();
+        console.log(row);
         rows.push(row);
         this.bpFormTab.setEmptyRow(row);
         this.bpFormTab.load(rows);
@@ -319,7 +342,7 @@ function bpD(table, title) {
     this.edit = function (id) {
         this.load();
         var rows = [];
-        var row = this.bpDialogTable.getRowData(id);
+        var row = this.getFormData(id);
         rows.push(row);
         this.bpFormTab.load(rows);
         this.addHiddenField('user_id', wp_adminId);
@@ -337,7 +360,7 @@ function bpD(table, title) {
         var dbIds = [];
 
         $.each(ids, function (ignore, value) {
-            var row = _this.bpDialogTable.getRowData(value);
+            var row = _this.getFormData(value);
             rows.push(row);
             dbIds[value] = row.id;
         });

@@ -152,7 +152,7 @@ function bpTabPane(element) {
      */
     this.updateFormTable = function (table, row, disabled, insert) {
 
-        console.log(row);
+        //console.log(row);
         var input = {};
         var select = {};
         var name = '';
