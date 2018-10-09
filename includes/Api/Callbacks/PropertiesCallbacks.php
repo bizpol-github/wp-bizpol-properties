@@ -113,20 +113,41 @@ class PropertiesCallbacks{
         }
 
         echo '<span class="select-input"><select name="' . $name . '" class="bp-select" ' . (isset($args['patern']) ? ' patern="' . $args['patern'] . '" ' : '') . '>
-                <option value="0">--Select--</option>
-                <option value="1">Janaury</option>
-    <option value="2">February</option>
-    <option value="3">March</option>
-    <option value="4">April</option>
-    <option value="5">May</option>
-    <option value="6">June</option>
-    <option value="7">July</option>
-    <option value="8">August</option>
-    <option value="9">September</option>
-    <option value="10">October</option>
-    <option value="11">November</option>
-    <option value="12">December</option>
-              </select><div class="status dashicons" status="null"></div></span>';
+                <option value="0">--Select--</option>';
+
+                for ($i = 1; $i <= 12; $i++ ) {
+                    $date = '01-'. $i .'-1970';
+                $date_str = date('F', strtotime($date));
+                echo '<option value="' . ($i)  .'">' . $date_str . '</option>';
+
+                }
+                
+              
+        echo '</select><div class="status dashicons" status="null"></div></span>';
+    }
+
+    public function yearSelect($args){
+        $name = $args['label_for'];
+        $option_name = $args['option_name'];
+        $value = '';
+        
+        if(isset($_POST['edit_post'])){
+            $input = get_option($option_name);
+            $value = $input[$_POST['edit_post']][$name];
+        }
+
+        echo '<span class="select-input"><select name="' . $name . '" class="bp-select" ' . (isset($args['patern']) ? ' patern="' . $args['patern'] . '" ' : '') . '>
+                <option value="0">--Select--</option>';
+
+                for ($i = 1970; $i <= 2069; $i++ ) {
+                    $date_now = date('Y', strtotime('now'));
+                    $selected = ($date_now == $i) ? ' selected' : '';
+                    echo '<option value="' . ($i)  .'"' . $selected . '>' . ($i) . '</option>';
+
+                }
+                
+              
+        echo '</select><div class="status dashicons" status="null"></div></span>';
     }
 
     public function incExpField($args){

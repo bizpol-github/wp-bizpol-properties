@@ -24,6 +24,7 @@ function bpDt(id, table) {
     this.bpEmptyRowExtraFields = [];
 
     this.bpParams = [];
+    this.bpTableFilter = [];
     this.funcName = id + 'DT';
 
     /**
@@ -468,5 +469,64 @@ function bpDt(id, table) {
     this.addDialogHiddenFields = function (name, value) {
 
         this.bpDialog.addConstantField(name, value);
+    };
+
+    this.addFilter = function (column) {
+        this.bpTableFilter.push(column);
+    };
+
+    this.createFilter = function () {
+        //Check filters
+        var filters = this.bpTableFilter;
+        var count = filters.length;
+        var rowData = this.getAllData();
+        var data = {};
+        var entries = [];
+        if (count > 0) {
+            $.each(filters, function (ignore, column) {
+
+                $.each(column, function (key, name) {
+                    var select = $('.' + key);
+                    var options = {};
+                    select.addClass(key);
+
+                    $.each(rowData.entries, function (ignore, entry) {
+                        if (!options[entry[key]]) {
+                            options[entry[key]] = entry[name];
+                        }
+                    });
+
+                    const ordered = {};
+                    Object.keys(options).sort().forEach(function(k) {
+                        ordered[k] = options[k];
+                    });
+
+                    $.each(options, function (opt, value) {
+                        select.append(
+                            $('<option>').val(opt).html(value)
+                        );
+                    });
+                    console.log(ordered);
+                    select.on('change', function () {
+                        _this.applyFilter(key, this.value);
+                    });
+                });
+            });
+
+            //data.entries = entries;
+        }
+    };
+
+    this.applyFilter = function (key, value) {
+        var rowData = this.getAllData();
+        var filtered = {};
+        var entries = [];
+        $.each(rowData.entries, function (idx, entry) {
+            if (entry[key] === value) {
+                entries.push(entries[idx]);
+            }
+        });
+        filtered.entries = entries;
+        window[_this.bpDataTableFeedName](filtered, _this);
     };
 }

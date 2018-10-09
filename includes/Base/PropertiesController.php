@@ -315,6 +315,12 @@ class PropertiesController extends BaseController
 
         foreach ($incexp2props as $incexp2prop) {
 
+            $month_name = date('F', strtotime('01-'. $incexp2prop->incexp_posting_month .'-1970'));
+
+            if ($incexp2prop->incexp_posting_month == "0") {
+                $month_name = 'Zero';
+            }
+
             $data['entries'][] = array(
                 'id' => $incexp2prop->id,
                 'property_id' => $incexp2prop->property_id,
@@ -324,6 +330,7 @@ class PropertiesController extends BaseController
                 'quantity' => $incexp2prop->quantity,
                 'value' => $incexp2prop->value,
                 'incexp_posting_month' => $incexp2prop->incexp_posting_month,
+                'incexp_posting_month_n' => $month_name,
                 'incexp_posting_year' => $incexp2prop->incexp_posting_year,
                 );
 
@@ -592,7 +599,7 @@ class PropertiesController extends BaseController
                     'option_name' => 'bizpol_inc2prop',
                     'label_for' => 'quantity',
                     'placeholder' => 'Quantity',
-                    'patern' => '^([\d]{1,16}[\,|\.][\d]{1,4})$|^([\d]{1,16})$',
+                    'patern' => '^[^0]{1}[\d]*$',
                     'required' => 'required'
                 ]
             ],
@@ -620,14 +627,14 @@ class PropertiesController extends BaseController
                     'option_name' => 'bizpol_inc2prop',
                     'label_for' => 'incexp_posting_month',
                     'placeholder' => 'Month',
-                    'patern' => '[\d]{1,2}',
+                    'patern' => '^(1[0-2]|[1-9])$',
                     'required' => 'required'
                 ]
             ],
         [
                 'id' => 'incexp_posting_year',
                 'title' => 'Year',
-                'callback' => [$this->properties_callbacks, 'textField'],
+                'callback' => [$this->properties_callbacks, 'yearSelect'],
                 'page' => 'bizpol_inc2prop',
                 'section' => 'inc2prop_index',
                 'args' => [

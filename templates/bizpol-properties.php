@@ -43,7 +43,11 @@
 
 
 	<div id="single" class="tab-pane">
-		<div class="tab-pane-header"></div>			
+		<div class="form-group">
+		    <label>Filter</label>
+		    <select class="incexp_posting_month"></select><select class="incexp_posting_year"></select>
+		  </div>
+		<div class="tab-pane-header"></div>
 		<button class="button button-primary" style="margin-bottom: 10px;" prop_id="">Add new</button>
 		<table class="bp-data-table">
 			<thead>
@@ -217,6 +221,10 @@
 		var rowCounter = 0;
 		var funcName =  table.getFuncName();
 
+		table.addFilter({incexp_posting_month: 'incexp_posting_month_n'});
+		table.addFilter({incexp_posting_year: 'incexp_posting_year'});
+		table.createFilter();
+
 	    for ( var r in data.entries ) {
 	      var record = data.entries[r];
 
@@ -226,7 +234,7 @@
 	      table.addCell(1, newRow, record.incexp_name + ' (' + record.incexp_type + ')');
 	      table.addCell(2, newRow, record.quantity, 'center');
 	      table.addCell(3, newRow, record.value, 'center');
-	      table.addCell(4, newRow, record.incexp_posting_month, 'center');
+	      table.addCell(4, newRow, record.incexp_posting_month_n, 'center');
 	      table.addCell(5, newRow, record.incexp_posting_year, 'center');
 	      table.addCell(6, newRow, '<button name="edit" class="button-link-edit edit small" onclick="' + funcName + '.edit(' + rowCounter + ');"><span class="dashicons dashicons-edit"></span></button><button name="delete" class="button-link-delete delete small" onclick="' + funcName + '.delete(' + rowCounter + ');"><span class="dashicons dashicons-trash"></span></button>', 'center');
 	      table.addCell(7, newRow, '<input type="checkbox" name="batch[]" value="' + parseInt(rowCounter) + '" id="batch' + parseInt(rowCounter) + '" onclick="' + funcName + '.flagCheckbox(this);"/>', 'center');
@@ -267,6 +275,8 @@
 		// divIncExpDiff.appendTo(summary);
 		
 	}
+
+
 
 	function incexp2propAdd(element){
 
