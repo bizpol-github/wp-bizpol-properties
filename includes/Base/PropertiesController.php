@@ -345,6 +345,9 @@ class PropertiesController extends BaseController
         $data['summary']['expense'] = number_format_i18n($expense, 2);
         $data['summary']['total'] = number_format_i18n($income - $expense, 2);
 
+        $data['filters'] = array('incexp_posting_month' => 'incexp_posting_month_n', 
+                                 'incexp_posting_year' => 'incexp_posting_year');
+
         $data['columns'] = $wpdb->get_col_info();
 
         $data['error'] = false;

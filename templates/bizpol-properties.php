@@ -221,9 +221,9 @@
 		var rowCounter = 0;
 		var funcName =  table.getFuncName();
 
-		table.addFilter({incexp_posting_month: 'incexp_posting_month_n'});
-		table.addFilter({incexp_posting_year: 'incexp_posting_year'});
-		table.createFilter();
+		//console.log(table.bpDataTable[0].tBodies[0].rows);
+
+		$(table.bpDataTable).find('tBody > tr').remove();
 
 	    for ( var r in data.entries ) {
 	      var record = data.entries[r];

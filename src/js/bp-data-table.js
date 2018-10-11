@@ -18,6 +18,7 @@ function bpDt(id, table) {
     this.bpRpcActionName = 'bp_rpc_get_all_' + id;
     this.bpDataTable = table;
     this.bpRPCData = {};
+    this.bpFilteredData = {};
     this.bpFlag = {};
     this.bpDialog = {};
 
@@ -25,6 +26,7 @@ function bpDt(id, table) {
 
     this.bpParams = [];
     this.bpTableFilter = [];
+    this.bpSelectedFilters = {};
     this.funcName = id + 'DT';
 
     /**
@@ -35,9 +37,6 @@ function bpDt(id, table) {
         this.bpDialog = new bpD(this, 'properties');
         this.setHeaderCheckbox();
         this.addFooter();
-
-        //this.bpDataTable = $(this.bpDataTableId);
-
 
         this.initialized = true;
     };
@@ -328,10 +327,18 @@ function bpDt(id, table) {
                 if (response.error === false) {
 
                     _this.bpRPCData = response;
+                    if (response.filters) {
+                        _this.bpTableFilter = response.filters;
+                        _this.createFilter();
+                    }
+
+                    console.log('filters');
+                    console.log(_this.bpTableFilter);
+
                     _this.bpDataTable.find('tbody').empty();
                     window[_this.bpDataTableFeedName](response, _this);
                     console.log('RESPOMSE:');
-                    console.log(response);
+                    console.log(response);this.bpTableFilter
 
                 }
             }
@@ -471,28 +478,26 @@ function bpDt(id, table) {
         this.bpDialog.addConstantField(name, value);
     };
 
-    this.addFilter = function (column) {
-        this.bpTableFilter.push(column);
-    };
-
     this.createFilter = function () {
         //Check filters
         var filters = this.bpTableFilter;
-        var count = filters.length;
+        var count = Object.keys(filters);
+
+        console.log(count);
+
         var rowData = this.getAllData();
         var data = {};
         var entries = [];
-        if (count > 0) {
-            $.each(filters, function (ignore, column) {
-
-                $.each(column, function (key, name) {
-                    var select = $('.' + key);
+        if (count.length > 0) {
+            $.each(filters, function (column, name) {
+                    var select = $('.' + column);
+                    select.empty();
                     var options = {};
-                    select.addClass(key);
+                    select.addClass(column);
 
                     $.each(rowData.entries, function (ignore, entry) {
-                        if (!options[entry[key]]) {
-                            options[entry[key]] = entry[name];
+                        if (!options[entry[columns]]) {
+                            options[entry[column]] = entry[name];
                         }
                     });
 
@@ -501,6 +506,10 @@ function bpDt(id, table) {
                         ordered[k] = options[k];
                     });
 
+                    select.append(
+                            $('<option>').val(0).html('---')
+                        );
+
                     $.each(options, function (opt, value) {
                         select.append(
                             $('<option>').val(opt).html(value)
@@ -508,9 +517,8 @@ function bpDt(id, table) {
                     });
                     console.log(ordered);
                     select.on('change', function () {
-                        _this.applyFilter(key, this.value);
+                        _this.applyFilter(column, this.value);
                     });
-                });
             });
 
             //data.entries = entries;
@@ -518,15 +526,89 @@ function bpDt(id, table) {
     };
 
     this.applyFilter = function (key, value) {
-        var rowData = this.getAllData();
-        var filtered = {};
-        var entries = [];
-        $.each(rowData.entries, function (idx, entry) {
-            if (entry[key] === value) {
-                entries.push(entries[idx]);
+        if (value !== "0") {
+            this.bpSelectedFilters[key] = value;
+        } else if (this.bpSelectedFilters[key]) {
+            delete this.bpSelectedFilters[key];
+        }
+
+        if (Object.keys(this.bpFilteredData).length === 0) {
+            this.bpFilteredData = this.getAllData();
+            console.log('Nie ma');
+        }
+        
+
+        var filtered = this.filterData(this.bpFilteredData.entries);
+
+        console.log('filtered');
+
+        console.log(filtered);
+
+        // this.bpFilteredData.entries = filtered;
+
+        // window[_this.bpDataTableFeedName](this.bpFilteredData, _this);
+       // this.updateFilter(key);
+    };
+
+    this.updateFilter = function (key) {
+        $.each (this.bpTableFilter, function (column, name) {
+            if (column !== key) {
+                var select = $('.' + column);
+                select.empty();
+
+                var options = {};
+
+                $.each(_this.bpFilteredData.entries, function (ignore, entry) {
+                    if (!options[entry[columns]]) {
+                        options[entry[column]] = entry[name];
+                    }
+                });
+
+                const ordered = {};
+                Object.keys(options).sort().forEach(function(k) {
+                    ordered[k] = options[k];
+                });
+
+                select.append(
+                    $('<option>').val(0).html('---')
+                );
+
+                $.each(options, function (opt, value) {
+                    select.append(
+                        $('<option>').val(opt).html(value)
+                    );
+                });
+            
+
             }
         });
-        filtered.entries = entries;
-        window[_this.bpDataTableFeedName](filtered, _this);
+    };
+
+    this.filterData = function (data, flag) {
+        var temp = [];
+        var countFilters = Object.keys(this.bpSelectedFilters).length;
+
+        if (flag === undefined) {
+            flag = 0;
+        } else {
+            flag += 1;
+        }
+
+        if (flag < countFilters) {
+            $.each(this.bpSelectedFilters, function (col, val) {
+                $.each (data, function (ignore, v) {
+                    if (v[col] === val) {
+                        temp.push(v);
+                    }
+                });
+                console.log('temp');
+                console.log(temp);
+                _this.filterData(temp, flag);
+            });
+        } else {
+            console.log('return');
+            console.log(data);
+            return data;
+        }
     };
 }
