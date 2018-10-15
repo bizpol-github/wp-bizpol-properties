@@ -483,7 +483,7 @@ function bpDt(id, table) {
         var filters = this.bpTableFilter;
         var count = Object.keys(filters);
 
-        console.log(count);
+        console.log(filters);
 
         var rowData = this.getAllData();
         var data = {};
@@ -496,8 +496,9 @@ function bpDt(id, table) {
                     select.addClass(column);
 
                     $.each(rowData.entries, function (ignore, entry) {
+                        //con
                         if (!options[entry[columns]]) {
-                            options[entry[column]] = entry[name];
+                            options[entry[column]] = entry[name.value];
                         }
                     });
 
@@ -526,28 +527,43 @@ function bpDt(id, table) {
     };
 
     this.applyFilter = function (key, value) {
+        var count = Object.keys(this.bpSelectedFilters).length;
+        var level = count;
+
+        if (!(key in this.bpSelectedFilters)) {
+            level = level+1;
+        } else {
+            level = this.bpSelectedFilters[key].level;
+        }
+
         if (value !== "0") {
-            this.bpSelectedFilters[key] = value;
+            this.bpSelectedFilters[key] = {'value' : value,
+                                           'level' : level};
         } else if (this.bpSelectedFilters[key]) {
+            var lvl = this.bpSelectedFilters[key].level;
+            $.each (this.bpSelectedFilters, function (k, v){
+                if (_this.bpSelectedFilters[k].level > lvl) {
+                    _this.bpSelectedFilters[k].level = _this.bpSelectedFilters[k].level-1;
+                }
+            });
             delete this.bpSelectedFilters[key];
         }
 
-        if (Object.keys(this.bpFilteredData).length === 0) {
-            this.bpFilteredData = this.getAllData();
-            console.log('Nie ma');
-        }
-        
+        console.log('filters');
 
-        var filtered = this.filterData(this.bpFilteredData.entries);
+        console.log(this.bpSelectedFilters);
+
+        this.filterData();
 
         console.log('filtered');
 
-        console.log(filtered);
+        console.log(this.bpFilteredData.entries);
+
 
         // this.bpFilteredData.entries = filtered;
 
-        // window[_this.bpDataTableFeedName](this.bpFilteredData, _this);
-       // this.updateFilter(key);
+        window[_this.bpDataTableFeedName](this.bpFilteredData, _this);
+        this.updateFilter(key);
     };
 
     this.updateFilter = function (key) {
@@ -578,8 +594,6 @@ function bpDt(id, table) {
                         $('<option>').val(opt).html(value)
                     );
                 });
-            
-
             }
         });
     };
@@ -587,28 +601,48 @@ function bpDt(id, table) {
     this.filterData = function (data, flag) {
         var temp = [];
         var countFilters = Object.keys(this.bpSelectedFilters).length;
+        var tempFilters = this.bpSelectedFilters;
+
+        console.log('count');
+        console.log(countFilters);
 
         if (flag === undefined) {
-            flag = 0;
+            flag = 1;
         } else {
             flag += 1;
         }
 
-        if (flag < countFilters) {
-            $.each(this.bpSelectedFilters, function (col, val) {
-                $.each (data, function (ignore, v) {
-                    if (v[col] === val) {
-                        temp.push(v);
-                    }
-                });
-                console.log('temp');
-                console.log(temp);
-                _this.filterData(temp, flag);
+        console.log('flag');
+        console.log(flag);
+
+        if (data === undefined) {
+            var rowData = this.getAllData();
+            data = rowData.entries;
+        }
+
+        console.log('data');
+        console.log(data);
+
+        if (flag <= countFilters) {
+
+            $.each(tempFilters, function (col, val) {
+                if (val.level == flag) {
+
+                    $.each (data, function (ignore, v) {
+                        if (v[col] === val.value) {
+                            temp.push(v);
+                        }
+                    });
+                    console.log('temp');
+                    console.log(temp);
+                    _this.filterData(temp, flag);
+
+                }
             });
         } else {
             console.log('return');
             console.log(data);
-            return data;
+            this.bpFilteredData.entries = data;
         }
     };
 }
