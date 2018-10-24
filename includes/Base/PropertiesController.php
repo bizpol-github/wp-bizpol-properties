@@ -273,6 +273,8 @@ class PropertiesController extends BaseController
             $data['entries'][] = $property; 
         }
 
+        $data['sorters'] = array('property_name', 'address', 'construction_year', 'land_register');
+
         $data['error'] = false;
         $data['total'] = count($properties);
         wp_send_json($data);
@@ -347,6 +349,10 @@ class PropertiesController extends BaseController
 
         $data['filters'] = array('incexp_posting_month' => array('value' => 'incexp_posting_month_n', 'default' => 'Month'), 
                                  'incexp_posting_year' => array('value' => 'incexp_posting_year', 'dafault' => 'Year'));
+
+        $data['sorters'] = array('incexp_name', 'quantity', 'value', 'incexp_posting_month', 'incexp_posting_year');
+
+
 
         $data['columns'] = $wpdb->get_col_info();
 

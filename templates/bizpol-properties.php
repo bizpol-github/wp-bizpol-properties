@@ -52,7 +52,7 @@
 		<table class="bp-data-table">
 			<thead>
 				<tr>
-					<th name="id">ID</th><th name="incexp_id">Income/Expense Name</th>
+					<th name="id">ID</th><th name="incexp_name">Income/Expense Name</th>
 					<th name="quantity">Quantity</th><th name="value">Amount</th><th name="incexp_posting_month">Month</th><th name="incexp_posting_year">Year</th>
 					<th class="text-center" name="actions">Actions</th>
 					<th align="center" width="20" name="batchFlag"><input type="checkbox" name="batchFlag" /></th>
@@ -220,6 +220,10 @@
 	function incexp2propTableFeed(data, table){
 		var rowCounter = 0;
 		var funcName =  table.getFuncName();
+		var summary = {};
+		summary.income = 0;
+		summary.expense = 0;
+		summary.total = 0;
 
 		//console.log(table.bpDataTable[0].tBodies[0].rows);
 
@@ -228,7 +232,8 @@
 	    for ( var r in data.entries ) {
 	      var record = data.entries[r];
 
-	      var newRow = table.addRow(rowCounter);    
+	      var newRow = table.addRow(rowCounter);
+	      var sum = record.value * record.quantity;    
 
 	      table.addCell(0, newRow, (rowCounter + 1) + ' - (#' + record.id + ')');
 	      table.addCell(1, newRow, record.incexp_name + ' (' + record.incexp_type + ')');
@@ -240,7 +245,16 @@
 	      table.addCell(7, newRow, '<input type="checkbox" name="batch[]" value="' + parseInt(rowCounter) + '" id="batch' + parseInt(rowCounter) + '" onclick="' + funcName + '.flagCheckbox(this);"/>', 'center');
 
 	      rowCounter++;
+
+	      if (record.incexp_type === 'income') {
+	      	summary.income += sum;
+	      } else {
+	      	summary.expense += sum;
+	      }
+	      
 		}
+
+		summary.total = summary.income - summary.expense;
 		//add extra input value fields to form in dialog
 
 		table.setEmptyRowExtraFields('incexp_button', '+ Add manualy');
@@ -248,15 +262,20 @@
 
 		
 
-		var summary = table.getTable().prev().prev().find('.header-summary');
-		summary.empty();
+		var divSummary = table.getTable().prev().prev().find('.header-summary');
+		divSummary.empty();
 
-		$.each(data.summary, function (key, value) {
+		$.each(summary, function (key, value) {
 			var div = $('<div>');
 	        div.addClass('summary-' + key);
 	        div.html(value);
-	        div.appendTo(summary);
+	        div.appendTo(divSummary);
 		});
+
+		// var sort = table.getTable().find('tbody tr td');
+
+		// console.log('sort');
+		// console.log(sort);
 
 		// var divIncome = $('<div>');
   //       //div.addClass('summary-' + key);

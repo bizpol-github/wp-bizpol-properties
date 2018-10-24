@@ -26,6 +26,7 @@ function bpDt(id, table) {
 
     this.bpParams = [];
     this.bpTableFilter = [];
+    this.bpTableSort = [];
     this.bpSelectedFilters = {};
     this.funcName = id + 'DT';
 
@@ -332,6 +333,11 @@ function bpDt(id, table) {
                         _this.createFilter();
                     }
 
+                    if (response.sorters) {
+                        _this.bpTableSort = response.sorters;
+                        _this.createSort();
+                    }
+
                     console.log('filters');
                     console.log(_this.bpTableFilter);
 
@@ -557,7 +563,7 @@ function bpDt(id, table) {
 
         console.log('filtered');
 
-        console.log(this.bpFilteredData.entries);
+        console.log(this.bpFilteredData);
 
 
         // this.bpFilteredData.entries = filtered;
@@ -645,4 +651,88 @@ function bpDt(id, table) {
             this.bpFilteredData.entries = data;
         }
     };
+
+    this.createSort = function () {
+        $.each(this.bpTableSort, function (ignore, column) {
+            var div = $('<div>');
+            var sortAsc = $('<div>');
+
+            sortAsc.append('<span class="dashicons dashicons-arrow-up"></span>');
+
+            sortAsc.appendTo(div);
+
+            var col = $('th[name=' + column + ']');
+            var colIndex = col[0].cellIndex;
+
+            sortAsc.click(function () {
+                $(this).find('span').toggleClass('dashicons-arrow-up');
+                $(this).find('span').toggleClass('dashicons-arrow-down');
+
+                // if ('.dashicons-arrow-up') {
+                //     $('.dashicons-arrow-down').css('color', 'red');
+                //     $('.dashicons-arrow-up').css('color', 'green')
+                // }
+
+                _this.sortTable(colIndex);
+            });
+            div.appendTo(col);
+        });
+    };
+
+    this.sortTable = function (n) {
+        var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+        table = this.bpDataTable[0];
+        console.log(table);
+        switching = true;
+        // Set the sorting direction to ascending:
+        dir = "asc";
+        /* Make a loop that will continue until
+        no switching has been done: */
+        while (switching) {
+            // Start by saying: no switching is done:
+            switching = false;
+            rows = table.rows;
+            /* Loop through all table rows (except the
+            first, which contains table headers): */
+            for (i = 1; i < (rows.length - 2); i++) {
+              // Start by saying there should be no switching:
+              shouldSwitch = false;
+              /* Get the two elements you want to compare,
+              one from current row and one from the next: */
+              x = rows[i].getElementsByTagName("TD")[n];
+              y = rows[i + 1].getElementsByTagName("TD")[n];
+              /* Check if the two rows should switch place,
+              based on the direction, asc or desc: */
+              if (dir == "asc") {
+                if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+                  // If so, mark as a switch and break the loop:
+                  shouldSwitch = true;
+                  break;
+                }
+              } else if (dir == "desc") {
+                if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+                  // If so, mark as a switch and break the loop:
+                  shouldSwitch = true;
+                  break;
+                }
+              }
+            }
+            if (shouldSwitch) {
+              /* If a switch has been marked, make the switch
+              and mark that a switch has been done: */
+              rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+              switching = true;
+              // Each time a switch is done, increase this count by 1:
+              switchcount ++;
+            } else {
+              /* If no switching has been done AND the direction is "asc",
+              set the direction to "desc" and run the while loop again. */
+              if (switchcount == 0 && dir == "asc") {
+                dir = "desc";
+                switching = true;
+              }
+            }
+          }
+
+    }
 }
