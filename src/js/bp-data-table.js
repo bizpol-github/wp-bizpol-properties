@@ -343,7 +343,7 @@ function bpDt(id, table) {
 
                     _this.bpDataTable.find('tbody').empty();
                     window[_this.bpDataTableFeedName](response, _this);
-                    console.log('RESPOMSE:');
+                    console.log('RESPONSE:');
                     console.log(response);this.bpTableFilter
 
                 }
@@ -569,40 +569,42 @@ function bpDt(id, table) {
         // this.bpFilteredData.entries = filtered;
 
         window[_this.bpDataTableFeedName](this.bpFilteredData, _this);
-        this.updateFilter(key);
+        //this.updateFilter(key);
     };
 
-    this.updateFilter = function (key) {
-        $.each (this.bpTableFilter, function (column, name) {
-            if (column !== key) {
-                var select = $('.' + column);
-                select.empty();
+    // TO DO
+    //
+    // this.updateFilter = function (key) {
+    //     $.each (this.bpTableFilter, function (column, name) {
+    //         if (column !== key) {
+    //             var select = $('.' + column);
+    //             select.empty();
 
-                var options = {};
+    //             var options = {};
 
-                $.each(_this.bpFilteredData.entries, function (ignore, entry) {
-                    if (!options[entry[columns]]) {
-                        options[entry[column]] = entry[name];
-                    }
-                });
+    //             $.each(_this.bpFilteredData.entries, function (ignore, entry) {
+    //                 if (!options[entry[columns]]) {
+    //                     options[entry[column]] = entry[name];
+    //                 }
+    //             });
 
-                const ordered = {};
-                Object.keys(options).sort().forEach(function(k) {
-                    ordered[k] = options[k];
-                });
+    //             const ordered = {};
+    //             Object.keys(options).sort().forEach(function(k) {
+    //                 ordered[k] = options[k];
+    //             });
 
-                select.append(
-                    $('<option>').val(0).html('---')
-                );
+    //             select.append(
+    //                 $('<option>').val(0).html('---')
+    //             );
 
-                $.each(options, function (opt, value) {
-                    select.append(
-                        $('<option>').val(opt).html(value)
-                    );
-                });
-            }
-        });
-    };
+    //             $.each(options, function (opt, value) {
+    //                 select.append(
+    //                     $('<option>').val(opt).html(value)
+    //                 );
+    //             });
+    //         }
+    //     });
+    // };
 
     this.filterData = function (data, flag) {
         var temp = [];
@@ -653,33 +655,30 @@ function bpDt(id, table) {
     };
 
     this.createSort = function () {
-        $.each(this.bpTableSort, function (ignore, column) {
+        $.each(this.bpTableSort, function (column, value) {
             var div = $('<div>');
-            var sortAsc = $('<div>');
+            div.css('display', 'inline-block');
+            var sort = $('<div class="dashicons dashicons-arrow-up">');
 
-            sortAsc.append('<span class="dashicons dashicons-arrow-up"></span>');
+            sort.css('display', 'inline-block');
 
-            sortAsc.appendTo(div);
+            sort.appendTo(div);
 
             var col = $('th[name=' + column + ']');
+            console.log(_this.bpTableSort);
             var colIndex = col[0].cellIndex;
 
-            sortAsc.click(function () {
-                $(this).find('span').toggleClass('dashicons-arrow-up');
-                $(this).find('span').toggleClass('dashicons-arrow-down');
+            sort.click(function () {
+                $(this).toggleClass('dashicons-arrow-up');
+                $(this).toggleClass('dashicons-arrow-down');
 
-                // if ('.dashicons-arrow-up') {
-                //     $('.dashicons-arrow-down').css('color', 'red');
-                //     $('.dashicons-arrow-up').css('color', 'green')
-                // }
-
-                _this.sortTable(colIndex);
+                _this.sortTable(colIndex, value['type']);
             });
             div.appendTo(col);
         });
     };
 
-    this.sortTable = function (n) {
+    this.sortTable = function (n, type) {
         var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
         table = this.bpDataTable[0];
         console.log(table);
@@ -695,44 +694,62 @@ function bpDt(id, table) {
             /* Loop through all table rows (except the
             first, which contains table headers): */
             for (i = 1; i < (rows.length - 2); i++) {
-              // Start by saying there should be no switching:
-              shouldSwitch = false;
-              /* Get the two elements you want to compare,
-              one from current row and one from the next: */
-              x = rows[i].getElementsByTagName("TD")[n];
-              y = rows[i + 1].getElementsByTagName("TD")[n];
-              /* Check if the two rows should switch place,
-              based on the direction, asc or desc: */
-              if (dir == "asc") {
-                if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
-                  // If so, mark as a switch and break the loop:
-                  shouldSwitch = true;
-                  break;
-                }
-              } else if (dir == "desc") {
-                if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
-                  // If so, mark as a switch and break the loop:
-                  shouldSwitch = true;
-                  break;
-                }
-              }
-            }
-            if (shouldSwitch) {
-              /* If a switch has been marked, make the switch
-              and mark that a switch has been done: */
-              rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
-              switching = true;
-              // Each time a switch is done, increase this count by 1:
-              switchcount ++;
-            } else {
-              /* If no switching has been done AND the direction is "asc",
-              set the direction to "desc" and run the while loop again. */
-              if (switchcount == 0 && dir == "asc") {
-                dir = "desc";
-                switching = true;
-              }
-            }
-          }
+                // Start by saying there should be no switching:
+                shouldSwitch = false;
+                /* Get the two elements you want to compare,
+                one from current row and one from the next: */
+                x = rows[i].getElementsByTagName("TD")[n];
+                y = rows[i + 1].getElementsByTagName("TD")[n];
+                /* Check if the two rows should switch place,
+                based on the direction, asc or desc: */
+                if (dir == "asc") {
 
+                    if (type === 'string') {
+                        if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+                            // If so, mark as a switch and break the loop:
+                            shouldSwitch = true;
+                            break;
+                        }
+                    } else if (type === 'int') {
+                        if (parseInt(x.innerHTML) > parseInt(y.innerHTML)) {
+                            // If so, mark as a switch and break the loop:
+                            shouldSwitch = true;
+                            break;
+                        }
+                    }
+
+                } else if (dir == "desc") {
+                    if (type === 'string') {
+                        if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+                            // If so, mark as a switch and break the loop:
+                            shouldSwitch = true;
+                            break;
+                        }
+                    } else if (type === 'int') {
+                        if (parseInt(x.innerHTML) < parseInt(y.innerHTML)) {
+                            // If so, mark as a switch and break the loop:
+                            shouldSwitch = true;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            if (shouldSwitch) {
+                /* If a switch has been marked, make the switch
+                and mark that a switch has been done: */
+                rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                switching = true;
+                // Each time a switch is done, increase this count by 1:
+                switchcount ++;
+            } else {
+                /* If no switching has been done AND the direction is "asc",
+                set the direction to "desc" and run the while loop again. */
+                if (switchcount == 0 && dir == "asc") {
+                    dir = "desc";
+                    switching = true;
+                }
+            }
+        }
     }
 }

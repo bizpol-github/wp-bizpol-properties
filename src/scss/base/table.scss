@@ -17,6 +17,14 @@
 
 	& th {
 		background-color: lightslategrey;
+
+		& div.dashicons-arrow-down{
+			color: red;
+		}
+		
+		& div.dashicons-arrow-up{
+			color: green;
+		}
 	}
 
 	& .text-center {
@@ -43,12 +51,4 @@
 
 span.dashicons-no-alt{
 	position: absolute;
-}
-
-span.dashicons-arrow-down{
-	color: red;
-}
-
-span.dashicons-arrow-up{
-	color: green;
 }

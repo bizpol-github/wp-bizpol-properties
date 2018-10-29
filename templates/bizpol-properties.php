@@ -45,7 +45,7 @@
 	<div id="single" class="tab-pane">
 		<div class="form-group">
 		    <label>Filter</label>
-		    <select class="incexp_posting_month"></select><select class="incexp_posting_year"></select>
+		    <select class="incexp_posting_month"></select><select class="incexp_posting_year"></select><select class="incexp_type"></select>
 		  </div>
 		<div class="tab-pane-header"></div>
 		<button class="button button-primary" style="margin-bottom: 10px;" prop_id="">Add new</button>

@@ -273,7 +273,10 @@ class PropertiesController extends BaseController
             $data['entries'][] = $property; 
         }
 
-        $data['sorters'] = array('property_name', 'address', 'construction_year', 'land_register');
+        $data['sorters'] = array('property_name' => array('type' => 'string'), 
+                                 'address' => array('type' => 'string'),
+                                 'construction_year' => array('type' => 'int'),
+                                 'land_register' => array('type' => 'string'));
 
         $data['error'] = false;
         $data['total'] = count($properties);
@@ -348,9 +351,14 @@ class PropertiesController extends BaseController
         $data['summary']['total'] = number_format_i18n($income - $expense, 2);
 
         $data['filters'] = array('incexp_posting_month' => array('value' => 'incexp_posting_month_n', 'default' => 'Month'), 
-                                 'incexp_posting_year' => array('value' => 'incexp_posting_year', 'dafault' => 'Year'));
+                                 'incexp_posting_year' => array('value' => 'incexp_posting_year', 'dafault' => 'Year'),
+                                 'incexp_type' => array('value' => 'incexp_type', 'dafault' => 'Type'));
 
-        $data['sorters'] = array('incexp_name', 'quantity', 'value', 'incexp_posting_month', 'incexp_posting_year');
+        $data['sorters'] = array('incexp_name' => array('type' => 'string'),
+                                 'quantity' => array('type' => 'int'), 
+                                 'value'=> array('type' => 'int'),
+                                 'incexp_posting_month' => array('type' => 'string'), 
+                                 'incexp_posting_year' => array('type' => 'int'));
 
 
 
