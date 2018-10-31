@@ -18,11 +18,11 @@
 	& th {
 		background-color: lightslategrey;
 
-		& div.dashicons-arrow-down{
+		& span.active.dashicons-arrow-down{
 			color: red;
 		}
 		
-		& div.dashicons-arrow-up{
+		& span.active.dashicons-arrow-up{
 			color: green;
 		}
 	}
@@ -47,8 +47,4 @@
 	& td {
 		position: relative;
 	}
-}
-
-span.dashicons-no-alt{
-	position: absolute;
 }

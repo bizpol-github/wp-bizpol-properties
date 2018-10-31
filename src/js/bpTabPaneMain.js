@@ -43,8 +43,10 @@ function bpTabPaneMain(id) {
                 var li = $('<li></li>');
                 var tabPane = content;
 
+
+
                 var removeButton = $('<span class="dashicons dashicons-no-alt"></span>');
-                var a = $('<a>').attr('href', '#' + key).text(content.name);
+                var a = $('<a>').attr('href', '#' + key).html('<span>' + content.name + '</span>');
                 tabPane.attr('id', key);
 
 
@@ -74,9 +76,18 @@ function bpTabPaneMain(id) {
 
                 a.appendTo(li);
                 li.appendTo(_this.ulTabs);
-                tabPane.append(content);
+                //tabPane.append(content);
                 tabPane.appendTo(_this.divContent);
                 content.present = true;
+
+                li.click(function (e) {
+                    e.preventDefault();
+                    _this.ulTabs.find("li.active").removeClass("active");
+                    _this.divContent.find(".tab-pane.active").removeClass("active");
+
+                    li.addClass('active');
+                    tabPane.addClass('active');
+                });
             }
             first = false;
         });

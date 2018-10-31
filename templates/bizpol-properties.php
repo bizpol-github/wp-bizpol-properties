@@ -13,7 +13,8 @@
     			<tr>
     				<th name="id">ID</th><th name="property_name">Name</th>
     				<th class="text-center" name="prefix">Prefix</th>
-    				<th name="address">Address</th>
+    				<th class="text-center" name="address">Address</th>
+    				<th class="text-center" name="city">City</th>
     				<th class="text-center" name="construction_year">Builded</th>
     				<th class="text-center" name="land_register">Land Register</th>
     				<th class="text-center" name="status">Status</th>
@@ -159,6 +160,8 @@
 </script>
 
 <script>
+	var bpCityRPC = new bpCities();
+
 	var wp_adminId = '<?php echo wp_get_current_user()->id ?>';
 	var wp_adminFullName = '<?php echo wp_get_current_user()->display_name ?>';
 	var bpTPM = new bpTabPaneMain('bpTPM');
@@ -178,6 +181,7 @@
 		property_name: 'Name',
 		prefix: 'Prefix',
 		address: 'Address',
+		city: 'City',
 		construction_year: 'Builded',
 		land_register: 'Land Register',
 		status: 'Status',
@@ -206,12 +210,13 @@
 	      // propertiesDT.addCell(1, newRow, '<a href="admin.php?page=bizpol_property&tab=single&rowId=' + rowCounter + '">' + record.property_name + '</a>');
 	      table.addCell(1, newRow, '<div class="property-link" onclick="bpTPM.newTab(\'incexp2prop\', ' + record.id + ', \'' + record.property_name + '\', propertiesDT.getRowData(' +  rowCounter +'))">' + record.property_name + '</div>');
 	      table.addCell(2, newRow, record.prefix, 'center');
-	      table.addCell(3, newRow, record.address);
-	      table.addCell(4, newRow, record.construction_year.substr(0,10), 'center');
-	      table.addCell(5, newRow, record.land_register);
-	      table.addCell(6, newRow, status, 'center');
-	      table.addCell(7, newRow, '<button name="edit" class="button-link-edit edit small" onclick="' + table.getName() + 'DT.edit(' + rowCounter + ')"><span class="dashicons dashicons-edit"></span></button><button name="delete" class="button-link-delete delete small" onclick="' + table.getName() + 'DT.delete(' + rowCounter + ')"><span class="dashicons dashicons-trash"></span></button>', 'center');
-	      table.addCell(8, newRow, '<input type="checkbox" name="batch[]" value="' + parseInt(rowCounter) + '" id="batch' + parseInt(rowCounter) + '" onclick="' + table.getName() + 'DT.flagCheckbox(this);"/>', 'center');
+	      table.addCell(3, newRow, record.address, 'center');
+	      table.addCell(4, newRow, record.city, 'center');
+	      table.addCell(5, newRow, record.construction_year.substr(0,10), 'center');
+	      table.addCell(6, newRow, record.land_register, 'center');
+	      table.addCell(7, newRow, status, 'center');
+	      table.addCell(8, newRow, '<button name="edit" class="button-link-edit edit small" onclick="' + table.getName() + 'DT.edit(' + rowCounter + ')"><span class="dashicons dashicons-edit"></span></button><button name="delete" class="button-link-delete delete small" onclick="' + table.getName() + 'DT.delete(' + rowCounter + ')"><span class="dashicons dashicons-trash"></span></button>', 'center');
+	      table.addCell(9, newRow, '<input type="checkbox" name="batch[]" value="' + parseInt(rowCounter) + '" id="batch' + parseInt(rowCounter) + '" onclick="' + table.getName() + 'DT.flagCheckbox(this);"/>', 'center');
 
 	      rowCounter++;
 		}

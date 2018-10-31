@@ -26,5 +26,6 @@ class Enqueue extends BaseController{
                 wp_enqueue_script('dialog', $this->plugin_url . 'src/js/bp-dialog.js');
                 wp_enqueue_script('tab-pane', $this->plugin_url . 'src/js/bp-tab-pane.js');
                 wp_enqueue_script('tab-pane-main', $this->plugin_url . 'src/js/bpTabPaneMain.js');
+                wp_enqueue_script('cities', $this->plugin_url . 'src/js/bp-cities.js');
     }
 }

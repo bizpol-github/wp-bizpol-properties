@@ -374,7 +374,7 @@ function bpD(table, title) {
     this.delete = function (id) {
         this.load();
         var rows = [];
-        var row = this.bpDialogTable.getRowData(id);
+        var row = this.getFormData(id);
         rows.push(row);
         this.bpFormTab.load(rows, true);
         this.addHiddenField('user_id', wp_adminId);

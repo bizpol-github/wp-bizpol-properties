@@ -47,6 +47,7 @@ class PropertiesController extends BaseController
         add_action('wp_ajax_bp_rpc_get_all_properties', array($this, 'bp_rpc_get_all_properties'));
         add_action('wp_ajax_bp_rpc_get_all_incexp', array($this, 'bp_rpc_get_all_incexp'));
         add_action('wp_ajax_bp_rpc_get_all_incexp2prop', array($this, 'bp_rpc_get_all_incexp2prop'));
+        add_action('wp_ajax_bp_rpc_search_cities', array($this, 'bp_rpc_search_cities'));
         
 	}
 
@@ -65,6 +66,7 @@ class PropertiesController extends BaseController
                     'property_name' => sanitize_text_field($value['property_name']),
                     'prefix' => sanitize_text_field($value['prefix']),
                     'address' => sanitize_text_field($value['address']),
+                    'city' => sanitize_text_field($value['city']),
                     'construction_year' => $value['construction_year'],
                     'land_register' => sanitize_text_field($value['land_register']),
                     'user_id' => sanitize_text_field($value['user_id']),
@@ -379,6 +381,14 @@ class PropertiesController extends BaseController
 
     }
 
+    public function bp_rpc_search_cities(){
+        global $wpdb;
+
+        $cities = get_results("SELECT DISTINCT city_name FROM `wp_bp_cities` WHERE city_name LIKE '%gru%'");
+        wp_send_json($cities);
+        wp_die();
+    }
+
 	public function setSubpages()
 	{
         global $wpdb;
@@ -479,6 +489,20 @@ class PropertiesController extends BaseController
                     'label_for' => 'address',
                     'placeholder' => 'Address',
                     'min' => '2',
+                    'required' => 'required'
+                ]
+            ],
+            [
+                'id' => 'city',
+                'title' => 'City',
+                'callback' => [$this->properties_callbacks, 'textFieldCity'],
+                'page' => 'bizpol_property',
+                'section' => 'property_index',
+                'args' => [
+                    'option_name' => 'bizpol_property',
+                    'label_for' => 'city',
+                    'placeholder' => 'City',
+                    'min' => '1',
                     'required' => 'required'
                 ]
             ],

@@ -12,6 +12,7 @@ function bpDt(id, table) {
     var _this = this;
 
     this.initialized = false;
+    this.bpSort = false;
     this.bpDataTableName = id;
     this.bpDataTableFeedName =  id + 'TableFeed';
     this.bpDataTableId = '#' + id + 'Table';
@@ -27,6 +28,7 @@ function bpDt(id, table) {
     this.bpParams = [];
     this.bpTableFilter = [];
     this.bpTableSort = [];
+    this.bpSortedColumn = undefined;
     this.bpSelectedFilters = {};
     this.funcName = id + 'DT';
 
@@ -655,27 +657,48 @@ function bpDt(id, table) {
     };
 
     this.createSort = function () {
-        $.each(this.bpTableSort, function (column, value) {
-            var div = $('<div>');
-            div.css('display', 'inline-block');
-            var sort = $('<div class="dashicons dashicons-arrow-up">');
+        if (this.bpSort === false) {
+            $.each(this.bpTableSort, function (column, value) {
+                var col = _this.bpDataTable.find('th[name=' + column + ']').attr('nowrap', '');
+                var name = col.text();
+                col.text('');
+                var nameDiv = $('<span class="name">');
+                nameDiv.text(name);
 
-            sort.css('display', 'inline-block');
+                var div = $('<div class="sort">');
+                div.css('display', 'inline');
+                var sortDiv = $('<span class="dashicons dashicons-arrow-up">');
 
-            sort.appendTo(div);
+                nameDiv.appendTo(div);
+                sortDiv.appendTo(div);
 
-            var col = $('th[name=' + column + ']');
-            console.log(_this.bpTableSort);
-            var colIndex = col[0].cellIndex;
+                var colIndex = col[0].cellIndex;
 
-            sort.click(function () {
-                $(this).toggleClass('dashicons-arrow-up');
-                $(this).toggleClass('dashicons-arrow-down');
+                col.click(function () {
+                    var sortedColumn = $(this).attr('name');
 
-                _this.sortTable(colIndex, value['type']);
+                    if (_this.bpSortedColumn !== undefined && _this.bpSortedColumn !== sortedColumn) {
+                        var sortReset = $('th[name=' + _this.bpSortedColumn + ']').find('span.dashicons');
+
+                        sortReset.removeClass('dashicons-arrow-down');
+                        sortReset.addClass('dashicons-arrow-up');
+                        sortReset.removeClass('active');
+                    }
+
+                    var sort = $(this).find('span.dashicons');
+
+                    sort.addClass('active');
+
+                    sort.toggleClass('dashicons-arrow-up');
+                    sort.toggleClass('dashicons-arrow-down');
+
+                    _this.sortTable(colIndex, value['type']);
+                    _this.bpSortedColumn = sortedColumn;
+                });
+                div.appendTo(col);
             });
-            div.appendTo(col);
-        });
+        }
+        this.bpSort = true;
     };
 
     this.sortTable = function (n, type) {

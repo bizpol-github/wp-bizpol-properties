@@ -9,7 +9,7 @@ function bpTabPane(element) {
 
     this.bpTabPane = this.bpForm.find('div.bp-tab-pane');
     this.bpTabUl = $('<ul class="nav-tabs"></ul>');
-    this.bpTabUlDiv = $('<div class="tab-content"></div>');
+    this.bpTabContents = $('<div class="tab-content"></div>');
     this.bpTabSpan = $('<span class="dashicons dashicons-no-alt"></span>');
     this.bpTabCounter = 0;
     this.bpTabActiveId = 0;
@@ -31,7 +31,7 @@ function bpTabPane(element) {
     this.bpTabInitialize = function () {
         this.bpFormTable.remove();
         this.bpTabUl.appendTo(this.bpTabPane);
-        this.bpTabUlDiv.appendTo(this.bpTabPane);
+        this.bpTabContents.appendTo(this.bpTabPane);
         this.inputKeyUp();
     };
 
@@ -100,7 +100,7 @@ function bpTabPane(element) {
             }
         });
 
-        this.bpTabUlDiv.append(function () {
+        this.bpTabContents.append(function () {
             formTable.appendTo(tabPane);
             $(this).append(tabPane);
         });
@@ -109,6 +109,15 @@ function bpTabPane(element) {
             li.addClass('active');
             tabPane.addClass('active');
         }
+
+        li.click(function (e) {
+            e.preventDefault();
+            _this.bpTabUl.find("li.active").removeClass("active");
+            _this.bpTabContents.find(".tab-pane.active").removeClass("active");
+
+            li.addClass('active');
+            tabPane.addClass('active');
+        });
 
 
         this.updateFormTable(formTable, row, disabled, newTab);
@@ -120,7 +129,7 @@ function bpTabPane(element) {
         var lis = this.bpTabUl.find('li');
         lis.removeClass('active');
 
-        var divs = this.bpTabUlDiv.find('div.tab-pane');
+        var divs = this.bpTabContents.find('div.tab-pane');
         divs.removeClass('active');
 
         li.addClass('active');
@@ -248,24 +257,26 @@ function bpTabPane(element) {
     };
 
     this.setStatusSelect = function (select) {
-        var status = select.next();
-        var value = select.val();
+        if (!(select.hasClass('nocheck'))) {
+            var status = select.next();
+            var value = select.val();
 
-        var patern = select.attr('patern');
+            var patern = select.attr('patern');
 
-        var regex = new RegExp(patern);
-        var test = regex.test(value);
+            var regex = new RegExp(patern);
+            var test = regex.test(value);
 
-        //console.log(status);
+            //console.log(status);
 
-        if (test) {
-            status.removeClass('dashicons-no').addClass('dashicons-yes').css('color', 'green');
-            status.attr('status', true);
-        } else {
-            status.removeClass('dashicons-yes').addClass('dashicons-no').css('color', 'red');
-            status.attr('status', false);
+            if (test) {
+                status.removeClass('dashicons-no').addClass('dashicons-yes').css('color', 'green');
+                status.attr('status', true);
+            } else {
+                status.removeClass('dashicons-yes').addClass('dashicons-no').css('color', 'red');
+                status.attr('status', false);
+            }
+
         }
-
     };
 
     /**

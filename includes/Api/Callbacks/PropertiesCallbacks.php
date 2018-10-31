@@ -73,11 +73,29 @@ class PropertiesCallbacks{
             $value = $input[$_POST['edit_post']][$name];
         }
 
-        echo '<span class="select-input"><select name="prefix" class="prefix">
+        echo '<span class="select-input"><select name="prefix" class="prefix nocheck">
   <option value="ul">ul.</option>
   <option value="al">al.</option>
   <option value="os">os.</option>
 </select><input ' . (isset($args['type']) ? 'type="' . $args['type'] . '" ' : 'type="text"') . ' class="bp-input" id="' . $name . '" name="' . $name . '" value="' . $value . '" placeholder="' . $args['placeholder'] . '" min="' . $args['min'] . '" ' . (isset($args['max']) ? 'max="' . $args['max'] . '" ' : '') . 'required><div class="status dashicons" status="null"></div></span>';
+    }
+
+    /**
+     * Creates city text fields
+     *
+     * @param      <object>  $args   The arguments
+     */
+    public function textFieldCity($args){
+        $name = $args['label_for'];
+        $option_name = $args['option_name'];
+        $value = '';
+        
+        if(isset($_POST['edit_post'])){
+            $input = get_option($option_name);
+            $value = $input[$_POST['edit_post']][$name];
+        }
+
+        echo '<input ' . (isset($args['type']) ? 'type="' . $args['type'] . '" ' : 'type="text"') . ' id="' . $name . '" name="' . $name . '" value="' . $value . '" placeholder="' . $args['placeholder'] . '" min="' . $args['min'] . '" ' . (isset($args['max']) ? ' max="' . $args['max'] . '" ' : '') . (isset($args['patern']) ? ' patern="' . $args['patern'] . '" ' : '') . (isset($args['required']) ? 'required' : '') . ' class="bp-input" autocomplete="on" onfocus="bpCityRPC.initialize(this);"><div class="status dashicons" status="null"></div>';
     }
 
     /**
