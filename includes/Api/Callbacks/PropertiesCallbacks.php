@@ -77,7 +77,7 @@ class PropertiesCallbacks{
   <option value="ul">ul.</option>
   <option value="al">al.</option>
   <option value="os">os.</option>
-</select><input ' . (isset($args['type']) ? 'type="' . $args['type'] . '" ' : 'type="text"') . ' class="bp-input" id="' . $name . '" name="' . $name . '" value="' . $value . '" placeholder="' . $args['placeholder'] . '" min="' . $args['min'] . '" ' . (isset($args['max']) ? 'max="' . $args['max'] . '" ' : '') . 'required><div class="status dashicons" status="null"></div></span>';
+</select><input ' . (isset($args['type']) ? 'type="' . $args['type'] . '" ' : 'type="text"') . ' class="bp-input" id="' . $name . '" name="' . $name . '" value="' . $value . '" placeholder="' . $args['placeholder'] . '" min="' . $args['min'] . '" ' . (isset($args['max']) ? 'max="' . $args['max'] . '" ' : '') . 'autocomplete="on" onfocus="bpStreetRPC.initialize(this);" required><div class="status dashicons" status="null"></div></span>';
     }
 
     /**

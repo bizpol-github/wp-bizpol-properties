@@ -47,7 +47,8 @@ class PropertiesController extends BaseController
         add_action('wp_ajax_bp_rpc_get_all_properties', array($this, 'bp_rpc_get_all_properties'));
         add_action('wp_ajax_bp_rpc_get_all_incexp', array($this, 'bp_rpc_get_all_incexp'));
         add_action('wp_ajax_bp_rpc_get_all_incexp2prop', array($this, 'bp_rpc_get_all_incexp2prop'));
-        add_action('wp_ajax_bp_rpc_search_cities', array($this, 'bp_rpc_search_cities'));
+        add_action('wp_ajax_bp_rpc_get_cities', array($this, 'bp_rpc_get_cities'));
+        add_action('wp_ajax_bp_rpc_get_streets', array($this, 'bp_rpc_get_streets'));
         
 	}
 
@@ -381,13 +382,56 @@ class PropertiesController extends BaseController
 
     }
 
-    public function bp_rpc_search_cities(){
+    public function bp_rpc_get_cities(){
         global $wpdb;
 
-        $cities = get_results("SELECT DISTINCT city_name FROM `wp_bp_cities` WHERE city_name LIKE '%gru%'");
-        wp_send_json($cities);
+        $data = array();
+
+        $data['unlogged'] = false;
+
+        if (!is_user_logged_in()) {
+
+            $data['unlogged'] = true;
+
+        }
+
+        $cities = $wpdb->get_results("SELECT NAZWA FROM `miejscowosci`");
+
+        foreach ($cities as $city) {
+            $data['entries'][] = $city->NAZWA; 
+        }
+
+        $data['error'] = false;
+        $data['total'] = count($cities);
+        wp_send_json($data);
         wp_die();
     }
+
+    public function bp_rpc_get_streets(){
+        global $wpdb;
+
+        $data = array();
+
+        $data['unlogged'] = false;
+
+        if (!is_user_logged_in()) {
+
+            $data['unlogged'] = true;
+
+        }
+
+        $streets = $wpdb->get_results("SELECT NAZWA_1 FROM `wp_bp_streets` WHERE WOJ = 04 AND POW = 62");        
+
+        foreach ($streets as $street) {
+            $data['entries'][] = $street->NAZWA_1;
+        }
+
+        $data['error'] = false;
+        $data['total'] = count($streets);
+        wp_send_json($data);
+        wp_die();
+    }
+
 
 	public function setSubpages()
 	{
@@ -479,20 +523,6 @@ class PropertiesController extends BaseController
                 ]
             ],
             [
-                'id' => 'address',
-                'title' => 'Address',
-                'callback' => [$this->properties_callbacks, 'textFieldAddress'],
-                'page' => 'bizpol_property',
-                'section' => 'property_index',
-                'args' => [
-                    'option_name' => 'bizpol_property',
-                    'label_for' => 'address',
-                    'placeholder' => 'Address',
-                    'min' => '2',
-                    'required' => 'required'
-                ]
-            ],
-            [
                 'id' => 'city',
                 'title' => 'City',
                 'callback' => [$this->properties_callbacks, 'textFieldCity'],
@@ -503,6 +533,20 @@ class PropertiesController extends BaseController
                     'label_for' => 'city',
                     'placeholder' => 'City',
                     'min' => '1',
+                    'required' => 'required'
+                ]
+            ],
+            [
+                'id' => 'address',
+                'title' => 'Address',
+                'callback' => [$this->properties_callbacks, 'textFieldAddress'],
+                'page' => 'bizpol_property',
+                'section' => 'property_index',
+                'args' => [
+                    'option_name' => 'bizpol_property',
+                    'label_for' => 'address',
+                    'placeholder' => 'Address',
+                    'min' => '2',
                     'required' => 'required'
                 ]
             ],

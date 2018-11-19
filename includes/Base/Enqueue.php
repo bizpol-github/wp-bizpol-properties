@@ -17,6 +17,7 @@ class Enqueue extends BaseController{
                 //enqueue all scripts
                 wp_enqueue_script('media_upload');
                 wp_enqueue_script('jquery-ui-dialog');
+                wp_enqueue_script('jquery-ui-autocomplete');
                 wp_enqueue_media();
                 wp_enqueue_style('main', $this->plugin_url . 'assets/style.min.css');
                 wp_enqueue_style('jquery-ui', '//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css');
@@ -27,5 +28,6 @@ class Enqueue extends BaseController{
                 wp_enqueue_script('tab-pane', $this->plugin_url . 'src/js/bp-tab-pane.js');
                 wp_enqueue_script('tab-pane-main', $this->plugin_url . 'src/js/bpTabPaneMain.js');
                 wp_enqueue_script('cities', $this->plugin_url . 'src/js/bp-cities.js');
+                wp_enqueue_script('streets', $this->plugin_url . 'src/js/bp-streets.js');
     }
 }

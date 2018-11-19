@@ -161,6 +161,7 @@
 
 <script>
 	var bpCityRPC = new bpCities();
+	var bpStreetRPC = new bpStreets();
 
 	var wp_adminId = '<?php echo wp_get_current_user()->id ?>';
 	var wp_adminFullName = '<?php echo wp_get_current_user()->display_name ?>';

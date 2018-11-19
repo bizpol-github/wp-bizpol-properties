@@ -1,10 +1,10 @@
-/* global bpCities, _this */
+/* global bpStreets, _this */
 /*global $ */
 /*global ajaxurl */
 /*global bpDataTableId */
 /*global feedDataTable */
 /*global bpRpcActionName */
-function bpCities() {
+function bpStreets() {
 
     'use strict';
     var _this = this;
@@ -13,14 +13,15 @@ function bpCities() {
 
     this.bpRPCData = {};
 
-    this.bpRpcActionName = 'bp_rpc_get_cities';
+    this.bpRpcActionName = 'bp_rpc_get_streets';
 
-    console.log('bpCities-start');
+    console.log('bpStreets-start');
 
     /**
      * set @var initialize only once
      */
     this.initialize = function (element) {
+
 
 
         if (this.initialized === false) {
@@ -34,6 +35,7 @@ function bpCities() {
                     action: _this.bpRpcActionName
                 },
                 function (response) {
+                    console.log('seba');
                     
                    // if (response.error === false) {
 
