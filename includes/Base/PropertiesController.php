@@ -48,6 +48,7 @@ class PropertiesController extends BaseController
         add_action('wp_ajax_bp_rpc_get_all_incexp', array($this, 'bp_rpc_get_all_incexp'));
         add_action('wp_ajax_bp_rpc_get_all_incexp2prop', array($this, 'bp_rpc_get_all_incexp2prop'));
         add_action('wp_ajax_bp_rpc_get_cities', array($this, 'bp_rpc_get_cities'));
+        add_action('wp_ajax_bp_rpc_get_zones', array($this, 'bp_rpc_get_zones'));
         add_action('wp_ajax_bp_rpc_get_streets', array($this, 'bp_rpc_get_streets'));
         
 	}
@@ -382,6 +383,35 @@ class PropertiesController extends BaseController
 
     }
 
+    public function bp_rpc_get_zones(){
+        global $wpdb;
+
+        $data = array();
+
+        $data['unlogged'] = false;
+
+        if (!is_user_logged_in()) {
+
+            $data['unlogged'] = true;
+
+        }
+
+        $data['params'] = $_GET;
+
+        $country_id = $_GET['country_id'];
+
+        $zones = $wpdb->get_results("SELECT * FROM `wp_bp_zones` WHERE zone_country_id = $country_id");
+
+        foreach ($zones as $zone) {
+            $data['entries'][] = $zone; 
+        }
+
+        $data['error'] = false;
+        $data['total'] = count($zones);
+        wp_send_json($data);
+        wp_die();
+    }
+
     public function bp_rpc_get_cities(){
         global $wpdb;
 
@@ -523,6 +553,20 @@ class PropertiesController extends BaseController
                 ]
             ],
             [
+                'id' => 'country',
+                'title' => 'Country',
+                'callback' => [$this->properties_callbacks, 'selectCountry'],
+                'page' => 'bizpol_property',
+                'section' => 'property_index',
+                'args' => [
+                    'option_name' => 'bizpol_property',
+                    'label_for' => 'country',
+                    'placeholder' => 'Country',
+                    'min' => '',
+                    'required' => 'required'
+                ]
+            ],
+            [
                 'id' => 'city',
                 'title' => 'City',
                 'callback' => [$this->properties_callbacks, 'textFieldCity'],
@@ -534,6 +578,47 @@ class PropertiesController extends BaseController
                     'placeholder' => 'City',
                     'min' => '1',
                     'required' => 'required'
+                ]
+            ],
+            [
+                'id' => 'zone',
+                'title' => 'Zone',
+                'callback' => [$this->properties_callbacks, 'textField'],
+                'page' => 'bizpol_property',
+                'section' => 'property_index',
+                'args' => [
+                    'option_name' => 'bizpol_property',
+                    'label_for' => 'zone',
+                    'placeholder' => 'Zone',
+                    'min' => '2',
+                ]
+            ],
+            [
+                'id' => 'county',
+                'title' => 'County',
+                'callback' => [$this->properties_callbacks, 'textField'],
+                'page' => 'bizpol_property',
+                'section' => 'property_index',
+                'args' => [
+                    'option_name' => 'bizpol_property',
+                    'label_for' => 'county',
+                    'placeholder' => 'County',
+                    'min' => '2',
+                    'class' => 'hidden'
+                ]
+            ],
+            [
+                'id' => 'community',
+                'title' => 'Community',
+                'callback' => [$this->properties_callbacks, 'textField'],
+                'page' => 'bizpol_property',
+                'section' => 'property_index',
+                'args' => [
+                    'option_name' => 'bizpol_property',
+                    'label_for' => 'community',
+                    'placeholder' => 'Community',
+                    'min' => '2',
+                    'class' => 'hidden'
                 ]
             ],
             [

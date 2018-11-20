@@ -85,6 +85,36 @@ class PropertiesCallbacks{
      *
      * @param      <object>  $args   The arguments
      */
+    public function selectCountry($args){
+         global $wpdb;
+
+        $countries = $wpdb->get_results("SELECT * FROM `wp_bp_countries`");
+
+        $name = $args['label_for'];
+        $option_name = $args['option_name'];
+        $value = '';
+        
+        if(isset($_POST['edit_post'])){
+            $input = get_option($option_name);
+            $value = $input[$_POST['edit_post']][$name];
+        }
+
+        echo '<span class="select-input"><select name="' . $name . '" class="bp-select" ' . (isset($args['patern']) ? ' patern="' . $args['patern'] . '" ' : '') . ' onchange="bpZoneRPC.load(this);">
+                <option value="0">--Select--</option>';
+
+        foreach ($countries as $country) {
+            echo  '<option value="' . $country->countries_id . '">' . $country->countries_name . ' (' . $country->countries_iso_code_2 .')</option>';
+        }
+
+
+        echo '</select><div class="status dashicons" status="null"></div></span>';
+    }
+
+    /**
+     * Creates city text fields
+     *
+     * @param      <object>  $args   The arguments
+     */
     public function textFieldCity($args){
         $name = $args['label_for'];
         $option_name = $args['option_name'];

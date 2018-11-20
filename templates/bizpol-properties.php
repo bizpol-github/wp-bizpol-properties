@@ -160,6 +160,7 @@
 </script>
 
 <script>
+	var bpZoneRPC = new bpZones();
 	var bpCityRPC = new bpCities();
 	var bpStreetRPC = new bpStreets();
 
